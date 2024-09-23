@@ -13,6 +13,9 @@ class AuthViewmodel extends ChangeNotifier {
 
   bool? _isloading;
   bool? get isloading => _isloading;
+  bool? obscureText = true;
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey1 = GlobalKey<FormState>();
 
   /*
   * login api call
@@ -31,5 +34,10 @@ class AuthViewmodel extends ChangeNotifier {
       _errormsg = e.toString();
       return false;
     }
+  }
+
+  setObscure(bool value) {
+    obscureText = !value;
+    notifyListeners();
   }
 }

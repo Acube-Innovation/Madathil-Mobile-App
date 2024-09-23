@@ -23,9 +23,10 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: providerList(),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Madathil',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
           useMaterial3: true,
         ),
         home: const SplashScreen(),
