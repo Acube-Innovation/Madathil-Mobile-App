@@ -45,7 +45,7 @@ class AttendancePage extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 40),
+          const Spacer(),
           InkWell(
             onTap: () {
               // Implement check-in logic

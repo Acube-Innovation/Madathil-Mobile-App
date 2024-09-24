@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:madathil/app_theme.dart';
 import 'package:madathil/constants.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
 import 'package:madathil/model/services/local_db/hive_local.dart';
@@ -25,10 +26,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Madathil',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
-          useMaterial3: true,
-        ),
+        theme: AppTheme.appTheme,
         home: const HomePage(),
       ),
     );
