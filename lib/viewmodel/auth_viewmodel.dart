@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:madathil/model/model_class/api_response_model/login_response.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
+import 'package:madathil/utils/color/util_functions.dart';
 
 class AuthViewmodel extends ChangeNotifier {
   final ApiRepository apiRepository;
@@ -20,17 +23,24 @@ class AuthViewmodel extends ChangeNotifier {
   /*
   * login api call
   * */
-
-  Future<bool> login({String? phone}) async {
+  LoginResponse? logindata;
+  Future<bool> login({String? username, String? pwd}) async {
     try {
-      LoginResponse? sentotpResponse = await apiRepository
-          .login({"mobile_no": "9876543210", "action": "sign in"});
-      if (sentotpResponse?.message?.success ?? false) {
+      LoginResponse? response =
+          await apiRepository.login(data: {"usr": username, "pwd": pwd});
+      if (UtilFunctions.checkAPIStatus(response?.message == 'Logged In') ??
+          false) {
+        logindata = response;
+        notifyListeners();
         return true;
+      } else {
+        _errormsg = "Invalid login credentials";
+        log(_errormsg.toString());
+        notifyListeners();
+        return false;
       }
-      _errormsg = sentotpResponse?.message?.message;
-      return false;
     } catch (e) {
+      log(e.toString());
       _errormsg = e.toString();
       return false;
     }

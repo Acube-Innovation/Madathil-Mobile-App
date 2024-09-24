@@ -5,6 +5,7 @@ import 'package:madathil/constants.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
 import 'package:madathil/model/services/local_db/hive_local.dart';
 import 'package:madathil/view/screens/homepage/homepage.dart';
+import 'package:madathil/view/screens/splash_screen/splash_screen.dart';
 import 'package:madathil/viewmodel/auth_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
@@ -24,11 +25,10 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: providerList(),
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Madathil',
-        theme: AppTheme.appTheme,
-        home: const HomePage(),
-      ),
+          debugShowCheckedModeBanner: false,
+          title: 'Madathil',
+          theme: AppTheme.appTheme,
+          home: const SplashScreen()),
     );
   }
 

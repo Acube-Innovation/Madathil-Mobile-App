@@ -14,4 +14,5 @@ class DataBoxKey {
   static const String kCurrentVersion = "current_version";
   static const String kFcmToken = "fcm-token";
   static const String kLocale = "locale";
+  static const String cookie = "Cookie";
 }

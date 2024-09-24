@@ -2,7 +2,10 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:madathil/constants.dart';
 import 'package:madathil/model/model_class/api_response_model/general_response.dart';
@@ -11,13 +14,69 @@ import 'package:madathil/model/model_class/local/environment.dart';
 import 'package:madathil/model/services/api_service/api_urls.dart';
 import 'package:madathil/model/services/local_db/hive_constants.dart';
 
+// class ApiViewModel {
+//   Dio dio = Dio();
+//   String pro = '0.0';
+//   String cookiesFormatted = '';
+
+//   ApiViewModel(String? env) {
+//     // String? token = hiveInstance?.getData(DataBoxKey.kFcmToken) ?? "";
+
+//     String baseUrl;
+
+//     switch (env) {
+//       case Environment.dev:
+//         baseUrl = ApiUrls.kStagingBaseURL;
+//         break;
+//       case Environment.prod:
+//         baseUrl = ApiUrls.kProdBaseURL;
+//         break;
+//       default:
+//         baseUrl = ApiUrls.kProdBaseURL;
+//     }
+
+//     dio
+//       ..options.baseUrl = baseUrl
+//       ..options.connectTimeout = const Duration(seconds: 6)
+//       ..options.receiveTimeout = const Duration(seconds: 6)
+//       ..options.headers = {
+//         'Content-Type': 'application/json; charset=UTF-8',
+//         // 'authorization': token,
+
+//         'lang': 'en',
+//       }
+//       ..interceptors.add(
+//           LogInterceptor(responseBody: true, requestBody: true, request: true))
+//       ..interceptors.add(InterceptorsWrapper(
+//         onError: (error, handler) {},
+//         onResponse: (response, handler) {
+//           response.headers.forEach((name, values) async {
+//             if (name == HttpHeaders.setCookieHeader) {
+//               final cookieMap = <String, String>{};
+//               for (var c in values) {
+//                 var key = '';
+//                 var value = '';
+//                 key = c.substring(0, c.indexOf('='));
+//                 value = c.substring(key.length + 1, c.indexOf(';'));
+//                 cookieMap[key] = value;
+//               }
+//               cookiesFormatted = '';
+//               cookieMap
+//                   .forEach((key, value) => cookiesFormatted += '$key=$value; ');
+//             }
+//           });
+//           handler.next(response);
+//         },
+//       ));
+
+//   }
+
 class ApiViewModel {
   Dio dio = Dio();
   String pro = '0.0';
+  String cookiesFormatted = '';
 
   ApiViewModel(String? env) {
-    String? token = hiveInstance?.getData(DataBoxKey.kFcmToken) ?? "";
-
     String baseUrl;
 
     switch (env) {
@@ -37,15 +96,42 @@ class ApiViewModel {
       ..options.receiveTimeout = const Duration(seconds: 6)
       ..options.headers = {
         'Content-Type': 'application/json; charset=UTF-8',
-        'authorization': token,
         'lang': 'en',
       }
       ..interceptors.add(
           LogInterceptor(responseBody: true, requestBody: true, request: true))
-      ..interceptors.add(InterceptorsWrapper(
-        onError: (error, handler) {},
-        onResponse: (response, handler) {},
-      ));
+      ..interceptors.add(InterceptorsWrapper(onError: (error, handler) {
+        // Handle errors here
+      }, onResponse: (response, handler) {
+        // Extract cookies from response headers
+        response.headers.forEach((name, values) async {
+          if (name == HttpHeaders.setCookieHeader) {
+            final cookieMap = <String, String>{};
+            for (var c in values) {
+              var key = '';
+              var value = '';
+              key = c.substring(0, c.indexOf('='));
+              value = c.substring(key.length + 1, c.indexOf(';'));
+              cookieMap[key] = value;
+            }
+            cookiesFormatted = '';
+            cookieMap
+                .forEach((key, value) => cookiesFormatted += '$key=$value; ');
+            hiveInstance!.saveData(DataBoxKey.cookie, cookiesFormatted);
+          }
+        });
+
+        // Continue with the response handler
+        handler.next(response);
+      }, onRequest: (options, handler) {
+        // Attach cookies to the request headers, if available
+        var cookies = hiveInstance!.getData(DataBoxKey.cookie);
+        log("cookiesss----->$cookies");
+        if (cookies != null) {
+          options.headers[HttpHeaders.cookieHeader] = cookiesFormatted;
+        }
+        handler.next(options);
+      }));
   }
 
   Future<T?> post<T>(
@@ -55,7 +141,8 @@ class ApiViewModel {
           data: data,
           options: Options(headers: {
             'Content-Type': 'application/json; charset=UTF-8',
-            'authorization': hiveInstance?.getData(DataBoxKey.kFcmToken),
+            // 'authorization': hiveInstance?.getData(DataBoxKey.kFcmToken),
+            'Cookie': hiveInstance?.getData(DataBoxKey.cookie),
             'lang': 'en',
           }));
       if (response.statusCode == 200) {
@@ -76,7 +163,8 @@ class ApiViewModel {
           queryParameters: data,
           options: Options(headers: {
             'Content-Type': 'application/json; charset=UTF-8',
-            'authorization': hiveInstance?.getData(DataBoxKey.kFcmToken),
+            // 'authorization': hiveInstance?.getData(DataBoxKey.kFcmToken),
+            'Cookie': hiveInstance?.getData(DataBoxKey.cookie),
             'lang': 'en',
           }));
       if (response.statusCode == 200) {
@@ -259,3 +347,4 @@ void handleApiException(int statusCode) {
   print(
       failure); // This will print the appropriate error message based on the status code
 }
+//    String? cookie = hiveInstance?.getData(DataBoxKey.cookie) ?? "";

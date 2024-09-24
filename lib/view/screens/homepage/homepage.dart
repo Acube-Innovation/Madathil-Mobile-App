@@ -4,6 +4,7 @@ import 'package:madathil/app_images.dart';
 import 'package:madathil/view/screens/attendance/attendance.dart';
 import 'package:madathil/view/screens/homepage/components/drawer_widget.dart';
 import 'package:madathil/view/screens/homepage/components/home_item_widget.dart';
+import 'package:madathil/view/screens/products/product_list.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -148,7 +149,12 @@ class HomePage extends StatelessWidget {
                 HomeItemWidget(
                   image: AppImages.productsImage,
                   title: "Products",
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => const PrdoductList()),
+                    );
+                  },
                 ),
                 const SizedBox(width: 8),
                 HomeItemWidget(

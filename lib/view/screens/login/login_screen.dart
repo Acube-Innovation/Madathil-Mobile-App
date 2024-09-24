@@ -5,6 +5,7 @@ import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
 import 'package:madathil/view/screens/common_widgets/custom_text_field.dart';
 import 'package:madathil/view/screens/customer_registration/customer_registration.dart';
+import 'package:madathil/view/screens/homepage/homepage.dart';
 import 'package:madathil/view/screens/products/product_list.dart';
 import 'package:madathil/view/screens/profile/profile_screen.dart';
 import 'package:madathil/viewmodel/auth_viewmodel.dart';
@@ -177,6 +178,16 @@ class LoginScreen extends StatelessWidget {
           width: double.maxFinite,
           onPressed: () {
             if (authVm.formKey.currentState!.validate()) {
+              authVm
+                  .login(username: emailCtlr.text, pwd: passwordCtlr.text)
+                  .then((value) {
+                if (value) {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const HomePage()));
+                } else {
+                  toast(authVm.errormsg, context);
+                }
+              });
             } else {
               toast("Required Field missing", context);
             }

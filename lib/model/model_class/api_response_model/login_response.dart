@@ -1,40 +1,23 @@
 class LoginResponse {
-  Message? message;
-
-  LoginResponse({this.message});
-
-  LoginResponse.fromJson(Map<String, dynamic> json) {
-    message =
-        json['message'] != null ? Message.fromJson(json['message']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if (message != null) {
-      data['message'] = message!.toJson();
-    }
-    return data;
-  }
-}
-
-class Message {
-  bool? success;
-  String? docName;
   String? message;
+  String? homePage;
+  String? fullName;
 
-  Message({this.success, this.docName, this.message});
+  LoginResponse({
+    this.message,
+    this.homePage,
+    this.fullName,
+  });
 
-  Message.fromJson(Map<String, dynamic> json) {
-    success = json['success'];
-    docName = json['doc_name'];
-    message = json['message'];
-  }
+  factory LoginResponse.fromJson(Map<String, dynamic> json) => LoginResponse(
+        message: json["message"],
+        homePage: json["home_page"],
+        fullName: json["full_name"],
+      );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['success'] = success;
-    data['doc_name'] = docName;
-    data['message'] = message;
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+        "message": message,
+        "home_page": homePage,
+        "full_name": fullName,
+      };
 }

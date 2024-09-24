@@ -1,9 +1,9 @@
 class ApiUrls {
   //dev endpoint
-  static const kStagingBaseURL = "https://jambotaxi.frappe.cloud";
+  static const kStagingBaseURL = 'https://madathiltest.frappe.cloud';
 
   //live endpoint
-  static const kProdBaseURL = "https://jambotaxi.frappe.cloud";
+  static const kProdBaseURL = 'https://madathiltest.frappe.cloud';
 
-  static const klogin = '/api/method/trip.v1.auth.generate_otp';
+  static const klogin = '/api/method/login';
 }
