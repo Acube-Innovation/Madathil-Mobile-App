@@ -18,6 +18,7 @@ class AppColors {
   static const Color amber = Colors.amber;
   static Color? amber50 = Colors.amber[50];
   static Color? amber100 = Colors.amber[100];
+  static Color? bgColor = const Color(0xffDEDEDE);
 
   static const Color transparent = Colors.transparent;
 }

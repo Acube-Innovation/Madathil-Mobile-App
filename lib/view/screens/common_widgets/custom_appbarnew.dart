@@ -6,9 +6,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final Widget? leading;
   final List<Widget>? actions;
+  final Color? bgcolor;
 
   const CustomAppBar(
-      {super.key, required this.title, this.leading, this.actions});
+      {super.key,
+      required this.title,
+      this.leading,
+      this.actions,
+      this.bgcolor});
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +26,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         title,
         style: Theme.of(context)
             .textTheme
-            .displayMedium!
+            .headlineMedium!
             .copyWith(color: AppColors.primeryColor),
       ),
-      backgroundColor: AppColors.white,
+      backgroundColor: bgcolor ?? AppColors.white,
       leading: leading ??
           GestureDetector(
             onTap: () {

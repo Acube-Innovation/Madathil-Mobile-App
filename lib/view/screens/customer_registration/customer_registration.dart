@@ -193,7 +193,7 @@ class CustomerRegistration extends StatelessWidget {
                         shape: BoxShape.circle,
                         color: AppColors.primeryColor,
                       ),
-                      child: Center(
+                      child: const Center(
                         child: Icon(
                           Icons.task_alt,
                           size: 60, // Adjust the size as needed

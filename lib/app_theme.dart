@@ -35,7 +35,7 @@ class AppTheme {
       displayMedium: TextStyle(
           fontSize: 20, color: AppColors.primeryColor, fontFamily: "Poppins"),
       titleLarge: TextStyle(
-          fontSize: 18,
+          fontSize: 20,
           fontWeight: FontWeight.bold,
           color: AppColors.primeryColor,
           fontFamily: "Poppins"),
