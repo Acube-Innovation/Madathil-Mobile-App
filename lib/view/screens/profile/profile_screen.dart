@@ -26,13 +26,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             color: AppColors.secondaryColor,
           ),
         ),
-        title: Text(
-          "Profile Details",
-          style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                height: 1.7,
-                color: AppColors.primeryColor,
-              ),
-        ),
+        title: "Profile Details",
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),

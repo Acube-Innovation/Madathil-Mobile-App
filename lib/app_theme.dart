@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:madathil/app_colors.dart';
+import 'package:madathil/utils/color/app_colors.dart';
 
 class AppTheme {
   static ThemeData appTheme = ThemeData(
     useMaterial3: false,
     scaffoldBackgroundColor: AppColors.white,
+    appBarTheme: const AppBarTheme(
+        backgroundColor: AppColors.white,
+        elevation: 0,
+        iconTheme: IconThemeData(color: AppColors.primeryColor)),
     elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-      backgroundColor: AppColors.primaryColor,
+      backgroundColor: AppColors.primeryColor,
       textStyle: const TextStyle(
-          fontSize: 14, fontWeight: FontWeight.bold, fontFamily: "Poppins"),
+          color: AppColors.white,
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+          fontFamily: "Poppins"),
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
     )),
@@ -17,30 +24,30 @@ class AppTheme {
       labelMedium: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
-          color: AppColors.primaryColor,
+          color: AppColors.primeryColor,
           fontFamily: "Poppins"),
       headlineLarge: TextStyle(
-          fontSize: 35, color: AppColors.primaryColor, fontFamily: "Poppins"),
+          fontSize: 35, color: AppColors.primeryColor, fontFamily: "Poppins"),
       headlineMedium: TextStyle(
-          fontSize: 25, color: AppColors.primaryColor, fontFamily: "Poppins"),
+          fontSize: 25, color: AppColors.primeryColor, fontFamily: "Poppins"),
       displayLarge: TextStyle(
-          fontSize: 25, color: AppColors.primaryColor, fontFamily: "Poppins"),
+          fontSize: 25, color: AppColors.primeryColor, fontFamily: "Poppins"),
       displayMedium: TextStyle(
-          fontSize: 20, color: AppColors.primaryColor, fontFamily: "Poppins"),
+          fontSize: 20, color: AppColors.primeryColor, fontFamily: "Poppins"),
       titleLarge: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
-          color: AppColors.primaryColor,
+          color: AppColors.primeryColor,
           fontFamily: "Poppins"),
       titleMedium: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
-          color: AppColors.primaryColor,
+          color: AppColors.primeryColor,
           fontFamily: "Poppins"),
       titleSmall: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.bold,
-          color: AppColors.primaryColor,
+          color: AppColors.primeryColor,
           fontFamily: "Poppins"),
       bodyLarge: TextStyle(
           fontSize: 20, color: AppColors.black, fontFamily: "Poppins"),
@@ -53,7 +60,7 @@ class AppTheme {
       hintStyle: const TextStyle(
           fontSize: 14, color: AppColors.grey, fontFamily: "Poppins"),
       floatingLabelStyle:
-          const TextStyle(color: AppColors.primaryColor, fontFamily: "Poppins"),
+          const TextStyle(color: AppColors.primeryColor, fontFamily: "Poppins"),
       contentPadding:
           const EdgeInsetsDirectional.symmetric(horizontal: 20, vertical: 5),
       enabledBorder: OutlineInputBorder(
@@ -62,7 +69,7 @@ class AppTheme {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10.0),
-        borderSide: const BorderSide(color: AppColors.primaryColor),
+        borderSide: const BorderSide(color: AppColors.primeryColor),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10.0),

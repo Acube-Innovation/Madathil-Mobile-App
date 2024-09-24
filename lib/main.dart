@@ -4,6 +4,7 @@ import 'package:madathil/app_theme.dart';
 import 'package:madathil/constants.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
 import 'package:madathil/model/services/local_db/hive_local.dart';
+import 'package:madathil/size_config.dart';
 import 'package:madathil/view/screens/homepage/homepage.dart';
 import 'package:madathil/view/screens/splash_screen/splash_screen.dart';
 import 'package:madathil/viewmodel/auth_viewmodel.dart';
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return MultiProvider(
       providers: providerList(),
       child: MaterialApp(

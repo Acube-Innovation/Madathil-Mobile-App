@@ -27,13 +27,7 @@ class _PrdoductListState extends State<PrdoductList> {
               color: AppColors.secondaryColor,
             ),
           ),
-          title: Text(
-            "Product List",
-            style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                  height: 1.7,
-                  color: AppColors.primeryColor,
-                ),
-          ),
+          title: "Product List",
           actions: const [
             Padding(
               padding: EdgeInsets.all(8.0),
@@ -97,9 +91,9 @@ class _PrdoductListState extends State<PrdoductList> {
                         color: Colors.white,
                       )),
                   enabled: true,
-                  disabledBorder: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(Radius.circular(5.0)),
-                    borderSide: BorderSide(color: AppColors.black!),
+                  disabledBorder: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                    borderSide: BorderSide(color: AppColors.black),
                   ),
                   border: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25.0)),
@@ -114,9 +108,9 @@ class _PrdoductListState extends State<PrdoductList> {
                     borderSide:
                         BorderSide(color: AppColors.primeryColor, width: 1),
                   ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(Radius.circular(25.0)),
-                    borderSide: BorderSide(color: AppColors.red!),
+                  errorBorder: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                    borderSide: BorderSide(color: AppColors.red),
                   ),
                   hintText: "Search",
                   counterText: "",
