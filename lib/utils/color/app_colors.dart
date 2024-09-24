@@ -8,6 +8,8 @@ class AppColors {
 
   static const Color black = Color(0xff000000);
   static const Color white = Color(0xffffffff);
+  static const Color orange = Color(0xFFFFA600);
+
   // static const Color grey = Color.fromARGB(255, 225, 225, 225);
   static const Color grey = Colors.grey;
   static const Color grey300 = Color(0xFFE0E0E0);

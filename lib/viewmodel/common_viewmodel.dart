@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:madathil/model/model_class/api_response_model/checkin_checkout_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/checkin_checkout_response.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
@@ -77,5 +79,74 @@ class CommonDataViewmodel extends ChangeNotifier {
   void selectIndex(int index) {
     _selectedIndex = index;
     notifyListeners();
+  }
+
+  //
+
+  String? _errormsg;
+  String? get errormsg => _errormsg;
+
+  bool? _isloading = false;
+  bool? get isloading => _isloading;
+
+  /*
+  * checin checkout api call
+  * */
+
+  Future<bool> employeeCheckin({String? logType}) async {
+    try {
+      _isloading = true;
+      CheckInCheckOutResponse? response =
+          await apiRepository.employeeCheckin(data: {
+        "employee": "HR-EMP-00278",
+        "log_type": logType,
+        "latitude": "9.76686867",
+        "longitude": "76.12312312"
+      });
+      if (response?.data != null) {
+        _isloading = false;
+        notifyListeners();
+        return true;
+      } else {
+        _isloading = false;
+        _errormsg = "";
+        notifyListeners();
+        return false;
+      }
+    } catch (e) {
+      _isloading = false;
+      _errormsg = e.toString();
+      return false;
+    }
+  }
+
+  /*
+  * checin checkout List api call
+  * */
+
+  CheckInCheckOutListResponse? _checkOutListResponse;
+  CheckInCheckOutListResponse? get checkOutListResponse =>
+      _checkOutListResponse;
+
+  Future<bool> employeeCheckinList({String? username, String? pwd}) async {
+    try {
+      _isloading = true;
+      CheckInCheckOutListResponse? response =
+          await apiRepository.employeeCheckinList();
+      if ((response?.data ?? []).isNotEmpty) {
+        _checkOutListResponse = response;
+        _isloading = false;
+        notifyListeners();
+        return true;
+      } else {
+        _isloading = false;
+        notifyListeners();
+        return false;
+      }
+    } catch (e) {
+      _isloading = false;
+      _errormsg = e.toString();
+      return false;
+    }
   }
 }

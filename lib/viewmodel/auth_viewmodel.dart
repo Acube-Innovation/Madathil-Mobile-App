@@ -1,10 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:madathil/model/model_class/api_response_model/login_response.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
-import 'package:madathil/utils/color/util_functions.dart';
 
 class AuthViewmodel extends ChangeNotifier {
   final ApiRepository apiRepository;
@@ -28,19 +25,16 @@ class AuthViewmodel extends ChangeNotifier {
     try {
       LoginResponse? response =
           await apiRepository.login(data: {"usr": username, "pwd": pwd});
-      if (UtilFunctions.checkAPIStatus(response?.message == 'Logged In') ??
-          false) {
+      if (response?.message == 'Logged In') {
         logindata = response;
         notifyListeners();
         return true;
       } else {
         _errormsg = "Invalid login credentials";
-        log(_errormsg.toString());
         notifyListeners();
         return false;
       }
     } catch (e) {
-      log(e.toString());
       _errormsg = e.toString();
       return false;
     }

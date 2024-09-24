@@ -5,7 +5,6 @@ import 'package:madathil/constants.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
 import 'package:madathil/model/services/local_db/hive_local.dart';
 import 'package:madathil/size_config.dart';
-import 'package:madathil/view/screens/homepage/homepage.dart';
 import 'package:madathil/view/screens/splash_screen/splash_screen.dart';
 import 'package:madathil/viewmodel/auth_viewmodel.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';

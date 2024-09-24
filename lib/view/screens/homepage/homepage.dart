@@ -5,6 +5,8 @@ import 'package:madathil/view/screens/attendance/attendance.dart';
 import 'package:madathil/view/screens/homepage/components/drawer_widget.dart';
 import 'package:madathil/view/screens/homepage/components/home_item_widget.dart';
 import 'package:madathil/view/screens/products/product_list.dart';
+import 'package:madathil/viewmodel/common_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -123,6 +125,8 @@ class HomePage extends StatelessWidget {
                   image: AppImages.attendaneImage,
                   title: "Attendance",
                   onTap: () {
+                    Provider.of<CommonDataViewmodel>(context, listen: false)
+                        .employeeCheckinList();
                     Navigator.push(
                         context,
                         MaterialPageRoute(

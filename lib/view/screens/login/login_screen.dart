@@ -7,7 +7,6 @@ import 'package:madathil/view/screens/common_widgets/custom_text_field.dart';
 import 'package:madathil/view/screens/customer_registration/customer_registration.dart';
 import 'package:madathil/view/screens/homepage/homepage.dart';
 import 'package:madathil/view/screens/products/product_list.dart';
-import 'package:madathil/view/screens/profile/profile_screen.dart';
 import 'package:madathil/viewmodel/auth_viewmodel.dart';
 import 'package:provider/provider.dart';
 
