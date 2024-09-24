@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:madathil/constants.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
 import 'package:madathil/model/services/local_db/hive_local.dart';
-import 'package:madathil/view/screens/splash_screen/splash_screen.dart';
+import 'package:madathil/view/screens/homepage/homepage.dart';
 import 'package:madathil/viewmodel/auth_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
           useMaterial3: true,
         ),
-        home: const SplashScreen(),
+        home: const HomePage(),
       ),
     );
   }
