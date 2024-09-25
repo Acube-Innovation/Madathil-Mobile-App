@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:madathil/utils/color/app_colors.dart';
-import 'package:madathil/app_colors.dart' as appColor;
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
 
 class TransactionItem extends StatelessWidget {
@@ -14,7 +13,7 @@ class TransactionItem extends StatelessWidget {
         height: 80,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
-            color: appColor.AppColors.primaryColor.withOpacity(0.3),
+            color: AppColors.primeryColor.withOpacity(0.3),
             borderRadius: BorderRadius.all(Radius.circular(20))),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

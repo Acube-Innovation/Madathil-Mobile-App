@@ -5,6 +5,7 @@ import 'package:madathil/view/screens/attendance/attendance.dart';
 import 'package:madathil/view/screens/homepage/components/drawer_widget.dart';
 import 'package:madathil/view/screens/homepage/components/home_item_widget.dart';
 import 'package:madathil/view/screens/products/product_list.dart';
+import 'package:madathil/view/screens/transactions/transaction_list.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:provider/provider.dart';
 

@@ -27,13 +27,7 @@ class _TransactionListState extends State<TransactionList> {
             color: AppColors.secondaryColor,
           ),
         ),
-        title: Text(
-          "Transaction List",
-          style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                height: 1.7,
-                color: AppColors.primeryColor,
-              ),
-        ),
+        title: 'Transactions'
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),

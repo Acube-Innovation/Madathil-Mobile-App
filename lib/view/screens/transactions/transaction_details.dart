@@ -19,13 +19,7 @@ class TransactionDetails extends StatelessWidget {
             color: AppColors.secondaryColor,
           ),
         ),
-        title: Text(
-          "Transaction Details",
-          style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                height: 1.7,
-                color: AppColors.primeryColor,
-              ),
-        ),
+        title: 'Transaction Details',
       ),
       body: Center(
         child: Padding(
