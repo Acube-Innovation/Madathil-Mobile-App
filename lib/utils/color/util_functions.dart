@@ -39,6 +39,57 @@ class UtilFunctions {
       return false;
     }
   }
+
+  static String? validateItemName(String? value) {
+    return value == null || value.isEmpty ? 'Item name is required' : null;
+  }
+
+  static String? validateClosedKw(String? value) {
+    return value == null || value.isEmpty ? 'Closed Kw is required' : null;
+  }
+
+  static String? validateItemMargin(String? value) {
+    return value == null || value.isEmpty ? 'Item margin is required' : null;
+  }
+
+  static String? validateItemExpense(String? value) {
+    return value == null || value.isEmpty ? 'Item expense is required' : null;
+  }
+
+  static String? validateBusiness(String? value) {
+    return value == null || value.isEmpty ? 'Business is required' : null;
+  }
+
+  static Future<void> selectDate(
+      BuildContext context, Function(DateTime) onDateSelected) async {
+    DateTime? selectedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(), // Default to current date
+      firstDate: DateTime(2000), // Minimum date
+      lastDate: DateTime(2100), // Maximum date
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: AppColors.primeryColor, // Header color
+              onPrimary: Colors.white, // Header text color
+              onSurface: Colors.black, // Text color
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.primeryColor, // Button color
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (selectedDate != null) {
+      onDateSelected(selectedDate); // Pass the selected date back to the caller
+    }
+  }
 }
 
 void toast(msg, BuildContext context, {bool? isError = false}) {

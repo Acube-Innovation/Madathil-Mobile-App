@@ -8,6 +8,7 @@ import 'package:madathil/view/screens/products/product_list.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:madathil/view/screens/transactions/transaction_list.dart';
+import 'package:madathil/view/screens/statments/closing_statements.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -208,7 +209,13 @@ class HomePage extends StatelessWidget {
                 HomeItemWidget(
                   image: AppImages.statementsImage,
                   title: "Statements",
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const ClosingStatmentsListScreen()));
+                  },
                 ),
                 const Expanded(child: SizedBox())
               ],
