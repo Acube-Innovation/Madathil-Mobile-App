@@ -23,4 +23,5 @@ class AppColors {
   static Color? bgColor = const Color(0xffDEDEDE);
 
   static const Color transparent = Colors.transparent;
+  static const Color malachit = Color(0xff21C622);
 }

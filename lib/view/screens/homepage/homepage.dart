@@ -4,6 +4,7 @@ import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/attendance/attendance.dart';
 import 'package:madathil/view/screens/homepage/components/drawer_widget.dart';
 import 'package:madathil/view/screens/homepage/components/home_item_widget.dart';
+import 'package:madathil/view/screens/orders/orders_screen.dart';
 import 'package:madathil/view/screens/products/product_list.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -161,7 +162,13 @@ class HomePage extends StatelessWidget {
                 HomeItemWidget(
                   image: AppImages.ordersImage,
                   title: "Orders",
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const OrderHistory(),
+                        ));
+                  },
                 ),
               ],
             ),

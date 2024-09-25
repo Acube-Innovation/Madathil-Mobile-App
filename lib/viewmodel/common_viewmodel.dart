@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_response.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
@@ -10,8 +11,26 @@ class CommonDataViewmodel extends ChangeNotifier {
   final ApiRepository apiRepository;
 
   CommonDataViewmodel({required this.apiRepository});
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   TextEditingController dobController = TextEditingController();
+
+  String _selectedValue = '';
+
+  String get selectedValue => _selectedValue;
+
+  void selectValue(String value) {
+    _selectedValue = value;
+    notifyListeners(); // Notify listeners when the value changes
+  }
+
+  String _selectedpayment = '';
+
+  String get selectedpayment => _selectedpayment;
+  void selectPayment(String value) {
+    _selectedpayment = value;
+    notifyListeners(); // Notify listeners when the value changes
+  }
 
   Future<void> selectDate(BuildContext context) async {
     final DateTime today = DateTime.now();
@@ -148,5 +167,29 @@ class CommonDataViewmodel extends ChangeNotifier {
       _errormsg = e.toString();
       return false;
     }
+  }
+
+  /*
+  * image picker
+  * */
+  final ImagePicker _picker = ImagePicker();
+
+  XFile? _pickedImage;
+
+  XFile? get pickedImage => _pickedImage;
+
+  Future<XFile?> pickImage(ImageSource source) async {
+    final XFile? image = await _picker.pickImage(source: source);
+
+    if (image != null) {
+      _pickedImage = image;
+      notifyListeners();
+    }
+    return pickedImage;
+  }
+
+  clearCustomerimage() {
+    _pickedImage = null;
+    notifyListeners();
   }
 }

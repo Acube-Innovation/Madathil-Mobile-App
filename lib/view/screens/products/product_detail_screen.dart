@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/view/screens/cart/cart_screen.dart';
 import 'package:madathil/view/screens/check_out/check_out_screen.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
@@ -237,21 +238,32 @@ class ProductDetailScreen extends StatelessWidget {
                                     },
                                   ),
                                   const Spacer(),
-                                  Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 6),
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: AppColors.white,
-                                          border: Border.all(
-                                              color: AppColors.primeryColor)),
-                                      child: const CustomPngImage(
-                                        imageName: 'assets/images/Add_cart.png',
-                                        boxFit: BoxFit.contain,
-                                      )),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const CartScreen(),
+                                          ));
+                                    },
+                                    child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 6),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color: AppColors.white,
+                                            border: Border.all(
+                                                color: AppColors.primeryColor)),
+                                        child: const CustomPngImage(
+                                          imageName:
+                                              'assets/images/Add_cart.png',
+                                          boxFit: BoxFit.contain,
+                                        )),
+                                  ),
                                 ],
-                              )
+                              ),
                             ],
                           ),
                         ),

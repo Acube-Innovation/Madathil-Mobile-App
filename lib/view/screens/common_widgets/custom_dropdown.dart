@@ -19,10 +19,10 @@ class CustomDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
       icon: const Icon(Icons.keyboard_arrow_down),
-      value: selectedItem ?? "",
+      value: selectedItem,
       hint: Text(
         hint,
-        style: Theme.of(context).textTheme.labelMedium!.copyWith(
+        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
               height: 1.7,
               color: AppColors.grey,
             ),

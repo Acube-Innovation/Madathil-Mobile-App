@@ -19,4 +19,12 @@ class AppImages {
   static const String termsImage = "assets/images/t_and_c.png";
   static const String supportImage = "assets/images/support.png";
   static const String logoutImage = "assets/images/logout.png";
+  static const String creditcardImage = "assets/images/Credit_Card.png";
+  static const String debitcardImage = "assets/images/Debit_card.png";
+  static const String cashImage = "assets/images/Cash.png";
+  static const String upiImage = "assets/images/upi.png";
+  static const String paymentSuccessImage = "assets/images/success.png";
+  static const String solarImage = "assets/images/solar.png";
+  static const String acImage = "assets/images/ac.png";
+  static const String shippingIcon = "assets/images/shipping.png";
 }

@@ -19,6 +19,10 @@ class UtilFunctions {
     return value == null || value.isEmpty ? 'address is required' : null;
   }
 
+  static String? validatepincode(String? value) {
+    return value == null || value.isEmpty ? 'pincode is required' : null;
+  }
+
   static String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Email is required';
