@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:madathil/size_config.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -22,7 +23,7 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialButton(
       onPressed: onPressed,
-      minWidth: width ?? 1.sw,
+      minWidth: width ?? SizeConfig.screenWidth,
       height: height ?? 45,
       color: color ?? AppColors.primeryColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

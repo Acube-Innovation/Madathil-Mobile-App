@@ -20,16 +20,20 @@ class AuthViewmodel extends ChangeNotifier {
   /*
   * login api call
   * */
-
-  Future<bool> login({String? phone}) async {
+  LoginResponse? logindata;
+  Future<bool> login({String? username, String? pwd}) async {
     try {
-      LoginResponse? sentotpResponse = await apiRepository
-          .login({"mobile_no": "9876543210", "action": "sign in"});
-      if (sentotpResponse?.message?.success ?? false) {
+      LoginResponse? response =
+          await apiRepository.login(data: {"usr": username, "pwd": pwd});
+      if (response?.message == 'Logged In') {
+        logindata = response;
+        notifyListeners();
         return true;
+      } else {
+        _errormsg = "Invalid login credentials";
+        notifyListeners();
+        return false;
       }
-      _errormsg = sentotpResponse?.message?.message;
-      return false;
     } catch (e) {
       _errormsg = e.toString();
       return false;

@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
+import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
+import 'package:madathil/view/screens/common_widgets/custom_dropdown.dart';
+import 'package:madathil/view/screens/common_widgets/custom_images.dart';
+import 'package:madathil/view/screens/common_widgets/custom_text_field.dart';
 import 'package:madathil/view/screens/products/widget/solar_product.dart';
+import 'package:madathil/viewmodel/auth_viewmodel.dart';
+import 'package:madathil/viewmodel/common_viewmodel.dart';
+import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class PrdoductList extends StatefulWidget {
   const PrdoductList({super.key});
@@ -13,6 +21,7 @@ class PrdoductList extends StatefulWidget {
 class _PrdoductListState extends State<PrdoductList> {
   @override
   Widget build(BuildContext context) {
+    final commonVm = Provider.of<CommonDataViewmodel>(context, listen: false);
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -27,19 +36,18 @@ class _PrdoductListState extends State<PrdoductList> {
               color: AppColors.secondaryColor,
             ),
           ),
-          title: Text(
-            "Product List",
-            style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                  height: 1.7,
-                  color: AppColors.primeryColor,
-                ),
-          ),
-          actions: const [
+          title: "Product List",
+          actions: [
             Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.tune,
-                color: AppColors.secondaryColor,
+              padding: const EdgeInsets.all(8.0),
+              child: GestureDetector(
+                onTap: () {
+                  showfilterPopup(context);
+                },
+                child: const Icon(
+                  Icons.tune,
+                  color: AppColors.secondaryColor,
+                ),
               ),
             )
           ],
@@ -97,9 +105,9 @@ class _PrdoductListState extends State<PrdoductList> {
                         color: Colors.white,
                       )),
                   enabled: true,
-                  disabledBorder: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(Radius.circular(5.0)),
-                    borderSide: BorderSide(color: AppColors.black!),
+                  disabledBorder: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                    borderSide: BorderSide(color: AppColors.black),
                   ),
                   border: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25.0)),
@@ -114,9 +122,9 @@ class _PrdoductListState extends State<PrdoductList> {
                     borderSide:
                         BorderSide(color: AppColors.primeryColor, width: 1),
                   ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(Radius.circular(25.0)),
-                    borderSide: BorderSide(color: AppColors.red!),
+                  errorBorder: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                    borderSide: BorderSide(color: AppColors.red),
                   ),
                   hintText: "Search",
                   counterText: "",
@@ -145,7 +153,144 @@ class _PrdoductListState extends State<PrdoductList> {
             ),
           ]),
         ),
+        floatingActionButton: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: AppColors.primeryColor,
+            ),
+            child: const Icon(
+              size: 30,
+              Icons.shopping_cart,
+              color: Colors.white,
+            )),
       ),
+    );
+  }
+
+  void showfilterPopup(BuildContext context) {
+    // Wrap the logic that accesses MediaQuery in a Builder
+    final commonVm = Provider.of<CommonDataViewmodel>(context, listen: false);
+    showModalBottomSheet(
+      isDismissible: true,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (BuildContext context) {
+        final popupHeight =
+            MediaQuery.of(context).size.height * 0.6; // Calculate height here
+        return Stack(
+          children: [
+            SingleChildScrollView(
+              child: ClipRRect(
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(20)),
+                child: Container(
+                  color: AppColors.white,
+                  padding: const EdgeInsets.all(5),
+                  height: popupHeight, // Use the calculated height
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 20),
+                    child: Consumer<CommonDataViewmodel>(
+                        builder: (context, cdv, _) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.tune,
+                                color: AppColors.black,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "Filter",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge!
+                                    .copyWith(
+                                      height: 1.7,
+                                      color: AppColors.black,
+                                    ),
+                              )
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          GestureDetector(
+                            onTap: () {
+                              commonVm.selectDate(context);
+                            },
+                            child: AbsorbPointer(
+                              child: CustomTextField(
+                                controller: cdv.dobController,
+                                hint: 'Enter DOB',
+                                suffixIcon: const Icon(Icons.calendar_month),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 15),
+
+                          CustomDropdown(
+                            hint: 'Select Brand',
+                            items: const ["Brand", "LG"],
+                            selectedItem: 'Brand',
+                            onChanged: (String? value) {},
+                          ),
+                          const SizedBox(height: 15),
+
+                          CustomDropdown(
+                            hint: 'Select Size',
+                            items: const ["Size", "walt"],
+                            selectedItem: 'Size',
+                            onChanged: (String? value) {},
+                          ),
+
+                          const SizedBox(height: 30),
+
+                          // Provides spacing before the button
+                          const Spacer(),
+                          CustomButton(
+                            height: 44,
+                            width: double.infinity,
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            text: "Apply",
+                          )
+                        ],
+                      );
+                    }),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top:
+                  -5, // Adjust position to place it outside the bottom sheet content
+              left: 0,
+              right: 0,
+
+              child: Shimmer.fromColors(
+                  baseColor: AppColors.grey300,
+                  highlightColor: AppColors.grey300.withOpacity(0.2),
+                  period: const Duration(seconds: 5),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 120, vertical: 10),
+                    child: Container(
+                      height: 6,
+                      decoration: BoxDecoration(
+                          color: AppColors.grey,
+                          borderRadius: BorderRadius.circular(15)),
+                    ),
+                  )),
+            )
+          ],
+        );
+      },
     );
   }
 }

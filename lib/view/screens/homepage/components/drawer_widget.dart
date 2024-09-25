@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:madathil/app_images.dart';
+import 'package:madathil/view/screens/profile/profile_screen.dart';
 
 class DrawerWidget extends StatelessWidget {
   const DrawerWidget({super.key});
@@ -21,7 +22,11 @@ class DrawerWidget extends StatelessWidget {
           const SizedBox(height: 20),
           const Divider(indent: 20, endIndent: 20),
           const SizedBox(height: 20),
-          drawerItem("My Profile", AppImages.profileImage, () {}),
+          drawerItem("My Profile", AppImages.profileImage, () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const ProfileScreen()),
+            );
+          }),
           const SizedBox(height: 20),
           drawerItem("Service History", AppImages.serviceHistoryImage, () {}),
           const SizedBox(height: 20),

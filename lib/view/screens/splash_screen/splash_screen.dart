@@ -52,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Shimmer.fromColors(
           baseColor: AppColors.primeryColor,
           highlightColor: AppColors.secondaryColor.withOpacity(0.2),
-          period: const Duration(seconds: 5),
+          period: const Duration(seconds: 3),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: List.generate(4, (index) {

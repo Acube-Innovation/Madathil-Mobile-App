@@ -1,10 +1,14 @@
 // ignore_for_file: type_literal_in_constant_pattern
 
 import 'dart:async';
-import 'dart:convert';
+import 'dart:io';
+import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:madathil/constants.dart';
+import 'package:madathil/model/model_class/api_response_model/checkin_checkout_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/checkin_checkout_response.dart';
 import 'package:madathil/model/model_class/api_response_model/general_response.dart';
 import 'package:madathil/model/model_class/api_response_model/login_response.dart';
 import 'package:madathil/model/model_class/local/environment.dart';
@@ -14,10 +18,9 @@ import 'package:madathil/model/services/local_db/hive_constants.dart';
 class ApiViewModel {
   Dio dio = Dio();
   String pro = '0.0';
+  CookieJar cookieJar = CookieJar();
 
   ApiViewModel(String? env) {
-    String? token = hiveInstance?.getData(DataBoxKey.kFcmToken) ?? "";
-
     String baseUrl;
 
     switch (env) {
@@ -36,28 +39,60 @@ class ApiViewModel {
       ..options.connectTimeout = const Duration(seconds: 6)
       ..options.receiveTimeout = const Duration(seconds: 6)
       ..options.headers = {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'authorization': token,
-        'lang': 'en',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
       }
+      ..interceptors.add(CookieManager(cookieJar))
       ..interceptors.add(
-          LogInterceptor(responseBody: true, requestBody: true, request: true))
-      ..interceptors.add(InterceptorsWrapper(
-        onError: (error, handler) {},
-        onResponse: (response, handler) {},
-      ));
+          LogInterceptor(responseBody: true, requestBody: true, request: true));
+  }
+
+  Future<T?> login<T>(
+      {required String apiUrl, required Map<String, dynamic>? data}) async {
+    try {
+      Response response = await dio.post(apiUrl, data: data);
+      if (response.headers[HttpHeaders.setCookieHeader] != null) {
+        List<String>? setCookies =
+            response.headers[HttpHeaders.setCookieHeader];
+        if (setCookies != null) {
+          for (var cookie in setCookies) {
+            await cookieJar.saveFromResponse(Uri.parse(dio.options.baseUrl),
+                [Cookie.fromSetCookieValue(cookie)]);
+          }
+        }
+      }
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> cookies = {};
+        final savedCookies =
+            await cookieJar.loadForRequest(Uri.parse(dio.options.baseUrl));
+        for (var cookie in savedCookies) {
+          cookies[cookie.name] = cookie.value;
+        }
+        hiveInstance?.saveData(DataBoxKey.cookie, cookies);
+
+        return fromJson<T>(response.data);
+      } else {
+        throw Failure.fromCode(response.statusCode ?? ResponseCode.DEFAULT);
+      }
+    } on DioException catch (error) {
+      throw Failure.fromCode(
+          error.response?.statusCode ?? ResponseCode.DEFAULT);
+    }
   }
 
   Future<T?> post<T>(
       {required String apiUrl, Map<String, dynamic>? data}) async {
     try {
-      Response response = await dio.post(apiUrl,
-          data: data,
-          options: Options(headers: {
-            'Content-Type': 'application/json; charset=UTF-8',
-            'authorization': hiveInstance?.getData(DataBoxKey.kFcmToken),
-            'lang': 'en',
-          }));
+      Map<String, dynamic>? savedCookies =
+          hiveInstance?.getData(DataBoxKey.cookie);
+      if (savedCookies != null && savedCookies.isNotEmpty) {
+        dio.options.headers[HttpHeaders.cookieHeader] =
+            savedCookies.entries.map((e) => '${e.key}=${e.value}').join('; ');
+      }
+
+      Response response = await dio.post(apiUrl, data: data);
+
       if (response.statusCode == 200) {
         return fromJson<T>(response.data);
       } else {
@@ -70,42 +105,17 @@ class ApiViewModel {
   }
 
   Future<T?> get<T>(
-      {required String apiUrl, Map<String, dynamic>? data}) async {
+      {required String apiUrl, Map<String, dynamic>? params}) async {
     try {
-      Response response = await dio.get(apiUrl,
-          queryParameters: data,
-          options: Options(headers: {
-            'Content-Type': 'application/json; charset=UTF-8',
-            'authorization': hiveInstance?.getData(DataBoxKey.kFcmToken),
-            'lang': 'en',
-          }));
-      if (response.statusCode == 200) {
-        return fromJson<T>(response.data);
-      } else {
-        // if (response.statusCode == 401) {
-        //   hiveInstance?.deleteData(DataBoxKey.kFcmToken);
-        //   redirect.Get.to(const LoginScreen());
-        // } else
-        {
-          throw Failure.fromCode(response.statusCode ?? ResponseCode.DEFAULT);
-        }
+      Map<String, dynamic>? savedCookies =
+          hiveInstance?.getData(DataBoxKey.cookie);
+      if (savedCookies != null && savedCookies.isNotEmpty) {
+        dio.options.headers[HttpHeaders.cookieHeader] =
+            savedCookies.entries.map((e) => '${e.key}=${e.value}').join('; ');
       }
-    } on DioException catch (error) {
-      throw Failure.fromCode(
-          error.response?.statusCode ?? ResponseCode.DEFAULT);
-    }
-  }
 
-  Future<T?> put<T>(
-      {required String apiUrl, Map<String, dynamic>? data}) async {
-    try {
-      Response response = await dio.put(apiUrl,
-          data: data,
-          options: Options(headers: {
-            'Content-Type': 'application/json; charset=UTF-8',
-            'authorization': hiveInstance?.getData(DataBoxKey.kFcmToken),
-            'lang': 'en',
-          }));
+      Response response = await dio.get(apiUrl, queryParameters: params);
+
       if (response.statusCode == 200) {
         return fromJson<T>(response.data);
       } else {
@@ -117,63 +127,17 @@ class ApiViewModel {
     }
   }
 
-  Future<T?> delete<T>(
-      {required String apiUrl, Map<String, dynamic>? data}) async {
-    try {
-      Response response = await dio.delete(apiUrl,
-          data: data,
-          options: Options(headers: {
-            'Content-Type': 'application/json; charset=UTF-8',
-            'authorization': hiveInstance?.getData(DataBoxKey.kFcmToken),
-            'lang': 'en',
-          }));
-      if (response.statusCode == 200) {
-        return fromJson<T>(response.data);
-      } else {
-        throw Failure.fromCode(response.statusCode ?? ResponseCode.DEFAULT);
-      }
-    } on DioException catch (error) {
-      throw Failure.fromCode(
-          error.response?.statusCode ?? ResponseCode.DEFAULT);
-    }
-  }
-
-  Future<T?> postFormdata<T>({required String apiUrl, required data}) async {
-    String? token = hiveInstance?.getData(DataBoxKey.kFcmToken) ?? "";
-    try {
-      Response response = await dio.post(
-        apiUrl,
-        data: data,
-        options: Options(headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'authorization': token,
-          'lang': 'en'
-        }),
-        onSendProgress: (sent, total) {
-          String percentage = (sent / total * 100).toStringAsFixed(2);
-          pro = percentage;
-        },
-      );
-      if (response.statusCode == 200) {
-        return fromJson<T>(response.data);
-      } else {
-        throw Failure.fromCode(response.statusCode ?? ResponseCode.DEFAULT);
-      }
-    } on DioException catch (error) {
-      throw Failure.fromCode(
-          error.response?.statusCode ?? ResponseCode.DEFAULT);
-    }
-  }
-
+  // Convert response to respective model classes
   T fromJson<T>(Map<String, dynamic> json) {
-    debugPrint(jsonEncode(json));
     switch (T) {
-      //add api response classes here as new case.
       case GeneralResponse:
         return GeneralResponse.fromJson(json) as T;
       case LoginResponse:
         return LoginResponse.fromJson(json) as T;
-
+      case CheckInCheckOutResponse:
+        return CheckInCheckOutResponse.fromJson(json) as T;
+      case CheckInCheckOutListResponse:
+        return CheckInCheckOutListResponse.fromJson(json) as T;
       default:
         throw FromJsonNotImplementedException();
     }

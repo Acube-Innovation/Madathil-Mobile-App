@@ -31,6 +31,14 @@ class UtilFunctions {
   static String? validatePassword(String? value) {
     return value == null || value.isEmpty ? 'Password is required' : null;
   }
+
+  static bool checkAPIStatus(bool? status) {
+    if (status == true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
 
 void toast(msg, BuildContext context, {bool? isError = false}) {

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:madathil/app_colors.dart';
 import 'package:madathil/app_images.dart';
+import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/attendance/attendance.dart';
 import 'package:madathil/view/screens/homepage/components/drawer_widget.dart';
 import 'package:madathil/view/screens/homepage/components/home_item_widget.dart';
-import 'package:madathil/view/screens/transactions/transaction_list.dart';
+import 'package:madathil/view/screens/products/product_list.dart';
+import 'package:madathil/viewmodel/common_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -14,17 +16,12 @@ class HomePage extends StatelessWidget {
     return Scaffold(
         drawer: const DrawerWidget(),
         appBar: AppBar(
-          title: const Text(
-            "Hi, User!",
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+          title:
+              Text("Hi, User!", style: Theme.of(context).textTheme.titleSmall),
           actions: [
             Padding(
-              padding: const EdgeInsets.only(right: 10.0),
-              child: Image.asset(AppImages.userImage, height: 25),
+              padding: const EdgeInsets.only(right: 20.0, top: 10, bottom: 10),
+              child: Image.asset(AppImages.userImage, height: 20),
             )
           ],
         ),
@@ -128,6 +125,8 @@ class HomePage extends StatelessWidget {
                   image: AppImages.attendaneImage,
                   title: "Attendance",
                   onTap: () {
+                    Provider.of<CommonDataViewmodel>(context, listen: false)
+                        .employeeCheckinList();
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -149,7 +148,12 @@ class HomePage extends StatelessWidget {
                 HomeItemWidget(
                   image: AppImages.productsImage,
                   title: "Products",
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => const PrdoductList()),
+                    );
+                  },
                 ),
                 const SizedBox(width: 8),
                 HomeItemWidget(

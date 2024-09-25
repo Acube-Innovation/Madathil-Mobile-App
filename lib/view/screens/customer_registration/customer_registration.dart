@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:madathil/utils/color/util_functions.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
@@ -194,7 +193,7 @@ class CustomerRegistration extends StatelessWidget {
                         shape: BoxShape.circle,
                         color: AppColors.primeryColor,
                       ),
-                      child: Center(
+                      child: const Center(
                         child: Icon(
                           Icons.task_alt,
                           size: 60, // Adjust the size as needed

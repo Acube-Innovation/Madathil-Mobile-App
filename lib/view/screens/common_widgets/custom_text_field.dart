@@ -70,9 +70,9 @@ class CustomTextField extends StatelessWidget {
       decoration: InputDecoration(
         suffixIcon: suffixIcon,
         enabled: true,
-        disabledBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(5.0)),
-          borderSide: BorderSide(color: AppColors.black!),
+        disabledBorder: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+          borderSide: BorderSide(color: AppColors.black),
         ),
         border: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -86,9 +86,9 @@ class CustomTextField extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(5.0)),
           borderSide: BorderSide(color: AppColors.primeryColor, width: 2),
         ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(5.0)),
-          borderSide: BorderSide(color: AppColors.red!),
+        errorBorder: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+          borderSide: BorderSide(color: AppColors.red),
         ),
         hintText: hint,
         counterText: "",
