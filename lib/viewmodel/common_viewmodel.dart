@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_response.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
@@ -147,6 +148,137 @@ class CommonDataViewmodel extends ChangeNotifier {
       _isloading = false;
       _errormsg = e.toString();
       return false;
+    }
+  }
+
+  ///// add point in ui
+
+  List<TextEditingController> _noteControllers = [];
+
+  // Getter for the list of note controllers
+  List<TextEditingController> get noteControllers => _noteControllers;
+
+  // Method to add a new call point field (new TextEditingController)
+  void addNoteField() {
+    _noteControllers.add(TextEditingController());
+    notifyListeners();
+  }
+
+  // Method to remove a call point field based on index
+  void removeNoteField(int index) {
+    _noteControllers[index]
+        .dispose(); // Dispose the controller to avoid memory leaks
+    _noteControllers.removeAt(index);
+    notifyListeners();
+  }
+
+  void disposeControllers() {
+    for (var controller in _noteControllers) {
+      controller.dispose();
+    }
+    _noteControllers.clear();
+    notifyListeners();
+  }
+
+  ///// Set reminder
+
+  DateTime? selectedReminderDate;
+  TimeOfDay? selectedReminderTime;
+
+  // Function to set the selected date
+  void setReminderDate(DateTime date) {
+    selectedReminderDate = date;
+    notifyListeners();
+  }
+
+  // Function to set the selected time
+  void setReminderTime(TimeOfDay time) {
+    selectedReminderTime = time;
+    notifyListeners();
+  }
+
+  // Function to clear the reminder
+  void clearReminder() {
+    selectedReminderDate = null;
+    selectedReminderTime = null;
+    notifyListeners();
+  }
+
+  // Helper function to format the selected date and time to "dd MM yyyy, hh mm"
+  String formatSelectedDateTime() {
+    if (selectedReminderDate != null && selectedReminderTime != null) {
+      final DateTime fullDateTime = DateTime(
+        selectedReminderDate!.year,
+        selectedReminderDate!.month,
+        selectedReminderDate!.day,
+        selectedReminderTime!.hour,
+        selectedReminderTime!.minute,
+      );
+      return DateFormat('dd/MM/yyyy, hh:mm aa')
+          .format(fullDateTime); // Changed format to "dd MM yyyy, hh mm"
+    } else if (selectedReminderDate != null) {
+      return DateFormat('dd MM yyyy')
+          .format(selectedReminderDate!); // Only date
+    } else {
+      return "No Reminder Set";
+    }
+  }
+
+  // Function to pick a date
+  Future<void> selectDateR(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2100),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: AppColors.primeryColor, // Header color
+              onPrimary: Colors.white, // Header text color
+              onSurface: Colors.black, // Text color
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.primeryColor, // Button color
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (pickedDate != null) {
+      setReminderDate(pickedDate);
+    }
+  }
+
+  // Function to pick a time
+  Future<void> selectTime(BuildContext context) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: AppColors.primeryColor, // Header color
+              onPrimary: Colors.white, // Header text color
+              onSurface: Colors.black, // Text color
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.primeryColor, // Button color
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (pickedTime != null) {
+      setReminderTime(pickedTime);
     }
   }
 }

@@ -60,6 +60,18 @@ class UtilFunctions {
     return value == null || value.isEmpty ? 'Business is required' : null;
   }
 
+    static String? validateCalltitle(String? value) {
+    return value == null || value.isEmpty ? 'Call title is required' : null;
+  }
+
+      static String? validatePoints(String? value) {
+    return value == null || value.isEmpty ? 'Call title is required' : null;
+  }
+
+      static String? validateNote(String? value) {
+    return value == null || value.isEmpty ? 'Note is required' : null;
+  }
+
   static Future<void> selectDate(
       BuildContext context, Function(DateTime) onDateSelected) async {
     DateTime? selectedDate = await showDatePicker(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:madathil/app_images.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/attendance/attendance.dart';
+import 'package:madathil/view/screens/call_management/call_list_screen.dart';
 import 'package:madathil/view/screens/homepage/components/drawer_widget.dart';
 import 'package:madathil/view/screens/homepage/components/home_item_widget.dart';
 import 'package:madathil/view/screens/products/product_list.dart';
@@ -183,7 +184,10 @@ class HomePage extends StatelessWidget {
                 HomeItemWidget(
                   image: AppImages.callListImage,
                   title: "Call List",
-                  onTap: () {},
+                  onTap: () {
+
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const CallListScreen()));
+                  },
                 ),
               ],
             ),
