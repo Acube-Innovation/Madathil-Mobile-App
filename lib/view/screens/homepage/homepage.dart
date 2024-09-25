@@ -4,6 +4,7 @@ import 'package:madathil/app_images.dart';
 import 'package:madathil/view/screens/attendance/attendance.dart';
 import 'package:madathil/view/screens/homepage/components/drawer_widget.dart';
 import 'package:madathil/view/screens/homepage/components/home_item_widget.dart';
+import 'package:madathil/view/screens/transactions/transaction_list.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -164,7 +165,13 @@ class HomePage extends StatelessWidget {
                 HomeItemWidget(
                   image: AppImages.transactionsImage,
                   title: "Transactions",
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TransactionList(),
+                        ));
+                  },
                 ),
                 const SizedBox(width: 8),
                 HomeItemWidget(
