@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:madathil/model/model_class/api_response_model/attendance_list_response.dart';
 import 'package:intl/intl.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_response.dart';
@@ -153,7 +154,7 @@ class CommonDataViewmodel extends ChangeNotifier {
 
   ///// add point in ui
 
-  List<TextEditingController> _noteControllers = [];
+  final List<TextEditingController> _noteControllers = [];
 
   // Getter for the list of note controllers
   List<TextEditingController> get noteControllers => _noteControllers;
@@ -279,6 +280,34 @@ class CommonDataViewmodel extends ChangeNotifier {
     );
     if (pickedTime != null) {
       setReminderTime(pickedTime);
+    }
+  }
+
+  /*
+  * attendance List api call
+  * */
+
+  AttendanceList? _attendanceList;
+  AttendanceList? get attendanceList => _attendanceList;
+
+  Future<bool> getAttendanceList() async {
+    try {
+      _isloading = true;
+      AttendanceList? response = await apiRepository.getAttendanceList();
+      if ((response?.data ?? []).isNotEmpty) {
+        _attendanceList = response;
+        _isloading = false;
+        notifyListeners();
+        return true;
+      } else {
+        _isloading = false;
+        notifyListeners();
+        return false;
+      }
+    } catch (e) {
+      _isloading = false;
+      _errormsg = e.toString();
+      return false;
     }
   }
 }

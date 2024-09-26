@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:madathil/constants.dart';
+import 'package:madathil/model/model_class/api_response_model/attendance_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_response.dart';
 import 'package:madathil/model/model_class/api_response_model/general_response.dart';
@@ -138,6 +139,9 @@ class ApiViewModel {
         return CheckInCheckOutResponse.fromJson(json) as T;
       case CheckInCheckOutListResponse:
         return CheckInCheckOutListResponse.fromJson(json) as T;
+      case AttendanceList:
+        return AttendanceList.fromJson(json) as T;
+
       default:
         throw FromJsonNotImplementedException();
     }

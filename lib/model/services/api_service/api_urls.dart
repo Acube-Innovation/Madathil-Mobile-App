@@ -10,5 +10,5 @@ class ApiUrls {
       '/api/resource/Employee Checkin?fields=["name", "time", "log_type"]&filters={"employee": "HR-EMP-00278", "date": "2023-09-28"}&order_by=modified desc';
   static const kCheckinCheckout = '/api/resource/Employee Checkin';
   static const kAttendanceHistory =
-      '/api/resource/Employee Checkin?fields=["employee", "date", "modified"]&filters={"employee": "HR-EMP-00278", "date": "2023-09-21"}&order_by=modified desc&limit=10&limit_start=0';
+      '/api/resource/Attendance?fields=["name", "attendance_date", "employee_in_time", "employee_out_time", "status", "city", "state", "area"]&filters={"employee": "HR-EMP-00145", "attendance_date": ["between", ["2024-04-10", "2024-05-10"]]}';
 }

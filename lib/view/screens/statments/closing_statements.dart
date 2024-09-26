@@ -111,13 +111,9 @@ class _ClosingStatmentsListScreenState
                 ),
               ),
             ),
-
             const SizedBox(
               height: 15,
             ),
-
-            //closing statment items
-
             const Expanded(child: ClosingStatementItem())
           ],
         ),
