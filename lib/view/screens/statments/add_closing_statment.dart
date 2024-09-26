@@ -4,6 +4,7 @@ import 'package:madathil/utils/color/util_functions.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
 import 'package:madathil/view/screens/common_widgets/custom_text_field.dart';
+import 'package:madathil/view/screens/points/points_congrats_screen.dart';
 
 class AddClosingStatment extends StatelessWidget {
   const AddClosingStatment({super.key});
@@ -190,6 +191,11 @@ class AddClosingStatment extends StatelessWidget {
                   width: double.maxFinite,
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const CongratulationsScreen()));
                     } else {
                       toast("Required Field missing", context);
                     }

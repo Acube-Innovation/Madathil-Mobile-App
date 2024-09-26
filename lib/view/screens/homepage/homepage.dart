@@ -7,6 +7,7 @@ import 'package:madathil/view/screens/homepage/components/drawer_widget.dart';
 import 'package:madathil/view/screens/homepage/components/home_item_widget.dart';
 import 'package:madathil/view/screens/leads/leads_screen.dart';
 import 'package:madathil/view/screens/products/product_list.dart';
+import 'package:madathil/view/screens/service/service_history_screen.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:madathil/view/screens/transactions/transaction_list.dart';
@@ -190,8 +191,10 @@ class HomePage extends StatelessWidget {
                   image: AppImages.callListImage,
                   title: "Call List",
                   onTap: () {
-
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const CallListScreen()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const CallListScreen()));
                   },
                 ),
               ],
@@ -208,7 +211,13 @@ class HomePage extends StatelessWidget {
                 HomeItemWidget(
                   image: AppImages.serviceListImage,
                   title: "Service List",
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const ServiceHistoryScreen()));
+                  },
                 ),
               ],
             ),

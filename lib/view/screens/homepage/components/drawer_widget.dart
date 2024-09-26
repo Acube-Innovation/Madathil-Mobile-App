@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:madathil/app_images.dart';
+import 'package:madathil/view/screens/Referal/referal_screen.dart';
+import 'package:madathil/view/screens/points/customer_points_screen.dart';
 import 'package:madathil/view/screens/profile/profile_screen.dart';
 
 class DrawerWidget extends StatelessWidget {
@@ -33,7 +35,23 @@ class DrawerWidget extends StatelessWidget {
           drawerItem(
               "Attendance History", AppImages.attendancehistoryImage, () {}),
           const SizedBox(height: 20),
-          drawerItem("Points", AppImages.pointsImage, () {}),
+          drawerItem("Points", AppImages.pointsImage, () {
+
+              Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const CustomerPointsScreen()),
+            );
+            
+
+          }),
+               const SizedBox(height: 20),
+          drawerItem("Referal", AppImages.pointsImage, () {
+
+              Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const ReferalScreen()),
+            );
+            
+
+          }),
           const SizedBox(height: 20),
           drawerItem("Settings", AppImages.settingsImage, () {}),
           const SizedBox(height: 20),
