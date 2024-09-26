@@ -12,6 +12,7 @@ import 'package:madathil/model/model_class/api_response_model/checkin_checkout_l
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_response.dart';
 import 'package:madathil/model/model_class/api_response_model/general_response.dart';
 import 'package:madathil/model/model_class/api_response_model/login_response.dart';
+import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
 import 'package:madathil/model/model_class/local/environment.dart';
 import 'package:madathil/model/services/api_service/api_urls.dart';
 import 'package:madathil/model/services/local_db/hive_constants.dart';
@@ -141,6 +142,8 @@ class ApiViewModel {
         return CheckInCheckOutListResponse.fromJson(json) as T;
       case AttendanceList:
         return AttendanceList.fromJson(json) as T;
+      case ProductListResponse:
+        return ProductListResponse.fromJson(json) as T;
 
       default:
         throw FromJsonNotImplementedException();

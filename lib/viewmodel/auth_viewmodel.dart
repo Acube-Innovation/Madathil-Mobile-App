@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:madathil/model/model_class/api_response_model/login_response.dart';
@@ -35,6 +37,7 @@ class AuthViewmodel extends ChangeNotifier {
         return false;
       }
     } catch (e) {
+      log(e.toString());
       _errormsg = e.toString();
       return false;
     }

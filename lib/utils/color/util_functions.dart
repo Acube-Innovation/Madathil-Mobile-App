@@ -114,12 +114,24 @@ class UtilFunctions {
       barrierDismissible: false,
       useSafeArea: false,
       context: context,
-      barrierColor: Colors.white,
+      barrierColor: Colors.transparent,
       builder: (BuildContext context) {
-        return const Center(
-          child: CupertinoAlertDialog(
-              content: CupertinoActivityIndicator(animating: true, radius: 15)),
-        );
+        return Center(
+            child: Card(
+          color: AppColors.screenBgColor,
+          elevation: 1,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: const Padding(
+            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+            child: CupertinoActivityIndicator(
+              animating: true,
+              radius: 15,
+              color: AppColors.territoryColor,
+            ),
+          ),
+        ));
       },
     );
   }

@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:custom_date_range_picker/custom_date_range_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/cart/cart_screen.dart';
@@ -9,6 +12,7 @@ import 'package:madathil/view/screens/common_widgets/custom_text_field.dart';
 import 'package:madathil/view/screens/products/widget/solar_product.dart';
 import 'package:madathil/viewmodel/auth_viewmodel.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
+import 'package:madathil/viewmodel/product_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -23,6 +27,7 @@ class _PrdoductListState extends State<PrdoductList> {
   @override
   Widget build(BuildContext context) {
     final commonVm = Provider.of<CommonDataViewmodel>(context, listen: false);
+    final productVm = Provider.of<ProductViewmodel>(context, listen: false);
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -70,7 +75,7 @@ class _PrdoductListState extends State<PrdoductList> {
                 dividerColor: Colors.transparent,
                 labelStyle: Theme.of(context).textTheme.headlineSmall!,
                 onTap: (index) {
-                  // bookinVm.setTabIndex(index);
+                  productVm.setTabIndex(index);
                 },
                 indicatorSize: TabBarIndicatorSize.tab,
                 labelColor: AppColors.white,
@@ -145,9 +150,13 @@ class _PrdoductListState extends State<PrdoductList> {
             const Expanded(
               child: TabBarView(
                 children: [
-                  SolarProductList(),
+                  SolarProductList(
+                    issolarProduct: true,
+                  ),
                   // Return a BookingCard for each item
-                  SolarProductList()
+                  SolarProductList(
+                    issolarProduct: false,
+                  )
                   // Return a BookingCard for each item
                 ],
               ),
@@ -180,7 +189,7 @@ class _PrdoductListState extends State<PrdoductList> {
 
   void showfilterPopup(BuildContext context) {
     // Wrap the logic that accesses MediaQuery in a Builder
-    final commonVm = Provider.of<CommonDataViewmodel>(context, listen: false);
+    final productVm = Provider.of<ProductViewmodel>(context, listen: false);
     showModalBottomSheet(
       isDismissible: true,
       isScrollControlled: true,
@@ -202,8 +211,8 @@ class _PrdoductListState extends State<PrdoductList> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 20),
-                    child: Consumer<CommonDataViewmodel>(
-                        builder: (context, cdv, _) {
+                    child:
+                        Consumer<ProductViewmodel>(builder: (context, cdv, _) {
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -229,18 +238,57 @@ class _PrdoductListState extends State<PrdoductList> {
                             ],
                           ),
                           const SizedBox(height: 20),
-                          GestureDetector(
-                            onTap: () {
-                              commonVm.selectDate(context);
-                            },
-                            child: AbsorbPointer(
-                              child: CustomTextField(
-                                controller: cdv.dobController,
-                                hint: 'Enter DOB',
-                                suffixIcon: const Icon(Icons.calendar_month),
+                          Consumer<ProductViewmodel>(
+                              builder: (context, pvm, _) {
+                            return GestureDetector(
+                              onTap: () {
+                                // productVm.selectDate(context);
+
+                                showCustomDateRangePicker(context,
+                                    dismissible: true,
+                                    minimumDate: DateTime.now()
+                                        .subtract(const Duration(days: 365)),
+                                    maximumDate: DateTime.now()
+                                        .add(const Duration(days: 365)),
+                                    startDate: pvm.start,
+                                    endDate: pvm.end, onApplyClick:
+                                        (DateTime startDate, DateTime endDate) {
+                                  productVm.setDateRange(startDate, endDate);
+                                  if (productVm.startFormatted != null &&
+                                      productVm.endFormatted != null) {
+                                    if (productVm.tabindex == 0) {
+                                      productVm.resetProductPagination();
+
+                                      productVm.fetchProductList(
+                                          isSolarProduct: true);
+                                    } else {
+                                      productVm.resetProductPagination();
+
+                                      productVm.fetchProductList(
+                                          isSolarProduct: false);
+                                    }
+                                  }
+                                }, onCancelClick: () {
+                                  if (productVm.tabindex == 0) {
+                                    productVm.clearDateRange();
+                                    productVm.resetProductPagination();
+                                  } else {
+                                    productVm.clearDateRange();
+                                    productVm.resetProductPagination();
+                                  }
+                                },
+                                    backgroundColor: AppColors.white,
+                                    primaryColor: AppColors.secondaryColor);
+                              },
+                              child: AbsorbPointer(
+                                child: CustomTextField(
+                                  controller: cdv.dobController,
+                                  hint: 'Enter DOB',
+                                  suffixIcon: const Icon(Icons.calendar_month),
+                                ),
                               ),
-                            ),
-                          ),
+                            );
+                          }),
                           const SizedBox(height: 15),
 
                           CustomDropdown(
