@@ -10,8 +10,6 @@ class TransactionItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
       child: Container(
-        height: 80,
-        width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             color: AppColors.primeryColor.withOpacity(0.3),
             borderRadius: const BorderRadius.all(Radius.circular(20))),

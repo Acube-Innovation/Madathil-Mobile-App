@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/utils/color/util_functions.dart';
+import 'package:madathil/view/screens/call_management/add_call_details_screen.dart';
+import 'package:madathil/view/screens/call_management/widgets/call_item_widget.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
-import 'package:madathil/view/screens/statments/add_closing_statment.dart';
-import 'package:madathil/view/screens/statments/widgets/closing_statment_item.dart';
+import 'package:madathil/viewmodel/common_viewmodel.dart';
+import 'package:provider/provider.dart';
 
-class ClosingStatmentsListScreen extends StatefulWidget {
-  const ClosingStatmentsListScreen({super.key});
+class CallListScreen extends StatefulWidget {
+  const CallListScreen({super.key});
 
   @override
-  State<ClosingStatmentsListScreen> createState() =>
-      _ClosingStatmentsListScreenState();
+  State<CallListScreen> createState() => _CallListScreenState();
 }
 
-class _ClosingStatmentsListScreenState
-    extends State<ClosingStatmentsListScreen> {
+class _CallListScreenState extends State<CallListScreen> {
   String? _selectedDate;
 
   // Function to handle date selection
@@ -31,7 +31,7 @@ class _ClosingStatmentsListScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: "Closing Statement List",
+        title: "Call List",
         actions: [
           Padding(
             padding: const EdgeInsets.all(13.0),
@@ -50,10 +50,15 @@ class _ClosingStatmentsListScreenState
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          Provider.of<CommonDataViewmodel>(context, listen: false)
+              .clearReminder();
+          Provider.of<CommonDataViewmodel>(context, listen: false)
+              .disposeControllers();
+
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const AddClosingStatment()));
+                  builder: (context) => const AddCallDetailsScreen()));
         },
         backgroundColor: AppColors.primeryColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -111,10 +116,10 @@ class _ClosingStatmentsListScreenState
                 ),
               ),
             ),
-            const SizedBox(
+            SizedBox(
               height: 15,
             ),
-            const Expanded(child: ClosingStatementItem())
+            const Expanded(child: CallItemWidget())
           ],
         ),
       ),
