@@ -24,4 +24,6 @@ class AppColors {
 
   static const Color transparent = Colors.transparent;
   static const Color malachit = Color(0xff21C622);
+  static const Color reefGold = Color(0xffB39937);
+  static const Color screenBgColor = Color.fromARGB(255, 251, 254, 251);
 }

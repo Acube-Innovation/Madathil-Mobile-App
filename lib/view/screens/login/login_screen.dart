@@ -177,13 +177,17 @@ class LoginScreen extends StatelessWidget {
           width: double.maxFinite,
           onPressed: () {
             if (authVm.formKey.currentState!.validate()) {
+              UtilFunctions.loaderPopup(context);
               authVm
                   .login(username: emailCtlr.text, pwd: passwordCtlr.text)
                   .then((value) {
+                Navigator.pop(context);
+
                 if (value) {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (context) => const HomePage()));
                 } else {
+                  Navigator.pop(context);
                   toast(authVm.errormsg, context);
                 }
               });

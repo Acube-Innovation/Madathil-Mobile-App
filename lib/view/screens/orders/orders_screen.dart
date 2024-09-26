@@ -7,6 +7,7 @@ import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
 import 'package:madathil/view/screens/common_widgets/custom_dropdown.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
 import 'package:madathil/view/screens/common_widgets/custom_text_field.dart';
+import 'package:madathil/view/screens/orders/order_detail_screen.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -42,118 +43,127 @@ class OrderHistory extends StatelessWidget {
           ),
           itemCount: 2,
           itemBuilder: (context, index) {
-            return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-              decoration: BoxDecoration(
-                  color: AppColors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.grey.withOpacity(0.5),
-                      spreadRadius: 0,
-                      blurRadius: 3,
-                      offset: const Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: AppColors.territoryColor)),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: AppColors.bgColor),
-                        child: CustomPngImage(
-                          height: 100,
-                          width: 90,
-                          imageName: index == 0
-                              ? AppImages.solarImage
-                              : AppImages.acImage,
-                          boxFit: BoxFit.contain,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "George K",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(color: AppColors.grey),
-                          ),
-                          Text(
-                            index == 0 ? "Solar Panel" : "Air Conditioner",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(color: AppColors.primeryColor),
-                          ),
-                          Text(
-                            "\$ 30000",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(color: AppColors.black),
-                          ),
-                        ],
-                      ),
-                      const Spacer(),
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.secondaryColor.withOpacity(0.1)),
-                        child: const Icon(
-                          Icons.arrow_forward_ios,
-                          color: AppColors.secondaryColor,
-                          size: 20,
-                        ),
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const OrderDetailScreen()));
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                decoration: BoxDecoration(
+                    color: AppColors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.grey.withOpacity(0.5),
+                        spreadRadius: 0,
+                        blurRadius: 3,
+                        offset:
+                            const Offset(0, 3), // changes position of shadow
                       ),
                     ],
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        index == 0 ? "Delivered" : "Shipping",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium!
-                            .copyWith(color: AppColors.grey),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      index == 0
-                          ? const Icon(
-                              Icons.task_alt,
-                              color: AppColors.malachit,
-                            )
-                          : const CustomPngImage(
-                              height: 25,
-                              width: 25,
-                              imageName: AppImages.shippingIcon,
-                              boxFit: BoxFit.contain,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: AppColors.territoryColor)),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: AppColors.bgColor),
+                          child: CustomPngImage(
+                            height: 100,
+                            width: 90,
+                            imageName: index == 0
+                                ? AppImages.solarImage
+                                : AppImages.acImage,
+                            boxFit: BoxFit.contain,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "George K",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(color: AppColors.grey),
                             ),
-                      const Spacer(),
-                      Text(
-                        "24 jun 2021",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall!
-                            .copyWith(color: AppColors.grey),
-                      ),
-                    ],
-                  )
-                ],
+                            Text(
+                              index == 0 ? "Solar Panel" : "Air Conditioner",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(color: AppColors.primeryColor),
+                            ),
+                            Text(
+                              "\$ 30000",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(color: AppColors.black),
+                            ),
+                          ],
+                        ),
+                        const Spacer(),
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.secondaryColor.withOpacity(0.1)),
+                          child: const Icon(
+                            Icons.arrow_forward_ios,
+                            color: AppColors.secondaryColor,
+                            size: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          index == 0 ? "Delivered" : "Shipping",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(color: AppColors.grey),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        index == 0
+                            ? const Icon(
+                                Icons.task_alt,
+                                color: AppColors.malachit,
+                              )
+                            : const CustomPngImage(
+                                height: 25,
+                                width: 25,
+                                imageName: AppImages.shippingIcon,
+                                boxFit: BoxFit.contain,
+                              ),
+                        const Spacer(),
+                        Text(
+                          "24 jun 2021",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .copyWith(color: AppColors.grey),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
             );
           },

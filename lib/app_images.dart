@@ -27,4 +27,5 @@ class AppImages {
   static const String solarImage = "assets/images/solar.png";
   static const String acImage = "assets/images/ac.png";
   static const String shippingIcon = "assets/images/shipping.png";
+  static const String serviceIcon = "assets/images/Service_icon.png";
 }
