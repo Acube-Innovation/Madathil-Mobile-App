@@ -6,6 +6,7 @@ import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/attendance/attendance_history.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
+import 'package:madathil/view/screens/common_widgets/loaderwidget.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +18,9 @@ class AttendancePage extends StatelessWidget {
     return Scaffold(
       appBar: const CustomAppBar(title: "Attendance"),
       body: Consumer<CommonDataViewmodel>(builder: (context, cdv, _) {
+        if (cdv.isloading!) {
+          return const LoaderWidget();
+        }
         return Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
