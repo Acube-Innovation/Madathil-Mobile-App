@@ -17,15 +17,6 @@ class CommonDataViewmodel extends ChangeNotifier {
 
   TextEditingController dobController = TextEditingController();
 
-  String _selectedValue = '';
-
-  String get selectedValue => _selectedValue;
-
-  void selectValue(String value) {
-    _selectedValue = value;
-    notifyListeners(); // Notify listeners when the value changes
-  }
-
   String _selectedpayment = '';
 
   String get selectedpayment => _selectedpayment;
@@ -326,11 +317,10 @@ class CommonDataViewmodel extends ChangeNotifier {
     }
   }
 
-
   /// filter in service history
 
-String? _selectedStatus; // Holds the selected filter status
-  String? _selectedDate;   // Holds the selected filter date
+  String? _selectedStatus; // Holds the selected filter status
+  String? _selectedDate; // Holds the selected filter date
 
   String? get selectedStatus => _selectedStatus;
   String? get selectedDate => _selectedDate;
@@ -358,7 +348,6 @@ String? _selectedStatus; // Holds the selected filter status
     _selectedDate = null;
     notifyListeners();
   }
-
 
   /*
   * attendance List api call

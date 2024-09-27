@@ -126,10 +126,12 @@ class _SolarProductListState extends State<SolarProductList> {
                       const EdgeInsets.symmetric(horizontal: 2, vertical: 10),
                   child: GestureDetector(
                     onTap: () {
+                      log(item.itemName.toString());
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const ProductDetailScreen(),
+                            builder: (context) =>
+                                ProductDetailScreen(item: item),
                           ));
                     },
                     child: Container(
@@ -204,8 +206,8 @@ class _SolarProductListState extends State<SolarProductList> {
                                             ),
                                       ),
                                       Text(
-                                        // item.creation?.day.toString() ?? "",
-                                        "1200*100 / 1350 *700",
+                                        item.creation?.day.toString() ?? "",
+                                        // "1200*100 / 1350 *700",
                                         style: Theme.of(context)
                                             .textTheme
                                             .labelSmall!

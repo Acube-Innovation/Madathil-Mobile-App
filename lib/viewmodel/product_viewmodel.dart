@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
 import 'package:madathil/utils/color/app_colors.dart';
@@ -15,6 +16,7 @@ class ProductViewmodel extends ChangeNotifier {
   ProductViewmodel({required this.apiRepository});
 
   TextEditingController dobController = TextEditingController();
+  TextEditingController searchController = TextEditingController();
   String? _errormsg;
   String? get errormsg => _errormsg;
 
@@ -31,6 +33,8 @@ class ProductViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
+  String? productSearchfn;
+
   DateTime? _start;
   DateTime? _end;
 
@@ -46,6 +50,17 @@ class ProductViewmodel extends ChangeNotifier {
     endFormatted = DateFormat('yyyy-MM-dd').format(end!);
     dobController.text = "Start: $startFormatted  End: $endFormatted";
 
+    notifyListeners();
+  }
+
+  void setSearchValue(String val) {
+    productSearchfn = val;
+    notifyListeners();
+  }
+
+  clearSearchVal() {
+    productSearchfn = null;
+    searchController.clear();
     notifyListeners();
   }
 
@@ -68,8 +83,12 @@ class ProductViewmodel extends ChangeNotifier {
               "business": "Solar",
               "creation": [
                 "between",
-                [startFormatted, endFormatted]
+                [startFormatted, endFormatted],
               ],
+              "item_name": [
+                "like",
+                productSearchfn != null ? "$productSearchfn %" : "%"
+              ]
             }),
             "limit_start": page! * 10,
             "limit": 10,
@@ -77,7 +96,13 @@ class ProductViewmodel extends ChangeNotifier {
           };
         } else {
           param = {
-            "filters": jsonEncode({"business": "Solar"}),
+            "filters": jsonEncode({
+              "business": "Solar",
+              "item_name": [
+                "like",
+                productSearchfn != null ? "$productSearchfn %" : "%"
+              ]
+            }),
             "limit_start": page! * 10,
             "limit": 10,
             "order_by": "modified desc"
@@ -92,6 +117,10 @@ class ProductViewmodel extends ChangeNotifier {
                 "between",
                 [startFormatted, endFormatted]
               ],
+              "item_name": [
+                "like",
+                productSearchfn != null ? "$productSearchfn %" : "%"
+              ]
             }),
             "limit_start": page! * 10,
             "limit": 10,
@@ -99,7 +128,13 @@ class ProductViewmodel extends ChangeNotifier {
           };
         } else {
           param = {
-            "filters": jsonEncode({"business": "Trading"}),
+            "filters": jsonEncode({
+              "business": "Trading",
+              "item_name": [
+                "like",
+                productSearchfn != null ? "$productSearchfn %" : "%"
+              ]
+            }),
             "limit_start": page! * 10,
             "limit": 10,
             "order_by": "modified desc"
@@ -174,5 +209,50 @@ class ProductViewmodel extends ChangeNotifier {
     endFormatted = null;
     dobController.clear();
     notifyListeners();
+  }
+
+  Product? productData;
+
+  Future<bool> productDetail({String? itemName}) async {
+    try {
+      setLoader(true);
+
+      ProductDetailResponse? response =
+          await apiRepository.getProductDetail(param: {"item_name": itemName});
+      if (response?.message != null) {
+        // _productListResponse = response;
+        productData = null;
+        productData = response?.message;
+
+        log("produtct detail------------> ${productData?.toJson() ?? []}");
+        setLoader(false);
+
+        return true;
+      } else {
+        setLoader(false);
+        return false;
+      }
+    } catch (e) {
+      setLoader(false);
+      _errormsg = e.toString();
+      log(e.toString());
+      return false;
+    }
+  }
+
+  int _quantity = 0;
+
+  int get quantity => _quantity;
+
+  void increment() {
+    _quantity++;
+    notifyListeners();
+  }
+
+  void decrement() {
+    if (_quantity > 0) {
+      _quantity--;
+      notifyListeners();
+    }
   }
 }

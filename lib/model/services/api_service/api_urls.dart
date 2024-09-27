@@ -14,4 +14,7 @@ class ApiUrls {
 
   static const kgetProductList =
       '/api/method/a3sola_solar_management.api.get_item_list';
+  static const kgetProductDetail =
+      '/api/method/a3sola_solar_management.api.get_item_details';
+  static const kgetCustomerList = '/api/resource/Customer';
 }

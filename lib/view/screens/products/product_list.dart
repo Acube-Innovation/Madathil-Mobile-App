@@ -25,9 +25,15 @@ class PrdoductList extends StatefulWidget {
 
 class _PrdoductListState extends State<PrdoductList> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final commonVm = Provider.of<CommonDataViewmodel>(context, listen: false);
     final productVm = Provider.of<ProductViewmodel>(context, listen: false);
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -98,51 +104,95 @@ class _PrdoductListState extends State<PrdoductList> {
             ),
             SizedBox(
               height: 46,
-              child: TextField(
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.only(left: 30),
-                  suffixIcon: Container(
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.primeryColor,
-                      ),
-                      child: const Icon(
-                        Icons.search,
-                        color: Colors.white,
-                      )),
-                  enabled: true,
-                  disabledBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                    borderSide: BorderSide(color: AppColors.black),
+              child: Consumer<ProductViewmodel>(builder: (context, pvm, _) {
+                return TextField(
+                  controller: productVm.searchController,
+                  onChanged: (val) {
+                    log(val);
+                  },
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.only(left: 30),
+                    suffixIcon: Container(
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.primeryColor,
+                        ),
+                        child: pvm.productSearchfn != null
+                            ? GestureDetector(
+                                onTap: () {
+                                  productVm.clearSearchVal();
+                                  if (productVm.tabindex == 0) {
+                                    productVm.resetProductPagination();
+
+                                    productVm.fetchProductList(
+                                        isSolarProduct: true);
+                                  } else {
+                                    productVm.resetProductPagination();
+
+                                    productVm.fetchProductList(
+                                        isSolarProduct: false);
+                                  }
+                                },
+                                child: const Icon(
+                                  Icons.clear,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : GestureDetector(
+                                onTap: () {
+                                  productVm.setSearchValue(
+                                      productVm.searchController.text);
+                                  if (productVm.tabindex == 0) {
+                                    productVm.resetProductPagination();
+
+                                    productVm.fetchProductList(
+                                        isSolarProduct: true);
+                                  } else {
+                                    productVm.resetProductPagination();
+
+                                    productVm.fetchProductList(
+                                        isSolarProduct: false);
+                                  }
+                                },
+                                child: const Icon(
+                                  Icons.search,
+                                  color: Colors.white,
+                                ),
+                              )),
+                    enabled: true,
+                    disabledBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                      borderSide: BorderSide(color: AppColors.black),
+                    ),
+                    border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                      borderSide: BorderSide(color: AppColors.grey, width: 1),
+                    ),
+                    enabledBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                      borderSide: BorderSide(color: AppColors.grey, width: 1),
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                      borderSide:
+                          BorderSide(color: AppColors.primeryColor, width: 1),
+                    ),
+                    errorBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                      borderSide: BorderSide(color: AppColors.red),
+                    ),
+                    hintText: "Search",
+                    counterText: "",
+                    hintStyle: const TextStyle(
+                      // fontFamily: "SF Pro Display",
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400,
+                      height: 1.275,
+                      color: AppColors.grey,
+                    ),
                   ),
-                  border: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                    borderSide: BorderSide(color: AppColors.grey, width: 1),
-                  ),
-                  enabledBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                    borderSide: BorderSide(color: AppColors.grey, width: 1),
-                  ),
-                  focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                    borderSide:
-                        BorderSide(color: AppColors.primeryColor, width: 1),
-                  ),
-                  errorBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                    borderSide: BorderSide(color: AppColors.red),
-                  ),
-                  hintText: "Search",
-                  counterText: "",
-                  hintStyle: const TextStyle(
-                    // fontFamily: "SF Pro Display",
-                    fontSize: 18,
-                    fontWeight: FontWeight.w400,
-                    height: 1.275,
-                    color: AppColors.grey,
-                  ),
-                ),
-              ),
+                );
+              }),
             ),
             const SizedBox(
               height: 40,
@@ -191,162 +241,188 @@ class _PrdoductListState extends State<PrdoductList> {
     // Wrap the logic that accesses MediaQuery in a Builder
     final productVm = Provider.of<ProductViewmodel>(context, listen: false);
     showModalBottomSheet(
-      isDismissible: true,
+      isDismissible: false,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       context: context,
       builder: (BuildContext context) {
         final popupHeight =
             MediaQuery.of(context).size.height * 0.6; // Calculate height here
-        return Stack(
-          children: [
-            SingleChildScrollView(
-              child: ClipRRect(
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(20)),
-                child: Container(
-                  color: AppColors.white,
-                  padding: const EdgeInsets.all(5),
-                  height: popupHeight, // Use the calculated height
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 20),
-                    child:
-                        Consumer<ProductViewmodel>(builder: (context, cdv, _) {
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.tune,
-                                color: AppColors.black,
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "Filter",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge!
-                                    .copyWith(
-                                      height: 1.7,
-                                      color: AppColors.black,
-                                    ),
-                              )
-                            ],
-                          ),
-                          const SizedBox(height: 20),
-                          Consumer<ProductViewmodel>(
-                              builder: (context, pvm, _) {
-                            return GestureDetector(
-                              onTap: () {
-                                // productVm.selectDate(context);
-
-                                showCustomDateRangePicker(context,
-                                    dismissible: true,
-                                    minimumDate: DateTime.now()
-                                        .subtract(const Duration(days: 365)),
-                                    maximumDate: DateTime.now()
-                                        .add(const Duration(days: 365)),
-                                    startDate: pvm.start,
-                                    endDate: pvm.end, onApplyClick:
-                                        (DateTime startDate, DateTime endDate) {
-                                  productVm.setDateRange(startDate, endDate);
-                                  if (productVm.startFormatted != null &&
-                                      productVm.endFormatted != null) {
-                                    if (productVm.tabindex == 0) {
-                                      productVm.resetProductPagination();
-
-                                      productVm.fetchProductList(
-                                          isSolarProduct: true);
-                                    } else {
-                                      productVm.resetProductPagination();
-
-                                      productVm.fetchProductList(
-                                          isSolarProduct: false);
-                                    }
-                                  }
-                                }, onCancelClick: () {
-                                  if (productVm.tabindex == 0) {
-                                    productVm.clearDateRange();
-                                    productVm.resetProductPagination();
-                                  } else {
-                                    productVm.clearDateRange();
-                                    productVm.resetProductPagination();
-                                  }
-                                },
-                                    backgroundColor: AppColors.white,
-                                    primaryColor: AppColors.secondaryColor);
-                              },
-                              child: AbsorbPointer(
-                                child: CustomTextField(
-                                  controller: cdv.dobController,
-                                  hint: 'Enter DOB',
-                                  suffixIcon: const Icon(Icons.calendar_month),
+        return PopScope(
+          canPop: false,
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                child: ClipRRect(
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(20)),
+                  child: Container(
+                    color: AppColors.white,
+                    padding: const EdgeInsets.all(5),
+                    height: popupHeight, // Use the calculated height
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 20),
+                      child: Consumer<ProductViewmodel>(
+                          builder: (context, cdv, _) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.tune,
+                                  color: AppColors.black,
                                 ),
-                              ),
-                            );
-                          }),
-                          const SizedBox(height: 15),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "Filter",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .copyWith(
+                                        height: 1.7,
+                                        color: AppColors.black,
+                                      ),
+                                ),
+                                const Spacer(),
+                                GestureDetector(
+                                  onTap: () {
+                                    if (productVm.startFormatted != null &&
+                                        productVm.endFormatted != null) {
+                                      if (productVm.tabindex == 0) {
+                                        productVm.clearDateRange();
+                                        productVm.resetProductPagination();
+                                      } else {
+                                        productVm.clearDateRange();
+                                        productVm.resetProductPagination();
+                                      }
+                                    }
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Icon(
+                                    Icons.clear,
+                                    color: AppColors.black,
+                                    size: 30,
+                                  ),
+                                )
+                              ],
+                            ),
+                            const SizedBox(height: 20),
+                            Consumer<ProductViewmodel>(
+                                builder: (context, pvm, _) {
+                              return GestureDetector(
+                                onTap: () {
+                                  // productVm.selectDate(context);
 
-                          CustomDropdown(
-                            hint: 'Select Brand',
-                            items: const ["Brand", "LG"],
-                            selectedItem: 'Brand',
-                            onChanged: (String? value) {},
-                          ),
-                          const SizedBox(height: 15),
+                                  showCustomDateRangePicker(context,
+                                      dismissible: true,
+                                      minimumDate: DateTime.now()
+                                          .subtract(const Duration(days: 365)),
+                                      maximumDate: DateTime.now()
+                                          .add(const Duration(days: 365)),
+                                      startDate: pvm.start,
+                                      endDate: pvm.end, onApplyClick:
+                                          (DateTime startDate,
+                                              DateTime endDate) {
+                                    productVm.setDateRange(startDate, endDate);
+                                    if (productVm.startFormatted != null &&
+                                        productVm.endFormatted != null) {
+                                      if (productVm.tabindex == 0) {
+                                        productVm.resetProductPagination();
 
-                          CustomDropdown(
-                            hint: 'Select Size',
-                            items: const ["Size", "walt"],
-                            selectedItem: 'Size',
-                            onChanged: (String? value) {},
-                          ),
+                                        productVm.fetchProductList(
+                                            isSolarProduct: true);
+                                      } else {
+                                        productVm.resetProductPagination();
 
-                          const SizedBox(height: 30),
+                                        productVm.fetchProductList(
+                                            isSolarProduct: false);
+                                      }
+                                    }
+                                  }, onCancelClick: () {
+                                    if (productVm.tabindex == 0) {
+                                      productVm.clearDateRange();
+                                      productVm.resetProductPagination();
+                                    } else {
+                                      productVm.clearDateRange();
+                                      productVm.resetProductPagination();
+                                    }
+                                  },
+                                      backgroundColor: AppColors.white,
+                                      primaryColor: AppColors.secondaryColor);
+                                },
+                                child: AbsorbPointer(
+                                  child: CustomTextField(
+                                    controller: cdv.dobController,
+                                    hint: 'Enter DOB',
+                                    suffixIcon:
+                                        const Icon(Icons.calendar_month),
+                                  ),
+                                ),
+                              );
+                            }),
+                            const SizedBox(height: 15),
 
-                          // Provides spacing before the button
-                          const Spacer(),
-                          CustomButton(
-                            height: 44,
-                            width: double.infinity,
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            text: "Apply",
-                          )
-                        ],
-                      );
-                    }),
+                            CustomDropdown(
+                              hint: 'Select Brand',
+                              items: const ["Brand", "LG"],
+                              // selectedItem: 'Brand',
+                              onChanged: (String? value) {},
+                            ),
+                            const SizedBox(height: 15),
+
+                            CustomDropdown(
+                              hint: 'Select Size',
+                              items: const ["Size", "walt"],
+                              // selectedItem: 'Size',
+                              onChanged: (String? value) {},
+                            ),
+
+                            const SizedBox(height: 30),
+
+                            // Provides spacing before the button
+                            const Spacer(),
+                            CustomButton(
+                              height: 44,
+                              width: double.infinity,
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              text: "Apply",
+                            )
+                          ],
+                        );
+                      }),
+                    ),
                   ),
                 ),
               ),
-            ),
-            Positioned(
-              top:
-                  -5, // Adjust position to place it outside the bottom sheet content
-              left: 0,
-              right: 0,
+              Positioned(
+                top:
+                    -5, // Adjust position to place it outside the bottom sheet content
+                left: 0,
+                right: 0,
 
-              child: Shimmer.fromColors(
-                  baseColor: AppColors.grey300,
-                  highlightColor: AppColors.grey300.withOpacity(0.2),
-                  period: const Duration(seconds: 5),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 120, vertical: 10),
-                    child: Container(
-                      height: 6,
-                      decoration: BoxDecoration(
-                          color: AppColors.grey,
-                          borderRadius: BorderRadius.circular(15)),
-                    ),
-                  )),
-            )
-          ],
+                child: Shimmer.fromColors(
+                    baseColor: AppColors.grey300,
+                    highlightColor: AppColors.grey300.withOpacity(0.2),
+                    period: const Duration(seconds: 5),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 120, vertical: 10),
+                      child: Container(
+                        height: 6,
+                        decoration: BoxDecoration(
+                            color: AppColors.grey,
+                            borderRadius: BorderRadius.circular(15)),
+                      ),
+                    )),
+              )
+            ],
+          ),
         );
       },
     );

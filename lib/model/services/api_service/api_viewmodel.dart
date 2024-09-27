@@ -10,8 +10,10 @@ import 'package:madathil/constants.dart';
 import 'package:madathil/model/model_class/api_response_model/attendance_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_response.dart';
+import 'package:madathil/model/model_class/api_response_model/customer_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/general_response.dart';
 import 'package:madathil/model/model_class/api_response_model/login_response.dart';
+import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
 import 'package:madathil/model/model_class/local/environment.dart';
 import 'package:madathil/model/services/api_service/api_urls.dart';
@@ -144,6 +146,10 @@ class ApiViewModel {
         return AttendanceList.fromJson(json) as T;
       case ProductListResponse:
         return ProductListResponse.fromJson(json) as T;
+      case ProductDetailResponse:
+        return ProductDetailResponse.fromJson(json) as T;
+      case CustomerListResponse:
+        return CustomerListResponse.fromJson(json) as T;
 
       default:
         throw FromJsonNotImplementedException();

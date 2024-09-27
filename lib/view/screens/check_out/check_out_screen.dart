@@ -188,24 +188,24 @@ class CheckOutScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      // Handle change action here
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     // Handle change action here
 
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ChangeCustomer(),
-                          ));
-                    },
-                    child: Text(
-                      "Change",
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium!
-                          .copyWith(height: 1.7, color: AppColors.blue),
-                    ),
-                  ),
+                  //     // Navigator.push(
+                  //     //     context,
+                  //     //     MaterialPageRoute(
+                  //     //       builder: (context) => const ChangeCustomer(),
+                  //     //     ));
+                  //   },
+                  //   child: Text(
+                  //     "Change",
+                  //     style: Theme.of(context)
+                  //         .textTheme
+                  //         .titleMedium!
+                  //         .copyWith(height: 1.7, color: AppColors.blue),
+                  //   ),
+                  // ),
                 ],
               ),
               const SizedBox(height: 16),
