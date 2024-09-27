@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/view/screens/cart/cart_screen.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
 import 'package:madathil/view/screens/common_widgets/custom_dropdown.dart';
@@ -153,17 +154,26 @@ class _PrdoductListState extends State<PrdoductList> {
             ),
           ]),
         ),
-        floatingActionButton: Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: AppColors.primeryColor,
-            ),
-            child: const Icon(
-              size: 30,
-              Icons.shopping_cart,
-              color: Colors.white,
-            )),
+        floatingActionButton: GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CartScreen(),
+                ));
+          },
+          child: Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: AppColors.primeryColor,
+              ),
+              child: const Icon(
+                size: 30,
+                Icons.shopping_cart,
+                color: Colors.white,
+              )),
+        ),
       ),
     );
   }

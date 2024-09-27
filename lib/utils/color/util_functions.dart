@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:shimmer/shimmer.dart';
 
 class UtilFunctions {
   static String? validateName(String? value) {
@@ -17,6 +19,10 @@ class UtilFunctions {
 
   static String? validateAddress(String? value) {
     return value == null || value.isEmpty ? 'address is required' : null;
+  }
+
+  static String? validatepincode(String? value) {
+    return value == null || value.isEmpty ? 'pincode is required' : null;
   }
 
   static String? validateEmail(String? value) {
@@ -60,15 +66,15 @@ class UtilFunctions {
     return value == null || value.isEmpty ? 'Business is required' : null;
   }
 
-    static String? validateCalltitle(String? value) {
+  static String? validateCalltitle(String? value) {
     return value == null || value.isEmpty ? 'Call title is required' : null;
   }
 
-      static String? validatePoints(String? value) {
+  static String? validatePoints(String? value) {
     return value == null || value.isEmpty ? 'Call title is required' : null;
   }
 
-      static String? validateNote(String? value) {
+  static String? validateNote(String? value) {
     return value == null || value.isEmpty ? 'Note is required' : null;
   }
 
@@ -101,6 +107,21 @@ class UtilFunctions {
     if (selectedDate != null) {
       onDateSelected(selectedDate); // Pass the selected date back to the caller
     }
+  }
+
+  static loaderPopup(BuildContext context) {
+    showDialog(
+      barrierDismissible: false,
+      useSafeArea: false,
+      context: context,
+      barrierColor: Colors.white,
+      builder: (BuildContext context) {
+        return const Center(
+          child: CupertinoAlertDialog(
+              content: CupertinoActivityIndicator(animating: true, radius: 15)),
+        );
+      },
+    );
   }
 }
 

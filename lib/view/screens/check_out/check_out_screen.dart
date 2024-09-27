@@ -3,6 +3,8 @@ import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
+import 'package:madathil/view/screens/customer/change_customer.dart';
+import 'package:madathil/view/screens/payment_mode/payment_mode.dart';
 
 class CheckOutScreen extends StatelessWidget {
   const CheckOutScreen({super.key});
@@ -75,7 +77,7 @@ class CheckOutScreen extends StatelessWidget {
                                   "Solar Panel ",
                                   style: Theme.of(context)
                                       .textTheme
-                                      .titleLarge!
+                                      .titleMedium!
                                       .copyWith(
                                         height: 1.7,
                                         color: AppColors.primeryColor,
@@ -101,6 +103,9 @@ class CheckOutScreen extends StatelessWidget {
                                         color: AppColors.primeryColor,
                                       ),
                                   overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(
+                                  height: 20,
                                 )
                               ],
                             ),
@@ -146,7 +151,7 @@ class CheckOutScreen extends StatelessWidget {
               ),
               Text(
                 "Customer",
-                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       height: 1.7,
                       color: AppColors.black,
                     ),
@@ -186,6 +191,12 @@ class CheckOutScreen extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       // Handle change action here
+
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ChangeCustomer(),
+                          ));
                     },
                     child: Text(
                       "Change",
@@ -221,7 +232,7 @@ class CheckOutScreen extends StatelessWidget {
               ),
               Text(
                 "Price Details",
-                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       height: 1.7,
                       color: AppColors.black,
                     ),
@@ -331,7 +342,13 @@ class CheckOutScreen extends StatelessWidget {
                   CustomButton(
                     width: 200,
                     text: "Place Order",
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const PaymentModeScreen(),
+                          ));
+                    },
                   )
                 ],
               )

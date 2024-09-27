@@ -71,7 +71,7 @@ class SolarProductList extends StatelessWidget {
                                 "Solar Panel ",
                                 style: Theme.of(context)
                                     .textTheme
-                                    .titleLarge!
+                                    .titleMedium!
                                     .copyWith(
                                       height: 1.7,
                                       color: AppColors.primeryColor,
@@ -97,13 +97,17 @@ class SolarProductList extends StatelessWidget {
                                       color: AppColors.primeryColor,
                                     ),
                                 overflow: TextOverflow.ellipsis,
-                              )
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
                             ],
                           ),
                         ),
                       ],
                     ),
                   ),
+
                   // Right side with Arrow and Text
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -117,8 +121,12 @@ class SolarProductList extends StatelessWidget {
                             padding: const EdgeInsets.all(5),
                             decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: AppColors.grey.withOpacity(0.1)),
-                            child: const Icon(Icons.arrow_forward_ios),
+                                color:
+                                    AppColors.secondaryColor.withOpacity(0.1)),
+                            child: const Icon(
+                              Icons.arrow_forward_ios,
+                              color: AppColors.secondaryColor,
+                            ),
                           ),
                         ),
                       ),

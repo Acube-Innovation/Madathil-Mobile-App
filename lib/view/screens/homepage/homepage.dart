@@ -6,8 +6,11 @@ import 'package:madathil/view/screens/call_management/call_list_screen.dart';
 import 'package:madathil/view/screens/homepage/components/drawer_widget.dart';
 import 'package:madathil/view/screens/homepage/components/home_item_widget.dart';
 import 'package:madathil/view/screens/leads/leads_screen.dart';
+import 'package:madathil/view/screens/orders/orders_screen.dart';
 import 'package:madathil/view/screens/products/product_list.dart';
+import 'package:madathil/view/screens/service_list/service_list.dart';
 import 'package:madathil/view/screens/service/service_history_screen.dart';
+import 'package:madathil/view/screens/tasks/task_screen.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:madathil/view/screens/transactions/transaction_list.dart';
@@ -168,7 +171,13 @@ class HomePage extends StatelessWidget {
                 HomeItemWidget(
                   image: AppImages.ordersImage,
                   title: "Orders",
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const OrderHistory(),
+                        ));
+                  },
                 ),
               ],
             ),
@@ -205,7 +214,12 @@ class HomePage extends StatelessWidget {
                 HomeItemWidget(
                   image: AppImages.tasksImage,
                   title: "Tasks",
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const TasksScreen()));
+                  },
                 ),
                 const SizedBox(width: 8),
                 HomeItemWidget(
@@ -215,8 +229,7 @@ class HomePage extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                const ServiceHistoryScreen()));
+                            builder: (context) => const ServiceList()));
                   },
                 ),
               ],
