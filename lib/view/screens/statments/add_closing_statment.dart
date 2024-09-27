@@ -3,8 +3,13 @@ import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/utils/color/util_functions.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
+import 'package:madathil/view/screens/common_widgets/custom_dropdown.dart';
 import 'package:madathil/view/screens/common_widgets/custom_text_field.dart';
 import 'package:madathil/view/screens/points/points_congrats_screen.dart';
+import 'package:madathil/view/screens/statments/widgets/item_serch_dropdown.dart';
+import 'package:madathil/view/screens/statments/widgets/searchable_dropdown.dart';
+import 'package:madathil/viewmodel/common_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 class AddClosingStatment extends StatelessWidget {
   const AddClosingStatment({super.key});
@@ -20,6 +25,10 @@ class AddClosingStatment extends StatelessWidget {
     TextEditingController closedkwController = TextEditingController();
     TextEditingController itemMarginController = TextEditingController();
     TextEditingController itemExpenseController = TextEditingController();
+    final cdv = Provider.of<CommonDataViewmodel>(context, listen: false);
+    String? customer;
+    String? item;
+
     return Scaffold(
       appBar: const CustomAppBar(title: "Add Closing Statement"),
       body: SingleChildScrollView(
@@ -41,10 +50,11 @@ class AddClosingStatment extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                CustomTextField(
-                  validator: UtilFunctions.validateName,
-                  hint: "Safil",
-                  controller: customerNameController,
+                SearchableDropdown(
+                  hintText: "Select Customer",
+                  onItemSelected: (selectedCustomer) {
+                    customer = selectedCustomer;
+                  },
                 ),
                 const SizedBox(
                   height: 18,
@@ -119,10 +129,11 @@ class AddClosingStatment extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                CustomTextField(
-                  validator: UtilFunctions.validateItemName,
-                  hint: "Item1",
-                  controller: itemNameController,
+                ItemSearchableDropdown(
+                  hintText: "Select Item",
+                  onItemSelected: (selectedItem) {
+                    item = selectedItem;
+                  },
                 ),
                 const SizedBox(
                   height: 18,
@@ -139,6 +150,7 @@ class AddClosingStatment extends StatelessWidget {
                   height: 10,
                 ),
                 CustomTextField(
+                  keyboardType: TextInputType.number,
                   validator: UtilFunctions.validateClosedKw,
                   hint: "33.6",
                   controller: closedkwController,
@@ -158,6 +170,7 @@ class AddClosingStatment extends StatelessWidget {
                   height: 10,
                 ),
                 CustomTextField(
+                  keyboardType: TextInputType.number,
                   validator: UtilFunctions.validateItemMargin,
                   hint: "230.0",
                   controller: itemMarginController,
@@ -189,13 +202,35 @@ class AddClosingStatment extends StatelessWidget {
                   text: "Submit",
                   height: 43,
                   width: double.maxFinite,
-                  onPressed: () {
+                  onPressed: () async {
                     if (formKey.currentState!.validate()) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const CongratulationsScreen()));
+                      UtilFunctions.loaderPopup(context);
+                      await cdv
+                          .addClosingStatment(
+                        customerName: customer,
+                        mobNo: mobNoController.text,
+                        business: businessController.text,
+                        item: item,
+                        kw: closedkwController.text,
+                        margin: itemMarginController.text,
+                        expense: itemExpenseController.text,
+                        address: addressController.text,
+                      )
+                          .then((value) {
+                        Navigator.pop(context);
+                        if (value) {
+                          toast("Closing Statment added succesfully", context,
+                              isError: true);
+                        } else {
+                          toast(cdv.errormsg, context);
+                        }
+                      });
+
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) =>
+                      //             const CongratulationsScreen()));
                     } else {
                       toast("Required Field missing", context);
                     }

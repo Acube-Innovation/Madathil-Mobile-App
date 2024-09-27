@@ -11,4 +11,8 @@ class ApiUrls {
   static const kCheckinCheckout = '/api/resource/Employee Checkin';
   static const kAttendanceHistory =
       '/api/resource/Attendance?fields=["name", "attendance_date", "employee_in_time", "employee_out_time", "status", "city", "state", "area"]&filters={"employee": "HR-EMP-00145", "attendance_date": ["between", ["2024-04-10", "2024-05-10"]]}';
+
+  static const kAddClosingStatment = '/api/resource/Closing Statement';
+  static const kCustomerList = '/api/resource/Customer';
+  static const kItemList = '/api/resource/Item';
 }
