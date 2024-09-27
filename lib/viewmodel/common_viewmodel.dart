@@ -326,6 +326,40 @@ class CommonDataViewmodel extends ChangeNotifier {
     }
   }
 
+
+  /// filter in service history
+
+String? _selectedStatus; // Holds the selected filter status
+  String? _selectedDate;   // Holds the selected filter date
+
+  String? get selectedStatus => _selectedStatus;
+  String? get selectedDate => _selectedDate;
+
+  // Method to set the filter status
+  void setSelectedStatus(String? status) {
+    _selectedStatus = status;
+    notifyListeners();
+  }
+
+  // Method to set the selected date
+  void setSelectedDate(String? date) {
+    _selectedDate = date;
+    notifyListeners();
+  }
+
+  // Method to clear the filter status
+  void clearSelectedStatus() {
+    _selectedStatus = null;
+    notifyListeners();
+  }
+
+  // Method to clear the selected date
+  void clearSelectedDate() {
+    _selectedDate = null;
+    notifyListeners();
+  }
+
+
   /*
   * attendance List api call
   * */

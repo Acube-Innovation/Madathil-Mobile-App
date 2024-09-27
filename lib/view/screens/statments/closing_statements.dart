@@ -4,6 +4,7 @@ import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/utils/color/util_functions.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
+import 'package:madathil/view/screens/points/points_congrats_screen.dart';
 import 'package:madathil/view/screens/statments/add_closing_statment.dart';
 import 'package:madathil/view/screens/statments/widgets/closing_statment_item.dart';
 

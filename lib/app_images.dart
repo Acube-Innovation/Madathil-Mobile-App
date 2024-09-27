@@ -9,6 +9,9 @@ class AppImages {
   static const String serviceListImage = "assets/images/service.png";
   static const String statementsImage = "assets/images/statements.png";
   static const String userImage = "assets/images/user.png";
+  static const String moneyImage = "assets/images/money.png";
+  static const String assignImage = "assets/images/assign.png";
+  static const String sheetsImage = "assets/images/sheet.png";
 
   static const String profileImage = "assets/images/profile.png";
   static const String serviceHistoryImage = "assets/images/service_history.png";
