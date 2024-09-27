@@ -7,11 +7,13 @@ import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:madathil/constants.dart';
+import 'package:madathil/model/model_class/api_response_model/add_closing_statment_response.dart';
 import 'package:madathil/model/model_class/api_response_model/attendance_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_response.dart';
 import 'package:madathil/model/model_class/api_response_model/customer_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/general_response.dart';
+import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/login_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
@@ -144,6 +146,12 @@ class ApiViewModel {
         return CheckInCheckOutListResponse.fromJson(json) as T;
       case AttendanceList:
         return AttendanceList.fromJson(json) as T;
+        case AddClosingStatmentResponse :
+        return AddClosingStatmentResponse .fromJson(json) as T;
+         case CustomerListResponse  :
+        return CustomerListResponse  .fromJson(json) as T;
+         case ItemListResponse  :
+        return ItemListResponse  .fromJson(json) as T;
       case ProductListResponse:
         return ProductListResponse.fromJson(json) as T;
       case ProductDetailResponse:
@@ -153,6 +161,8 @@ class ApiViewModel {
 
       default:
         throw FromJsonNotImplementedException();
+
+        
     }
   }
 }

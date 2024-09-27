@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:madathil/model/model_class/api_response_model/add_closing_statment_response.dart';
 import 'package:madathil/model/model_class/api_response_model/attendance_list_response.dart';
 import 'package:intl/intl.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_response.dart';
+import 'package:madathil/model/model_class/api_response_model/customer_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
@@ -157,6 +162,44 @@ class CommonDataViewmodel extends ChangeNotifier {
       }
     } catch (e) {
       _isloading = false;
+      _errormsg = e.toString();
+      return false;
+    }
+  }
+
+  /*
+  * add closing statment
+  * */
+
+  Future<bool> addClosingStatment(
+      {String? customerName,
+      String? mobNo,
+      String? address,
+      String? item,
+      String? business,
+      String? kw,
+      String? margin,
+      String? expense}) async {
+    try {
+      AddClosingStatmentResponse? response =
+          await apiRepository.addClosingStatment(data: {
+        "customer_name": customerName,
+        "mobile_no": mobNo,
+        "address": address,
+        "item": item,
+        "kw": kw,
+        "margin": margin,
+        "expense": expense
+      });
+
+      if (response?.data != null) {
+        notifyListeners();
+        return true;
+      } else {
+        notifyListeners();
+        return false;
+      }
+    } catch (e) {
       _errormsg = e.toString();
       return false;
     }
@@ -373,6 +416,118 @@ class CommonDataViewmodel extends ChangeNotifier {
     } catch (e) {
       _isloading = false;
       _errormsg = e.toString();
+      return false;
+    }
+  }
+
+  /*
+  * customer list api call
+  * */
+
+  List<String> _customers = [];
+  List<String> get customers => _customers;
+
+  Future<bool> getCustomerList({String? searchItem}) async {
+    try {
+      _isloading = true;
+
+      Map<String, dynamic>? param = {};
+
+      if (searchItem != null && searchItem.isNotEmpty) {
+        param = {
+          "fields": jsonEncode(["name", "customer_name"]),
+          "filters": jsonEncode({
+            "disabled": "false",
+            "customer_name": ["like", "$searchItem%"]
+          }),
+          "order_by": "modified desc",
+        };
+      } else {
+        param = {
+          "fields": jsonEncode(["name", "customer_name"]),
+          "filters": jsonEncode({
+            "disabled": "false",
+            "customer_name": ["like", "%"]
+          }),
+          "order_by": "modified desc",
+        };
+      }
+
+      CustomerListResponse? response =
+          await apiRepository.getCustomerList(param: param);
+
+      if (response != null) {
+        _customers = response.data!
+            .map((customer) => customer.customerName ?? '')
+            .toList();
+        _isloading = false;
+        notifyListeners();
+        return true;
+      } else {
+        _isloading = false;
+        notifyListeners();
+        return false;
+      }
+    } catch (e) {
+      _errormsg = e.toString();
+      _isloading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+    /*
+  * item list api call
+  * */
+
+  List<String> _items = [];
+  List<String> get items => _items;
+
+  Future<bool> getItemList({String? searchItem}) async {
+    try {
+      _isloading = true;
+
+      Map<String, dynamic>? param = {};
+
+      if (searchItem != null && searchItem.isNotEmpty) {
+        param = {
+          "fields": jsonEncode(["name", "item_name"]),
+          "filters": jsonEncode({
+            "disabled": "false",
+            "item_name": ["like", "$searchItem%"]
+          }),
+          "order_by": "modified desc",
+        };
+      } else {
+        param = {
+          "fields": jsonEncode(["name", "item_name"]),
+          "filters": jsonEncode({
+            "disabled": "false",
+            "item_name": ["like", "%"]
+          }),
+          "order_by": "modified desc",
+        };
+      }
+
+      ItemListResponse ? response =
+          await apiRepository.getItemList(param: param);
+
+      if (response != null) {
+        _items = response.data!
+            .map((item) => item.itemName ?? '')
+            .toList();
+        _isloading = false;
+        notifyListeners();
+        return true;
+      } else {
+        _isloading = false;
+        notifyListeners();
+        return false;
+      }
+    } catch (e) {
+      _errormsg = e.toString();
+      _isloading = false;
+      notifyListeners();
       return false;
     }
   }

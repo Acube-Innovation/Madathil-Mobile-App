@@ -7,6 +7,8 @@ import 'package:madathil/view/screens/common_widgets/custom_images.dart';
 import 'package:madathil/view/screens/points/points_congrats_screen.dart';
 import 'package:madathil/view/screens/statments/add_closing_statment.dart';
 import 'package:madathil/view/screens/statments/widgets/closing_statment_item.dart';
+import 'package:madathil/viewmodel/common_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 class ClosingStatmentsListScreen extends StatefulWidget {
   const ClosingStatmentsListScreen({super.key});
@@ -51,6 +53,10 @@ class _ClosingStatmentsListScreenState
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+
+          Provider.of<CommonDataViewmodel>(context, listen: false).getCustomerList();
+
+          
           Navigator.push(
               context,
               MaterialPageRoute(

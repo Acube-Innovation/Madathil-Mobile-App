@@ -12,6 +12,9 @@ class ApiUrls {
   static const kAttendanceHistory =
       '/api/resource/Attendance?fields=["name", "attendance_date", "employee_in_time", "employee_out_time", "status", "city", "state", "area"]&filters={"employee": "HR-EMP-00145", "attendance_date": ["between", ["2024-04-10", "2024-05-10"]]}';
 
+  static const kAddClosingStatment = '/api/resource/Closing Statement';
+  static const kCustomerList = '/api/resource/Customer';
+  static const kItemList = '/api/resource/Item';
   static const kgetProductList =
       '/api/method/a3sola_solar_management.api.get_item_list';
   static const kgetProductDetail =
