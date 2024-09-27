@@ -26,7 +26,7 @@ class TaskDetailScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Center(
               child: Text(
@@ -56,14 +56,19 @@ class TaskDetailScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 25),
-            Container(
-              width: SizeConfig.screenWidth,
-              padding: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.grey),
-                  color: AppColors.white.withOpacity(0.1)),
-              child: const Text("task description given here"),
+            Card(
+              elevation: 5,
+              shape: OutlineInputBorder(
+                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              // decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(20),
+              //     color: AppColors.white.withOpacity(0.1)),
+              child: const Padding(
+                padding: EdgeInsets.all(15),
+                child: Text("task description given here"),
+              ),
             ),
             const SizedBox(height: 25),
             Container(

@@ -27,15 +27,15 @@ class AppTheme {
           color: AppColors.primeryColor,
           fontFamily: "Poppins"),
       headlineLarge: TextStyle(
-          fontSize: 35, color: AppColors.primeryColor, fontFamily: "Poppins"),
-      headlineMedium: TextStyle(
           fontSize: 25, color: AppColors.primeryColor, fontFamily: "Poppins"),
+      headlineMedium: TextStyle(
+          fontSize: 20, color: AppColors.primeryColor, fontFamily: "Poppins"),
       displayLarge: TextStyle(
           fontSize: 25, color: AppColors.primeryColor, fontFamily: "Poppins"),
       displayMedium: TextStyle(
           fontSize: 20, color: AppColors.primeryColor, fontFamily: "Poppins"),
       titleLarge: TextStyle(
-          fontSize: 20,
+          fontSize: 17,
           fontWeight: FontWeight.bold,
           color: AppColors.primeryColor,
           fontFamily: "Poppins"),

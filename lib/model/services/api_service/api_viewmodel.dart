@@ -40,8 +40,8 @@ class ApiViewModel {
 
     dio
       ..options.baseUrl = baseUrl
-      ..options.connectTimeout = const Duration(seconds: 6)
-      ..options.receiveTimeout = const Duration(seconds: 6)
+      ..options.connectTimeout = const Duration(seconds: 15)
+      ..options.receiveTimeout = const Duration(seconds: 15)
       ..options.headers = {
         'Accept': 'application/json',
         'Content-Type': 'application/json',

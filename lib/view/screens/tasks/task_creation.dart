@@ -25,88 +25,80 @@ class TaskCreationScreen extends StatelessWidget {
           child: Form(
             key: authVm.formKey1,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Full Name",
+                    "Task Title ",
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
                           height: 1.7,
                           color: AppColors.grey,
                         ),
                   ),
-                  const SizedBox(
-                    height: 5,
-                  ),
+                  const SizedBox(height: 5),
                   CustomTextField(
                     onchaged: (val) {},
                     controller: fullnameCTLR,
-                    hint: 'full name',
+                    hint: 'Enter the task title',
                     validator: UtilFunctions.validateName,
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 10),
                   Text(
-                    "Email ID",
+                    "Task Description",
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
                           height: 1.7,
                           color: AppColors.grey,
                         ),
                   ),
-                  const SizedBox(
-                    height: 5,
-                  ),
+                  const SizedBox(height: 5),
                   CustomTextField(
                       onchaged: (val) {},
+                      maxLines: 8,
                       controller: emailCTLR,
-                      hint: '123@mail.com',
+                      hint: 'Enter the description',
                       validator: UtilFunctions.validateEmail),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 10),
                   Text(
-                    "Mobile Number",
+                    "Task type",
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
                           height: 1.7,
                           color: AppColors.grey,
                         ),
                   ),
-                  const SizedBox(
-                    height: 5,
-                  ),
+                  const SizedBox(height: 5),
                   CustomTextField(
                     onchaged: (val) {},
                     controller: numberCTLR,
-                    hint: '9785857456',
+                    suffixIcon: const Icon(Icons.arrow_drop_down,
+                        color: AppColors.primeryColor),
+                    hint: 'Select type',
                     validator: UtilFunctions.validateMobileNumber,
                     // obscureText: avm.obscureText!,
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 10),
                   Text(
-                    "Full Name",
+                    "Date",
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
                           height: 1.7,
                           color: AppColors.grey,
                         ),
                   ),
-                  const SizedBox(
-                    height: 5,
-                  ),
+                  const SizedBox(height: 5),
                   CustomTextField(
                     onchaged: (val) {},
                     controller: fullnameCTLR,
-                    hint: 'full name',
+                    suffixIcon: const Icon(Icons.calendar_month,
+                        color: AppColors.primeryColor),
+                    enabled: false,
+                    hint: 'Select date',
                     validator: UtilFunctions.validateName,
                   ),
                   const SizedBox(
                     height: 10,
                   ),
                   Text(
-                    "Full Name",
+                    "Assignee",
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
                           height: 1.7,
                           color: AppColors.grey,
@@ -117,59 +109,22 @@ class TaskCreationScreen extends StatelessWidget {
                   ),
                   CustomTextField(
                     onchaged: (val) {},
+                    enabled: false,
                     controller: fullnameCTLR,
-                    hint: 'full name',
-                    validator: UtilFunctions.validateName,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    "Full Name",
-                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          height: 1.7,
-                          color: AppColors.grey,
-                        ),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  CustomTextField(
-                    onchaged: (val) {},
-                    controller: fullnameCTLR,
-                    hint: 'full name',
-                    validator: UtilFunctions.validateName,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    "Full Name",
-                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          height: 1.7,
-                          color: AppColors.grey,
-                        ),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  CustomTextField(
-                    onchaged: (val) {},
-                    controller: fullnameCTLR,
-                    hint: 'full name',
+                    suffixIcon: const Icon(Icons.arrow_drop_down,
+                        color: AppColors.primeryColor),
+                    hint: 'Select Assignee',
                     validator: UtilFunctions.validateName,
                   ),
                   const SizedBox(
                     height: 10,
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 50),
+                    padding: const EdgeInsets.symmetric(vertical: 20),
                     child: CustomButton(
-                      text: "Add Task",
-                      height: 43,
-                      width: double.maxFinite,
-                      onPressed: () {},
-                    ),
+                        text: "Add Task",
+                        width: double.maxFinite,
+                        onPressed: () {}),
                   ),
                 ],
               ),
