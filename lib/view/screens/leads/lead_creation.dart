@@ -25,12 +25,12 @@ class LeadCreationScreen extends StatelessWidget {
           child: Form(
             key: authVm.formKey1,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 2),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Full Name",
+                    "Lead Source",
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
                           height: 1.7,
                           color: AppColors.grey,
@@ -42,14 +42,14 @@ class LeadCreationScreen extends StatelessWidget {
                   CustomTextField(
                     onchaged: (val) {},
                     controller: fullnameCTLR,
-                    hint: 'full name',
+                    hint: 'Enter the lead source',
                     validator: UtilFunctions.validateName,
                   ),
                   const SizedBox(
                     height: 10,
                   ),
                   Text(
-                    "Email ID",
+                    "Lead Name",
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
                           height: 1.7,
                           color: AppColors.grey,
@@ -61,13 +61,13 @@ class LeadCreationScreen extends StatelessWidget {
                   CustomTextField(
                       onchaged: (val) {},
                       controller: emailCTLR,
-                      hint: '123@mail.com',
+                      hint: 'Enter the lead name',
                       validator: UtilFunctions.validateEmail),
                   const SizedBox(
                     height: 10,
                   ),
                   Text(
-                    "Mobile Number",
+                    "Lead Category",
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
                           height: 1.7,
                           color: AppColors.grey,
@@ -79,7 +79,7 @@ class LeadCreationScreen extends StatelessWidget {
                   CustomTextField(
                     onchaged: (val) {},
                     controller: numberCTLR,
-                    hint: '9785857456',
+                    hint: 'Select Lead Category',
                     validator: UtilFunctions.validateMobileNumber,
                     // obscureText: avm.obscureText!,
                   ),
@@ -87,7 +87,7 @@ class LeadCreationScreen extends StatelessWidget {
                     height: 10,
                   ),
                   Text(
-                    "Full Name",
+                    "Contact Number",
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
                           height: 1.7,
                           color: AppColors.grey,
@@ -99,14 +99,14 @@ class LeadCreationScreen extends StatelessWidget {
                   CustomTextField(
                     onchaged: (val) {},
                     controller: fullnameCTLR,
-                    hint: 'full name',
+                    hint: 'Enter contact number',
                     validator: UtilFunctions.validateName,
                   ),
                   const SizedBox(
                     height: 10,
                   ),
                   Text(
-                    "Full Name",
+                    "Contact Email",
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
                           height: 1.7,
                           color: AppColors.grey,
@@ -118,14 +118,14 @@ class LeadCreationScreen extends StatelessWidget {
                   CustomTextField(
                     onchaged: (val) {},
                     controller: fullnameCTLR,
-                    hint: 'full name',
+                    hint: 'Enter contact email',
                     validator: UtilFunctions.validateName,
                   ),
                   const SizedBox(
                     height: 10,
                   ),
                   Text(
-                    "Full Name",
+                    "Consumer Number",
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
                           height: 1.7,
                           color: AppColors.grey,
@@ -137,14 +137,14 @@ class LeadCreationScreen extends StatelessWidget {
                   CustomTextField(
                     onchaged: (val) {},
                     controller: fullnameCTLR,
-                    hint: 'full name',
+                    hint: 'Enter the Consumer Number',
                     validator: UtilFunctions.validateName,
                   ),
                   const SizedBox(
                     height: 10,
                   ),
                   Text(
-                    "Full Name",
+                    "Aadhar Number",
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
                           height: 1.7,
                           color: AppColors.grey,
@@ -156,19 +156,60 @@ class LeadCreationScreen extends StatelessWidget {
                   CustomTextField(
                     onchaged: (val) {},
                     controller: fullnameCTLR,
-                    hint: 'full name',
+                    hint: 'Enter the aadhar number',
                     validator: UtilFunctions.validateName,
                   ),
                   const SizedBox(
                     height: 10,
                   ),
+                  Text(
+                    "Address",
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                          height: 1.7,
+                          color: AppColors.grey,
+                        ),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  CustomTextField(
+                    onchaged: (val) {},
+                    controller: fullnameCTLR,
+                    hint: 'Enter Address',
+                    validator: UtilFunctions.validateName,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Image of the lead",
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                          height: 1.7,
+                          color: AppColors.grey,
+                        ),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  CustomTextField(
+                    onchaged: (val) {},
+                    suffixIcon: const Icon(Icons.camera_alt_outlined,
+                        color: AppColors.primeryColor),
+                    controller: fullnameCTLR,
+                    enabled: false,
+                    hint: 'Select image of the lead',
+                    validator: UtilFunctions.validateName,
+                  ),
+                  const SizedBox(height: 10),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 50),
+                    padding: const EdgeInsets.symmetric(vertical: 20),
                     child: CustomButton(
                       text: "Add Lead",
                       height: 43,
                       width: double.maxFinite,
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                     ),
                   ),
                 ],

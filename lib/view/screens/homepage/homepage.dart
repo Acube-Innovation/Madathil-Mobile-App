@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:madathil/app_images.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/view/screens/Referal/referal_screen.dart';
 import 'package:madathil/view/screens/attendance/attendance.dart';
 import 'package:madathil/view/screens/call_management/call_list_screen.dart';
 import 'package:madathil/view/screens/homepage/components/drawer_widget.dart';
@@ -8,6 +9,7 @@ import 'package:madathil/view/screens/homepage/components/home_item_widget.dart'
 import 'package:madathil/view/screens/leads/leads_screen.dart';
 import 'package:madathil/view/screens/orders/orders_screen.dart';
 import 'package:madathil/view/screens/products/product_list.dart';
+import 'package:madathil/view/screens/profile/profile_screen.dart';
 import 'package:madathil/view/screens/service_list/service_list.dart';
 import 'package:madathil/view/screens/tasks/task_screen.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
@@ -26,9 +28,16 @@ class HomePage extends StatelessWidget {
           title:
               Text("Hi, User!", style: Theme.of(context).textTheme.titleSmall),
           actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 20.0, top: 10, bottom: 10),
-              child: Image.asset(AppImages.userImage, height: 20),
+            InkWell(
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ProfileScreen())),
+              child: Padding(
+                padding:
+                    const EdgeInsets.only(right: 20.0, top: 10, bottom: 10),
+                child: Image.asset(AppImages.userImage, height: 20),
+              ),
             )
           ],
         ),
@@ -37,7 +46,7 @@ class HomePage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: Column(
               children: [
-                getDashboardDetails("admin"),
+                getDashboardDetails("admin", context),
                 const SizedBox(height: 10),
                 getBody("admin", context),
               ],
@@ -46,8 +55,8 @@ class HomePage extends StatelessWidget {
         ));
   }
 
-  getDashboardDetails(String? login) {
-    return const Card(
+  getDashboardDetails(String? login, BuildContext context) {
+    return Card(
       elevation: 5,
       child: SizedBox(
         height: 120,
@@ -55,64 +64,76 @@ class HomePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "10",
-                  style: TextStyle(
-                      color: AppColors.primaryLightColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22),
-                ),
-                Text(
-                  "New Leads",
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+            InkWell(
+              onTap: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const LeadsScreen())),
+              child: const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "10",
+                    style: TextStyle(
+                        color: AppColors.primaryLightColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22),
                   ),
-                ),
-              ],
+                  Text(
+                    "New Leads",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            VerticalDivider(endIndent: 50, indent: 50),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "8",
-                  style: TextStyle(
-                      color: AppColors.primaryLightColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22),
-                ),
-                Text(
-                  "Sales",
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+            const VerticalDivider(endIndent: 50, indent: 50),
+            const InkWell(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "8",
+                    style: TextStyle(
+                        color: AppColors.primaryLightColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22),
                   ),
-                ),
-              ],
+                  Text(
+                    "Sales",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            VerticalDivider(endIndent: 50, indent: 50),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "8",
-                  style: TextStyle(
-                      color: AppColors.primaryLightColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22),
-                ),
-                Text(
-                  "Reference Points",
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+            const VerticalDivider(endIndent: 50, indent: 50),
+            InkWell(
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ReferalScreen())),
+              child: const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "8",
+                    style: TextStyle(
+                        color: AppColors.primaryLightColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22),
                   ),
-                ),
-              ],
+                  Text(
+                    "Reference Points",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

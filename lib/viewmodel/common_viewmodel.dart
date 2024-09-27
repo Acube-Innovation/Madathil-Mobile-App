@@ -22,15 +22,6 @@ class CommonDataViewmodel extends ChangeNotifier {
 
   TextEditingController dobController = TextEditingController();
 
-  String _selectedValue = '';
-
-  String get selectedValue => _selectedValue;
-
-  void selectValue(String value) {
-    _selectedValue = value;
-    notifyListeners(); // Notify listeners when the value changes
-  }
-
   String _selectedpayment = '';
 
   String get selectedpayment => _selectedpayment;

@@ -63,57 +63,65 @@ class OwnLeads extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 46,
-          child: TextField(
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.only(left: 30),
-              suffixIcon: Container(
-                  decoration: const BoxDecoration(
-                      shape: BoxShape.circle, color: AppColors.primeryColor),
-                  child: const Icon(Icons.search, color: Colors.white)),
-              enabled: true,
-              disabledBorder: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                borderSide: BorderSide(color: AppColors.black),
-              ),
-              border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                borderSide: BorderSide(color: AppColors.grey, width: 1),
-              ),
-              enabledBorder: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                borderSide: BorderSide(color: AppColors.grey, width: 1),
-              ),
-              focusedBorder: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                borderSide: BorderSide(color: AppColors.primeryColor, width: 1),
-              ),
-              errorBorder: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                borderSide: BorderSide(color: AppColors.red),
-              ),
-              hintText: "Search",
-              counterText: "",
-              hintStyle: const TextStyle(
-                // fontFamily: "SF Pro Display",
-                fontSize: 18,
-                fontWeight: FontWeight.w400,
-                height: 1.275,
-                color: AppColors.grey,
+    return InkWell(
+      onTap: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const LeadDetailScreen()));
+      },
+      child: Column(
+        children: [
+          SizedBox(
+            height: 46,
+            child: TextField(
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.only(left: 30),
+                suffixIcon: Container(
+                    decoration: const BoxDecoration(
+                        shape: BoxShape.circle, color: AppColors.primeryColor),
+                    child: const Icon(Icons.search, color: Colors.white)),
+                enabled: true,
+                disabledBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                  borderSide: BorderSide(color: AppColors.black),
+                ),
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                  borderSide: BorderSide(color: AppColors.grey, width: 1),
+                ),
+                enabledBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                  borderSide: BorderSide(color: AppColors.grey, width: 1),
+                ),
+                focusedBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                  borderSide:
+                      BorderSide(color: AppColors.primeryColor, width: 1),
+                ),
+                errorBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                  borderSide: BorderSide(color: AppColors.red),
+                ),
+                hintText: "Search",
+                counterText: "",
+                hintStyle: const TextStyle(
+                  // fontFamily: "SF Pro Display",
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                  height: 1.275,
+                  color: AppColors.grey,
+                ),
               ),
             ),
           ),
-        ),
-        const SizedBox(height: 15),
-        ListView.builder(
-          shrinkWrap: true,
-          itemCount: 3,
-          itemBuilder: (context, index) => const LeadListItem(),
-        )
-      ],
+          const SizedBox(height: 15),
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: 3,
+            itemBuilder: (context, index) =>
+                const LeadListItem(status: "active"),
+          )
+        ],
+      ),
     );
   }
 }
@@ -177,7 +185,8 @@ class OtherLeads extends StatelessWidget {
           ListView.builder(
             shrinkWrap: true,
             itemCount: 3,
-            itemBuilder: (context, index) => const LeadListItem(),
+            itemBuilder: (context, index) =>
+                const LeadListItem(status: "inactive"),
           )
         ],
       ),
@@ -186,9 +195,8 @@ class OtherLeads extends StatelessWidget {
 }
 
 class LeadListItem extends StatelessWidget {
-  const LeadListItem({
-    super.key,
-  });
+  final String? status;
+  const LeadListItem({super.key, this.status});
 
   @override
   Widget build(BuildContext context) {
@@ -204,42 +212,65 @@ class LeadListItem extends StatelessWidget {
             color: AppColors.primeryColor.withOpacity(0.2),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "User Name",
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: AppColors.primeryColor,
-                      fontWeight: FontWeight.w400),
-                ),
-                const SizedBox(height: 5),
-                Row(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(Icons.circle, color: AppColors.secondaryColor),
-                    const SizedBox(width: 5),
-                    Expanded(
-                      child: Text(
-                        "Active",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: AppColors.primeryColor),
-                      ),
-                    ),
                     Text(
-                      "Created: ",
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(color: AppColors.primeryColor),
+                      "User Name",
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: AppColors.primeryColor,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      "Address: user address",
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppColors.primeryColor,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      "Phone: +91 987654321",
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppColors.primeryColor,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      "Created: 25-Sept-2024 ",
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppColors.primeryColor,
+                          fontWeight: FontWeight.w400),
                     ),
                   ],
-                )
-              ],
-            ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 15),
+                child: Container(
+                  color: status?.toLowerCase() == 'active'
+                      ? AppColors.green
+                      : AppColors.red,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                        status?.toLowerCase() == 'active'
+                            ? "Active"
+                            : "InActive",
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(color: AppColors.white)),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

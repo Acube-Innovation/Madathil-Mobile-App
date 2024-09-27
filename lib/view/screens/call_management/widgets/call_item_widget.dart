@@ -18,13 +18,16 @@ class CallItemWidget extends StatelessWidget {
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const CallDetailsScreen()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const CallDetailsScreen()));
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 4),
               child: Container(
                 decoration: BoxDecoration(
-                    color: AppColors.amber100!.withOpacity(0.5),
+                    color: AppColors.primeryColor.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(8)),
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),

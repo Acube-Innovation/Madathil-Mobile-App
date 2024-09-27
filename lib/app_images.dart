@@ -12,6 +12,7 @@ class AppImages {
   static const String moneyImage = "assets/images/money.png";
   static const String assignImage = "assets/images/assign.png";
   static const String sheetsImage = "assets/images/sheet.png";
+  static const String statementImage = "assets/images/statement.png";
 
   static const String profileImage = "assets/images/profile.png";
   static const String serviceHistoryImage = "assets/images/service_history.png";
@@ -31,4 +32,5 @@ class AppImages {
   static const String acImage = "assets/images/ac.png";
   static const String shippingIcon = "assets/images/shipping.png";
   static const String serviceIcon = "assets/images/Service_icon.png";
+  static const String placeHolder = "assets/images/place_holder.png";
 }

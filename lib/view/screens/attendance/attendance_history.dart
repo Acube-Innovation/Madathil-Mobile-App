@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
+import 'package:madathil/view/screens/common_widgets/loaderwidget.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -13,6 +14,9 @@ class AttendanceHistoryScreen extends StatelessWidget {
     return Scaffold(
       appBar: const CustomAppBar(title: "Attendance History"),
       body: Consumer<CommonDataViewmodel>(builder: (context, cdv, _) {
+        if (cdv.isloading!) {
+          return const LoaderWidget();
+        }
         return Column(
           children: [
             ListView.builder(

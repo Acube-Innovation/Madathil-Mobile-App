@@ -15,6 +15,8 @@ import 'package:madathil/model/model_class/api_response_model/customer_list_resp
 import 'package:madathil/model/model_class/api_response_model/general_response.dart';
 import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/login_response.dart';
+import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
+import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
 import 'package:madathil/model/model_class/local/environment.dart';
 import 'package:madathil/model/services/api_service/api_urls.dart';
 import 'package:madathil/model/services/local_db/hive_constants.dart';
@@ -40,8 +42,8 @@ class ApiViewModel {
 
     dio
       ..options.baseUrl = baseUrl
-      ..options.connectTimeout = const Duration(seconds: 6)
-      ..options.receiveTimeout = const Duration(seconds: 6)
+      ..options.connectTimeout = const Duration(seconds: 15)
+      ..options.receiveTimeout = const Duration(seconds: 15)
       ..options.headers = {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -150,6 +152,12 @@ class ApiViewModel {
         return CustomerListResponse  .fromJson(json) as T;
          case ItemListResponse  :
         return ItemListResponse  .fromJson(json) as T;
+      case ProductListResponse:
+        return ProductListResponse.fromJson(json) as T;
+      case ProductDetailResponse:
+        return ProductDetailResponse.fromJson(json) as T;
+      case CustomerListResponse:
+        return CustomerListResponse.fromJson(json) as T;
 
       default:
         throw FromJsonNotImplementedException();

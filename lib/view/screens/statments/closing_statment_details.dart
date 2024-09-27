@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:madathil/app_images.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 
@@ -19,14 +20,14 @@ class ClosingStatmentDetails extends StatelessWidget {
                 const SizedBox(
                   height: 60,
                 ),
-                const CircleAvatar(
+                CircleAvatar(
                   backgroundColor: AppColors.primeryColor,
                   radius: 50,
-                  child: Icon(
-                    Icons.exit_to_app_outlined,
-                    color: AppColors.white,
-                    size: 50,
-                  ),
+                  child: Center(
+                      child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.asset(AppImages.statementImage, width: 60),
+                  )),
                 ),
                 const SizedBox(
                   height: 25,

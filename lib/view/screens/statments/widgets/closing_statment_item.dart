@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:madathil/app_images.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/statments/closing_statment_details.dart';
 
@@ -33,21 +34,11 @@ class ClosingStatementItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Left icon container
-                    Container(
-                      height: 80,
-                      width: 60,
-                      decoration: BoxDecoration(
-                        color: AppColors.primeryColor,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Icon(
-                        Icons
-                            .exit_to_app_rounded, // You can change this to match your icon
-                        color: Colors.white,
-                        size: 40,
-                      ),
-                    ),
-                    const SizedBox(width: 16), // Space between icon and text
+                    Center(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.asset(AppImages.statementImage, width: 60),
+                    )),
 
                     // Text column
                     Expanded(
@@ -96,10 +87,11 @@ class ClosingStatementItem extends StatelessWidget {
                         ],
                       ),
                     ),
-
+                    const SizedBox(width: 10),
                     // Right column with amount and date
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
                           "Close Amount",
@@ -120,7 +112,7 @@ class ClosingStatementItem extends StatelessWidget {
                                   color: AppColors.primeryColor,
                                   fontSize: 15),
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 8),
                         Text(
                           "Closed Date",
                           style:

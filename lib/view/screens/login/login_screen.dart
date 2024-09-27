@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/utils/color/util_functions.dart';
@@ -178,17 +180,16 @@ class LoginScreen extends StatelessWidget {
           onPressed: () {
             if (authVm.formKey.currentState!.validate()) {
               UtilFunctions.loaderPopup(context);
+
               authVm
                   .login(username: emailCtlr.text, pwd: passwordCtlr.text)
                   .then((value) {
-                Navigator.pop(context);
-
                 if (value) {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (context) => const HomePage()));
                 } else {
-                  Navigator.pop(context);
-                  toast(authVm.errormsg, context);
+                  Navigator.of(context).pop();
+                  toast(authVm.errormsg ?? "", context);
                 }
               });
             } else {
