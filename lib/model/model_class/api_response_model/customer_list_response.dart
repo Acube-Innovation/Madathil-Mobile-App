@@ -1,14 +1,13 @@
 class CustomerListResponse {
-
-  List<Data>? data;
+  List<Customer>? data;
 
   CustomerListResponse({this.data});
 
   CustomerListResponse.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {
-      data = <Data>[];
+      data = <Customer>[];
       json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(new Customer.fromJson(v));
       });
     }
   }
@@ -22,41 +21,6 @@ class CustomerListResponse {
   }
 }
 
-class Data {
-  String? name;
-  String? customerName;
-
-  Data({this.name, this.customerName});
-
-  Data.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    customerName = json['customer_name'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['customer_name'] = this.customerName;
-    return data;
-  }
-
-  List<Customer>? data;
-
-  CustomerListResponse({
-    this.data,
-  });
-
-  factory CustomerListResponse.fromJson(Map<String, dynamic> json) =>
-      CustomerListResponse(
-        data:
-            List<Customer>.from(json["data"].map((x) => Customer.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "data": List<dynamic>.from(data!.map((x) => x.toJson())),
-      };
-}
-
 class Customer {
   String? name;
   String? customerName;
@@ -64,27 +28,24 @@ class Customer {
   String? emailId;
   String? mobileNo;
 
-  Customer({
-    this.name,
-    this.customerName,
-    this.image,
-    this.emailId,
-    this.mobileNo,
-  });
+  Customer(
+      {this.name, this.customerName, this.image, this.emailId, this.mobileNo});
 
-  factory Customer.fromJson(Map<String, dynamic> json) => Customer(
-        name: json["name"],
-        customerName: json["customer_name"],
-        image: json["image"],
-        emailId: json["email_id"],
-        mobileNo: json["mobile_no"],
-      );
+  Customer.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    customerName = json['customer_name'];
+    image = json['image'];
+    emailId = json['email_id'];
+    mobileNo = json['mobile_no'];
+  }
 
-  Map<String, dynamic> toJson() => {
-        "name": name,
-        "customer_name": customerName,
-        "image": image,
-        "email_id": emailId,
-        "mobile_no": mobileNo,
-      };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    data['customer_name'] = this.customerName;
+    data['image'] = this.image;
+    data['email_id'] = this.emailId;
+    data['mobile_no'] = this.mobileNo;
+    return data;
+  }
 }

@@ -45,16 +45,11 @@ class ApiRepository {
         apiUrl: ApiUrls.kAddClosingStatment, data: data);
   }
 
-  Future<CustomerListResponse?> getCustomerList(
-      {Map<String, dynamic>? param}) async {
-    return _apiViewModel!.get<CustomerListResponse>(
-        apiUrl: ApiUrls.kCustomerList, params: param);
-  }
-
   Future<ItemListResponse?> getItemList({Map<String, dynamic>? param}) async {
     return _apiViewModel!
         .get<ItemListResponse>(apiUrl: ApiUrls.kItemList, params: param);
-=======
+  }
+
   Future<ProductListResponse?> getProductList(
       {Map<String, dynamic>? param}) async {
     return _apiViewModel!.get<ProductListResponse>(
