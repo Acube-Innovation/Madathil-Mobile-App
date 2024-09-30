@@ -1,5 +1,9 @@
 import 'dart:convert';
+import 'dart:developer';
+import 'dart:io' as dio;
+import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,7 +13,9 @@ import 'package:intl/intl.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_response.dart';
 import 'package:madathil/model/model_class/api_response_model/customer_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/image_uploade_response.dart';
 import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
+import 'package:madathil/model/model_class/utility_model_class/customer_utility_model.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
@@ -105,6 +111,12 @@ class CommonDataViewmodel extends ChangeNotifier {
 
   bool? _isloading = false;
   bool? get isloading => _isloading;
+
+  bool isMoreLoading = true;
+  setMoreLoader(bool value) {
+    isMoreLoading = value;
+    notifyListeners();
+  }
 
   /*
   * checin checkout api call
@@ -219,6 +231,7 @@ class CommonDataViewmodel extends ChangeNotifier {
 
     if (image != null) {
       _pickedImage = image;
+
       notifyListeners();
     }
     return pickedImage;
@@ -226,6 +239,7 @@ class CommonDataViewmodel extends ChangeNotifier {
 
   clearCustomerimage() {
     _pickedImage = null;
+
     notifyListeners();
   }
 
@@ -476,7 +490,7 @@ class CommonDataViewmodel extends ChangeNotifier {
     }
   }
 
-    /*
+  /*
   * item list api call
   * */
 
@@ -509,13 +523,11 @@ class CommonDataViewmodel extends ChangeNotifier {
         };
       }
 
-      ItemListResponse ? response =
+      ItemListResponse? response =
           await apiRepository.getItemList(param: param);
 
       if (response != null) {
-        _items = response.data!
-            .map((item) => item.itemName ?? '')
-            .toList();
+        _items = response.data!.map((item) => item.itemName ?? '').toList();
         _isloading = false;
         notifyListeners();
         return true;

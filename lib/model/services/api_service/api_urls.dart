@@ -20,4 +20,13 @@ class ApiUrls {
   static const kgetProductDetail =
       '/api/method/a3sola_solar_management.api.get_item_details';
   static const kgetCustomerList = '/api/resource/Customer';
+  static const kFileUploade = '/api/method/upload_file';
+  static const kCreateCustomer = '/api/resource/Customer';
+  static const kCreateAddress = '/api/resource/Address';
+
+  static const kcustomer = '/api/resource/Customer';
+
+  static const kCustomerAddress =
+      '/api/method/a3sola_solar_management.api.get_doctype_data';
+  static const kCreateCheckOut = "/api/resource/Sales Order";
 }

@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:madathil/model/model_class/api_response_model/create_check_out_response_model.dart';
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
@@ -253,6 +254,45 @@ class ProductViewmodel extends ChangeNotifier {
     if (_quantity > 0) {
       _quantity--;
       notifyListeners();
+    }
+  }
+
+  SaleOrder? checkOutData;
+
+  Future<bool> createCheckOut(
+      {String? customer, String? date, Product? productData}) async {
+    try {
+      setLoader(true);
+
+      var response = await apiRepository.createCheckOut(data: {
+        "customer": customer,
+        "delivery_date": date,
+        "items": [
+          {
+            "item_code": productData?.itemCode,
+            "qty": quantity,
+            "rate": productData?.rate?.toInt()
+          }
+        ]
+      });
+      if (response?.data?.doctype == "Sales Order") {
+        // _productListResponse = response;
+
+        checkOutData = response?.data;
+
+        log("checkOut detail------------> ${checkOutData?.toJson() ?? []}");
+        setLoader(false);
+
+        return true;
+      } else {
+        setLoader(false);
+        return false;
+      }
+    } catch (e) {
+      setLoader(false);
+      _errormsg = e.toString();
+      log(e.toString());
+      return false;
     }
   }
 }

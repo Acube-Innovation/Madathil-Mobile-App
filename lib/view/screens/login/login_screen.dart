@@ -182,7 +182,9 @@ class LoginScreen extends StatelessWidget {
               UtilFunctions.loaderPopup(context);
 
               authVm
-                  .login(username: emailCtlr.text, pwd: passwordCtlr.text)
+                  .login(
+                      username: emailCtlr.text.trim(),
+                      pwd: passwordCtlr.text.trim())
                   .then((value) {
                 if (value) {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(

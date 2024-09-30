@@ -135,6 +135,10 @@ class UtilFunctions {
       },
     );
   }
+
+  static String? requiredField(String? value) {
+    return value == null || value.isEmpty ? 'Required Field' : null;
+  }
 }
 
 void toast(msg, BuildContext context, {bool? isError = false}) {

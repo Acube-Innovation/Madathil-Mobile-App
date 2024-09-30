@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/utils/color/util_functions.dart';
 import 'package:madathil/view/screens/check_out/check_out_screen.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
@@ -10,6 +11,7 @@ import 'package:madathil/view/screens/customer/add_customer_screen.dart';
 import 'package:madathil/view/screens/payment_mode/payment_mode.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:madathil/viewmodel/customer_viewmodel.dart';
+import 'package:madathil/viewmodel/product_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class ChangeCustomer extends StatefulWidget {
@@ -37,6 +39,7 @@ class _ChangeCustomerState extends State<ChangeCustomer> {
   Widget build(BuildContext context) {
     TextEditingController controller = TextEditingController();
     final customerVm = Provider.of<CustomerViewmodel>(context, listen: false);
+    final productVm = Provider.of<ProductViewmodel>(context, listen: false);
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -203,7 +206,7 @@ class _ChangeCustomerState extends State<ChangeCustomer> {
                               var item = customerVm.customerPost![index];
                               return GestureDetector(
                                 onTap: () {
-                                  customerVm.selectValue('Option $index');
+                                  customerVm.selectValue(item);
                                 },
                                 child: Container(
                                     padding: const EdgeInsets.symmetric(
@@ -268,8 +271,8 @@ class _ChangeCustomerState extends State<ChangeCustomer> {
                                         const Spacer(),
                                         Radio(
                                           activeColor: AppColors.black,
-                                          value: 'Option $index',
-                                          groupValue: csv.selectedValue,
+                                          value: item,
+                                          groupValue: csv.selectedAddress,
                                           onChanged: (value) {
                                             customerVm.selectValue(value!);
                                             // Update the selected value
@@ -303,11 +306,35 @@ class _ChangeCustomerState extends State<ChangeCustomer> {
               child: CustomButton(
                 text: "Select",
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const CheckOutScreen(),
-                      ));
+                  DateTime today = DateTime.now();
+
+                  DateTime nextDay = today.add(const Duration(days: 2));
+
+                  String nextDayString =
+                      "${nextDay.year}-${nextDay.month.toString().padLeft(2, '0')}-${nextDay.day.toString().padLeft(2, '0')}";
+                  UtilFunctions.loaderPopup(context);
+
+                  productVm
+                      .createCheckOut(
+                          customer: customerVm.selectedAddress?.customerName,
+                          date: nextDayString,
+                          productData: productVm.productData)
+                      .then((value) {
+                    customerVm.getCustomerAddress(
+                        name: customerVm.selectedAddress?.customerName);
+                    Navigator.of(context).pop();
+
+                    if (value) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CheckOutScreen(),
+                          ));
+                    } else {
+                      Navigator.of(context).pop();
+                      toast(customerVm.errormsg, context);
+                    }
+                  });
                 },
               ),
             ),

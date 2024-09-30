@@ -11,8 +11,14 @@ import 'package:madathil/model/model_class/api_response_model/add_closing_statme
 import 'package:madathil/model/model_class/api_response_model/attendance_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_response.dart';
+import 'package:madathil/model/model_class/api_response_model/create_address_response_model.dart';
+import 'package:madathil/model/model_class/api_response_model/create_check_out_response_model.dart';
+import 'package:madathil/model/model_class/api_response_model/create_customer_response.dart';
 import 'package:madathil/model/model_class/api_response_model/customer_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/general_response.dart';
+import 'package:madathil/model/model_class/api_response_model/get_customer_address_response.dart';
+import 'package:madathil/model/model_class/api_response_model/get_customer_detail_response.dart';
+import 'package:madathil/model/model_class/api_response_model/image_uploade_response.dart';
 import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/login_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
@@ -133,6 +139,33 @@ class ApiViewModel {
     }
   }
 
+  Future<T?> postFormdata<T>({
+    required String apiUrl,
+    required data,
+  }) async {
+    try {
+      Map<String, dynamic>? savedCookies =
+          hiveInstance?.getData(DataBoxKey.cookie);
+      if (savedCookies != null && savedCookies.isNotEmpty) {
+        dio.options.headers[HttpHeaders.cookieHeader] =
+            savedCookies.entries.map((e) => '${e.key}=${e.value}').join('; ');
+      }
+      Response response = await dio.post(
+        apiUrl,
+        data: data,
+      );
+
+      if (response.statusCode == 200) {
+        return fromJson<T>(response.data);
+      } else {
+        throw Failure.fromCode(response.statusCode ?? ResponseCode.DEFAULT);
+      }
+    } on DioException catch (error) {
+      throw Failure.fromCode(
+          error.response?.statusCode ?? ResponseCode.DEFAULT);
+    }
+  }
+
   // Convert response to respective model classes
   T fromJson<T>(Map<String, dynamic> json) {
     switch (T) {
@@ -146,23 +179,31 @@ class ApiViewModel {
         return CheckInCheckOutListResponse.fromJson(json) as T;
       case AttendanceList:
         return AttendanceList.fromJson(json) as T;
-        case AddClosingStatmentResponse :
-        return AddClosingStatmentResponse .fromJson(json) as T;
-         case CustomerListResponse  :
-        return CustomerListResponse  .fromJson(json) as T;
-         case ItemListResponse  :
-        return ItemListResponse  .fromJson(json) as T;
+      case AddClosingStatmentResponse:
+        return AddClosingStatmentResponse.fromJson(json) as T;
+      case CustomerListResponse:
+        return CustomerListResponse.fromJson(json) as T;
+      case ItemListResponse:
+        return ItemListResponse.fromJson(json) as T;
       case ProductListResponse:
         return ProductListResponse.fromJson(json) as T;
       case ProductDetailResponse:
         return ProductDetailResponse.fromJson(json) as T;
-      case CustomerListResponse:
-        return CustomerListResponse.fromJson(json) as T;
+      case CreateCustomerResponse:
+        return CreateCustomerResponse?.fromJson(json) as T;
+      case ImageUploadeResponse:
+        return ImageUploadeResponse?.fromJson(json) as T;
+      case CreateAddressResponse:
+        return CreateAddressResponse?.fromJson(json) as T;
+      case GetCustomerDetailResponse:
+        return GetCustomerDetailResponse?.fromJson(json) as T;
+      case GetCustomerAddress:
+        return GetCustomerAddress?.fromJson(json) as T;
+      case CreateCheckOutResponse:
+        return CreateCheckOutResponse?.fromJson(json) as T;
 
       default:
         throw FromJsonNotImplementedException();
-
-        
     }
   }
 }
