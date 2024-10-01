@@ -10,11 +10,9 @@ class TransactionItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
       child: Container(
-        height: 80,
-        width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             color: AppColors.primeryColor.withOpacity(0.3),
-            borderRadius: BorderRadius.all(Radius.circular(20))),
+            borderRadius: const BorderRadius.all(Radius.circular(20))),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Row(
@@ -22,65 +20,61 @@ class TransactionItem extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  CustomPngImage(
+                  const CustomPngImage(
                     imageName: 'assets/images/person_icon.png',
                     height: 60,
                     width: 60,
                   ),
-                  SizedBox(width: 17,),
+                  const SizedBox(
+                    width: 17,
+                  ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Jhon',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge!
-                              .copyWith(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w400,
-                                height: 1.7,
-                                color: AppColors.primeryColor,
-                              )),
-                              SizedBox(height: 5,),
-                              Text('10 Feb',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall!
-                              .copyWith(
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.black,
-                              ))
+                          style:
+                              Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w400,
+                                    height: 1.7,
+                                    color: AppColors.primeryColor,
+                                  )),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Text('10 Feb',
+                          style:
+                              Theme.of(context).textTheme.bodySmall!.copyWith(
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.black,
+                                  ))
                     ],
                   )
                 ],
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('\$1000',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge!
-                              .copyWith(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w400,
-                                height: 1.7,
-                                color: AppColors.primeryColor,
-                              )),
-                              SizedBox(height: 5,),
-                              Text('Solar Panel',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall!
-                              .copyWith(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.black,
-                              ))
-                    ],
-                  )
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text('\$1000',
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                            height: 1.7,
+                            color: AppColors.primeryColor,
+                          )),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Text('Solar Panel',
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.black,
+                          ))
+                ],
+              )
             ],
           ),
         ),

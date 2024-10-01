@@ -17,18 +17,7 @@ class _TransactionListState extends State<TransactionList> {
   Widget build(BuildContext context) {
     bool FilterOn = false;
     return Scaffold(
-      appBar: CustomAppBar(
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: const Icon(
-            Icons.arrow_back_ios_new,
-            color: AppColors.secondaryColor,
-          ),
-        ),
-        title: 'Transactions'
-      ),
+      appBar: const CustomAppBar(title: "Transaction List"),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -39,7 +28,7 @@ class _TransactionListState extends State<TransactionList> {
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.only(left: 30),
                   suffixIcon: Container(
-                      margin: EdgeInsets.all(2),
+                      margin: const EdgeInsets.all(2),
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         color: AppColors.primeryColor,
@@ -49,9 +38,9 @@ class _TransactionListState extends State<TransactionList> {
                         color: Colors.white,
                       )),
                   enabled: true,
-                  disabledBorder: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(Radius.circular(5.0)),
-                    borderSide: BorderSide(color: AppColors.black!),
+                  disabledBorder: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                    borderSide: BorderSide(color: AppColors.black),
                   ),
                   border: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25.0)),
@@ -66,9 +55,9 @@ class _TransactionListState extends State<TransactionList> {
                     borderSide:
                         BorderSide(color: AppColors.primeryColor, width: 1),
                   ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(Radius.circular(25.0)),
-                    borderSide: BorderSide(color: AppColors.red!),
+                  errorBorder: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                    borderSide: BorderSide(color: AppColors.red),
                   ),
                   hintText: "Search",
                   counterText: "",
@@ -109,11 +98,12 @@ class _TransactionListState extends State<TransactionList> {
                 Row(
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
                       height: 40,
                       decoration: BoxDecoration(
                           border: Border.all(color: AppColors.primeryColor),
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(20))),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -134,15 +124,16 @@ class _TransactionListState extends State<TransactionList> {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
                       height: 40,
                       decoration: BoxDecoration(
                           border: Border.all(color: AppColors.primeryColor),
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(20))),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -155,7 +146,7 @@ class _TransactionListState extends State<TransactionList> {
                                   color: AppColors.primeryColor,
                                 ),
                           ),
-                          Icon(
+                          const Icon(
                             Icons.close,
                             size: 20,
                             color: AppColors.primeryColor,
@@ -174,7 +165,7 @@ class _TransactionListState extends State<TransactionList> {
                         context: context,
                         backgroundColor: AppColors.transparent,
                         builder: (context) {
-                          return TransactionFilterBottomSheet();
+                          return const TransactionFilterBottomSheet();
                         });
                   },
                   icon: const Icon(
@@ -184,21 +175,22 @@ class _TransactionListState extends State<TransactionList> {
                 )
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
             Expanded(
               child: ListView.separated(
                   itemBuilder: (context, index) {
                     return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const TransactionDetails(),
-                        ));
-                      },
-                      child: TransactionItem());
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const TransactionDetails(),
+                              ));
+                        },
+                        child: const TransactionItem());
                   },
                   separatorBuilder: (context, index) {
                     return const SizedBox();

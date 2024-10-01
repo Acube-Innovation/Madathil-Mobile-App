@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_list_response.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/utils/util_functions.dart';
+import 'package:madathil/view/screens/attendance/attendance_history.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
+import 'package:madathil/view/screens/common_widgets/loaderwidget.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +19,9 @@ class AttendancePage extends StatelessWidget {
     return Scaffold(
       appBar: const CustomAppBar(title: "Attendance"),
       body: Consumer<CommonDataViewmodel>(builder: (context, cdv, _) {
+        if (cdv.isloading!) {
+          return const LoaderWidget();
+        }
         return Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -56,6 +62,7 @@ class AttendancePage extends StatelessWidget {
             InkWell(
               onTap: () {
                 // Implement check-in logic
+                UtilFunctions.loaderPopup(context);
                 cdv
                     .employeeCheckin(
                         logType: ((cdv.checkOutListResponse?.data ?? [])
@@ -67,6 +74,7 @@ class AttendancePage extends StatelessWidget {
                             : "OUT")
                     .then(
                   (value) {
+                    Navigator.pop(context);
                     cdv.employeeCheckinList();
                   },
                 );
@@ -114,7 +122,12 @@ class AttendancePage extends StatelessWidget {
                 height: 43,
                 width: double.maxFinite,
                 onPressed: () {
-                  // Implement history viewing logic
+                  cdv.getAttendanceList();
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const AttendanceHistoryScreen()));
                 },
                 child: Text(
                   'ATTENDANCE HISTORY',

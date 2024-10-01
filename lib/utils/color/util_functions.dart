@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:shimmer/shimmer.dart';
 
 class UtilFunctions {
   static String? validateName(String? value) {
@@ -17,6 +19,10 @@ class UtilFunctions {
 
   static String? validateAddress(String? value) {
     return value == null || value.isEmpty ? 'address is required' : null;
+  }
+
+  static String? validatepincode(String? value) {
+    return value == null || value.isEmpty ? 'pincode is required' : null;
   }
 
   static String? validateEmail(String? value) {
@@ -38,6 +44,100 @@ class UtilFunctions {
     } else {
       return false;
     }
+  }
+
+  static String? validateItemName(String? value) {
+    return value == null || value.isEmpty ? 'Item name is required' : null;
+  }
+
+  static String? validateClosedKw(String? value) {
+    return value == null || value.isEmpty ? 'Closed Kw is required' : null;
+  }
+
+  static String? validateItemMargin(String? value) {
+    return value == null || value.isEmpty ? 'Item margin is required' : null;
+  }
+
+  static String? validateItemExpense(String? value) {
+    return value == null || value.isEmpty ? 'Item expense is required' : null;
+  }
+
+  static String? validateBusiness(String? value) {
+    return value == null || value.isEmpty ? 'Business is required' : null;
+  }
+
+  static String? validateCalltitle(String? value) {
+    return value == null || value.isEmpty ? 'Call title is required' : null;
+  }
+
+  static String? validatePoints(String? value) {
+    return value == null || value.isEmpty ? 'Call title is required' : null;
+  }
+
+  static String? validateNote(String? value) {
+    return value == null || value.isEmpty ? 'Note is required' : null;
+  }
+
+  static Future<void> selectDate(
+      BuildContext context, Function(DateTime) onDateSelected) async {
+    DateTime? selectedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(), // Default to current date
+      firstDate: DateTime(2000), // Minimum date
+      lastDate: DateTime(2100), // Maximum date
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: AppColors.primeryColor, // Header color
+              onPrimary: Colors.white, // Header text color
+              onSurface: Colors.black, // Text color
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.primeryColor, // Button color
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (selectedDate != null) {
+      onDateSelected(selectedDate); // Pass the selected date back to the caller
+    }
+  }
+
+  static loaderPopup(BuildContext context) {
+    showDialog(
+      barrierDismissible: false,
+      useSafeArea: false,
+      context: context,
+      barrierColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return Center(
+            child: Card(
+          color: AppColors.screenBgColor,
+          elevation: 1,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: const Padding(
+            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+            child: CupertinoActivityIndicator(
+              animating: true,
+              radius: 15,
+              color: AppColors.territoryColor,
+            ),
+          ),
+        ));
+      },
+    );
+  }
+
+  static String? requiredField(String? value) {
+    return value == null || value.isEmpty ? 'Required Field' : null;
   }
 }
 

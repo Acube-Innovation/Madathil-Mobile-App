@@ -9,25 +9,14 @@ class TransactionDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: const Icon(
-            Icons.arrow_back_ios_new,
-            color: AppColors.secondaryColor,
-          ),
-        ),
-        title: 'Transaction Details',
-      ),
+      appBar: const CustomAppBar(title: "Transaction Details"),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CustomPngImage(
+              const CustomPngImage(
                 imageName: 'assets/images/person_icon.png',
                 height: 130,
                 width: 130,
@@ -52,11 +41,11 @@ class TransactionDetails extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.check_circle,
                     color: AppColors.green,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 5,
                   ),
                   Text(
@@ -76,7 +65,7 @@ class TransactionDetails extends StatelessWidget {
                       color: AppColors.black,
                     ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 16,
               ),
               Text(
@@ -86,7 +75,7 @@ class TransactionDetails extends StatelessWidget {
                       color: AppColors.black,
                     ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 60,
               ),
               Stack(
@@ -94,7 +83,8 @@ class TransactionDetails extends StatelessWidget {
                   Container(
                     height: 200,
                     width: 300,
-                    padding: EdgeInsets.only(top: 70, bottom: 20, left: 5, right: 5),
+                    padding: const EdgeInsets.only(
+                        top: 70, bottom: 20, left: 5, right: 5),
                     decoration: BoxDecoration(
                         color: Colors.white,
                         boxShadow: [
@@ -123,16 +113,19 @@ class TransactionDetails extends StatelessWidget {
                                       color: AppColors.black,
                                     ),
                               ),
-                              Text('098756447', style: Theme.of(context)
+                              Text(
+                                '098756447',
+                                style: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
                                     .copyWith(
                                       fontWeight: FontWeight.w500,
                                       color: AppColors.grey,
-                                    ),),
+                                    ),
+                              ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Row(
@@ -148,16 +141,19 @@ class TransactionDetails extends StatelessWidget {
                                       color: AppColors.black,
                                     ),
                               ),
-                              Text('Jhon', style: Theme.of(context)
+                              Text(
+                                'Jhon',
+                                style: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
                                     .copyWith(
                                       fontWeight: FontWeight.w500,
                                       color: AppColors.grey,
-                                    ),),
+                                    ),
+                              ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Row(
@@ -173,13 +169,16 @@ class TransactionDetails extends StatelessWidget {
                                       color: AppColors.black,
                                     ),
                               ),
-                              Text('Harrytheman', style: Theme.of(context)
+                              Text(
+                                'Harrytheman',
+                                style: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
                                     .copyWith(
                                       fontWeight: FontWeight.w500,
                                       color: AppColors.grey,
-                                    ),),
+                                    ),
+                              ),
                             ],
                           )
                         ],
@@ -191,9 +190,9 @@ class TransactionDetails extends StatelessWidget {
                       child: Container(
                         height: 50,
                         width: 300,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                        decoration: BoxDecoration(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 15),
+                        decoration: const BoxDecoration(
                             color: AppColors.secondaryColor,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(15))),
