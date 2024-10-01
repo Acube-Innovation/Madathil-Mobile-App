@@ -6,14 +6,15 @@ class CustomDropdown extends StatelessWidget {
   final List<String> items;
   final String? selectedItem;
   final ValueChanged<String?> onChanged;
+  final String? Function(String?)? validator;
 
-  const CustomDropdown({
-    super.key,
-    required this.hint,
-    required this.items,
-    this.selectedItem,
-    required this.onChanged,
-  });
+  const CustomDropdown(
+      {super.key,
+      required this.hint,
+      required this.items,
+      this.selectedItem,
+      required this.onChanged,
+      this.validator});
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +40,7 @@ class CustomDropdown extends StatelessWidget {
           ),
         );
       }).toList(),
+      validator: validator,
       onChanged: onChanged,
       decoration: const InputDecoration(
         border: OutlineInputBorder(

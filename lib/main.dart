@@ -9,6 +9,7 @@ import 'package:madathil/view/screens/splash_screen/splash_screen.dart';
 import 'package:madathil/viewmodel/auth_viewmodel.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:madathil/viewmodel/customer_viewmodel.dart';
+import 'package:madathil/viewmodel/leads_viewmodel.dart';
 import 'package:madathil/viewmodel/product_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
@@ -48,6 +49,8 @@ class MyApp extends StatelessWidget {
           create: (_) => ProductViewmodel(apiRepository: ApiRepository())),
       ChangeNotifierProvider(
           create: (_) => CustomerViewmodel(apiRepository: ApiRepository())),
+      ChangeNotifierProvider(
+          create: (_) => LeadsViewmodel(apiRepository: ApiRepository())),
     ];
   }
 }

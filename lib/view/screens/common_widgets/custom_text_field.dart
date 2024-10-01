@@ -55,7 +55,7 @@ class CustomTextField extends StatelessWidget {
       validator: validator,
       onChanged: onchaged,
       style: const TextStyle(
-          color: Color.fromRGBO(37, 37, 37, 1), fontFamily: "SF Pro Display"),
+          color: Color.fromRGBO(37, 37, 37, 1), fontFamily: "Poppins"),
       obscureText: obscureText,
       enabled: enabled,
       keyboardType: keyboardType,
@@ -94,10 +94,10 @@ class CustomTextField extends StatelessWidget {
         counterText: "",
         hintStyle: TextStyle(
           // fontFamily: "SF Pro Display",
-          fontSize: 16,
+          fontSize: 14,
           fontWeight: FontWeight.w400,
           height: 1.275,
-          color: hintcolor ?? AppColors.grey,
+          color: hintcolor ?? AppColors.grey.withOpacity(0.5),
         ),
       ),
     );

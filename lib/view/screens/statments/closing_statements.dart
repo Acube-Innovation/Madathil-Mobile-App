@@ -4,7 +4,7 @@ import 'package:custom_date_range_picker/custom_date_range_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:madathil/utils/color/app_colors.dart';
-import 'package:madathil/utils/color/util_functions.dart';
+import 'package:madathil/utils/util_functions.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
 import 'package:madathil/view/screens/points/points_congrats_screen.dart';

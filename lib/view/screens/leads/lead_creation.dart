@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:madathil/utils/color/util_functions.dart';
+import 'package:madathil/utils/custom_loader.dart';
+import 'package:madathil/utils/util_functions.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
+import 'package:madathil/view/screens/common_widgets/custom_dropdown.dart';
 import 'package:madathil/view/screens/common_widgets/custom_text_field.dart';
 import 'package:madathil/viewmodel/auth_viewmodel.dart';
+import 'package:madathil/viewmodel/leads_viewmodel.dart';
 import 'package:provider/provider.dart';
-
 import '../../../utils/color/app_colors.dart';
 
 class LeadCreationScreen extends StatelessWidget {
@@ -13,9 +15,17 @@ class LeadCreationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController emailCTLR = TextEditingController();
-    TextEditingController fullnameCTLR = TextEditingController();
-    TextEditingController numberCTLR = TextEditingController();
+    // Controllers for each input field
+    TextEditingController ldSourceCTLR = TextEditingController();
+    TextEditingController ldNameCTLR = TextEditingController();
+    TextEditingController ldCtgryCTLR = TextEditingController();
+    TextEditingController cntNoCTLR = TextEditingController();
+    TextEditingController cntEmailCTLR = TextEditingController();
+    TextEditingController cnsmrNoCTLR = TextEditingController();
+    TextEditingController adhrNoCTLR = TextEditingController();
+    TextEditingController adrsCTLR = TextEditingController();
+    TextEditingController cityCTLR = TextEditingController();
+
     final authVm = Provider.of<AuthViewmodel>(context, listen: false);
 
     return Scaffold(
@@ -29,6 +39,7 @@ class LeadCreationScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Lead Source
                   Text(
                     "Lead Source",
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
@@ -36,18 +47,30 @@ class LeadCreationScreen extends StatelessWidget {
                           color: AppColors.grey,
                         ),
                   ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  CustomTextField(
-                    onchaged: (val) {},
-                    controller: fullnameCTLR,
-                    hint: 'Enter the lead source',
-                    validator: UtilFunctions.validateName,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 5),
+                  Consumer<LeadsViewmodel>(builder: (context, lvm, _) {
+                    if (lvm.leadsSourceDetails != null &&
+                        (lvm.leadsSourceDetails ?? []).isNotEmpty) {
+                      return CustomDropdown(
+                        hint: 'Select Lead Source',
+                        items: lvm.leadsSourceDetails ?? [],
+                        onChanged: (value) {
+                          ldSourceCTLR.text = value ?? "";
+                        },
+                        validator: UtilFunctions.validateName,
+                      );
+                    }
+                    return const CustomLoader();
+                  }),
+                  // CustomTextField(
+                  //   onchaged: (val) {},
+                  //   controller: ldSourceCTLR,
+                  //   hint: 'Enter the lead source',
+                  //   validator: UtilFunctions.validateName,
+                  // ),
+                  const SizedBox(height: 10),
+
+                  // Lead Name
                   Text(
                     "Lead Name",
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
@@ -55,17 +78,16 @@ class LeadCreationScreen extends StatelessWidget {
                           color: AppColors.grey,
                         ),
                   ),
-                  const SizedBox(
-                    height: 5,
-                  ),
+                  const SizedBox(height: 5),
                   CustomTextField(
-                      onchaged: (val) {},
-                      controller: emailCTLR,
-                      hint: 'Enter the lead name',
-                      validator: UtilFunctions.validateEmail),
-                  const SizedBox(
-                    height: 10,
+                    onchaged: (val) {},
+                    controller: ldNameCTLR,
+                    hint: 'Enter the lead name',
+                    validator: UtilFunctions.validateName,
                   ),
+                  const SizedBox(height: 10),
+
+                  // Lead Category
                   Text(
                     "Lead Category",
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
@@ -73,19 +95,30 @@ class LeadCreationScreen extends StatelessWidget {
                           color: AppColors.grey,
                         ),
                   ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  CustomTextField(
-                    onchaged: (val) {},
-                    controller: numberCTLR,
-                    hint: 'Select Lead Category',
-                    validator: UtilFunctions.validateMobileNumber,
-                    // obscureText: avm.obscureText!,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 5),
+                  const SizedBox(height: 5),
+                  Consumer<LeadsViewmodel>(builder: (context, lvm, _) {
+                    if (lvm.leadsCategoryDetails != null &&
+                        (lvm.leadsCategoryDetails ?? []).isNotEmpty) {
+                      return CustomDropdown(
+                        hint: 'Select Lead Category',
+                        items: lvm.leadsCategoryDetails ?? [],
+                        onChanged: (value) {
+                          ldCtgryCTLR.text = value ?? "";
+                        },
+                        validator: UtilFunctions.validateName,
+                      );
+                    }
+                    return const CustomLoader();
+                  }),
+                  // CustomTextField(
+                  //   onchaged: (val) {},
+                  //   controller: ldCtgryCTLR,
+                  //   hint: 'Select Lead Category',
+                  //   validator: UtilFunctions.validateName,
+                  // ),
+                  const SizedBox(height: 10),
+                  // Contact Number
                   Text(
                     "Contact Number",
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
@@ -93,18 +126,16 @@ class LeadCreationScreen extends StatelessWidget {
                           color: AppColors.grey,
                         ),
                   ),
-                  const SizedBox(
-                    height: 5,
-                  ),
+                  const SizedBox(height: 5),
                   CustomTextField(
                     onchaged: (val) {},
-                    controller: fullnameCTLR,
+                    controller: cntNoCTLR,
                     hint: 'Enter contact number',
-                    validator: UtilFunctions.validateName,
+                    validator: UtilFunctions.validateMobileNumber,
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 10),
+
+                  // Contact Email
                   Text(
                     "Contact Email",
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
@@ -112,18 +143,16 @@ class LeadCreationScreen extends StatelessWidget {
                           color: AppColors.grey,
                         ),
                   ),
-                  const SizedBox(
-                    height: 5,
-                  ),
+                  const SizedBox(height: 5),
                   CustomTextField(
                     onchaged: (val) {},
-                    controller: fullnameCTLR,
+                    controller: cntEmailCTLR,
                     hint: 'Enter contact email',
-                    validator: UtilFunctions.validateName,
+                    validator: UtilFunctions.validateEmail,
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 10),
+
+                  // Consumer Number
                   Text(
                     "Consumer Number",
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
@@ -131,18 +160,16 @@ class LeadCreationScreen extends StatelessWidget {
                           color: AppColors.grey,
                         ),
                   ),
-                  const SizedBox(
-                    height: 5,
-                  ),
+                  const SizedBox(height: 5),
                   CustomTextField(
                     onchaged: (val) {},
-                    controller: fullnameCTLR,
+                    controller: cnsmrNoCTLR,
                     hint: 'Enter the Consumer Number',
                     validator: UtilFunctions.validateName,
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 10),
+
+                  // Aadhar Number
                   Text(
                     "Aadhar Number",
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
@@ -150,18 +177,16 @@ class LeadCreationScreen extends StatelessWidget {
                           color: AppColors.grey,
                         ),
                   ),
-                  const SizedBox(
-                    height: 5,
-                  ),
+                  const SizedBox(height: 5),
                   CustomTextField(
                     onchaged: (val) {},
-                    controller: fullnameCTLR,
-                    hint: 'Enter the aadhar number',
-                    validator: UtilFunctions.validateName,
+                    controller: adhrNoCTLR,
+                    hint: 'Enter the Aadhar number',
+                    validator: UtilFunctions.validateAadhar,
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 10),
+
+                  // Address
                   Text(
                     "Address",
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
@@ -169,18 +194,31 @@ class LeadCreationScreen extends StatelessWidget {
                           color: AppColors.grey,
                         ),
                   ),
-                  const SizedBox(
-                    height: 5,
-                  ),
+                  const SizedBox(height: 5),
                   CustomTextField(
                     onchaged: (val) {},
-                    controller: fullnameCTLR,
+                    controller: adrsCTLR,
                     hint: 'Enter Address',
                     validator: UtilFunctions.validateName,
                   ),
-                  const SizedBox(
-                    height: 10,
+                  const SizedBox(height: 10),
+                  Text(
+                    "City",
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                          height: 1.7,
+                          color: AppColors.grey,
+                        ),
                   ),
+                  const SizedBox(height: 5),
+                  CustomTextField(
+                    onchaged: (val) {},
+                    controller: cityCTLR,
+                    hint: 'Enter City',
+                    validator: UtilFunctions.validateName,
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Image of the lead
                   Text(
                     "Image of the lead",
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
@@ -188,30 +226,78 @@ class LeadCreationScreen extends StatelessWidget {
                           color: AppColors.grey,
                         ),
                   ),
-                  const SizedBox(
-                    height: 5,
-                  ),
+
                   CustomTextField(
-                    onchaged: (val) {},
-                    suffixIcon: const Icon(Icons.camera_alt_outlined,
-                        color: AppColors.primeryColor),
-                    controller: fullnameCTLR,
-                    enabled: false,
-                    hint: 'Select image of the lead',
-                    validator: UtilFunctions.validateName,
+                      onchaged: (val) {},
+                      suffixIcon: const Icon(Icons.camera_alt_outlined,
+                          color: AppColors.primeryColor),
+                      enabled: false,
+                      hint: 'Select image of the lead',
+                      validator: (val) {
+                        return;
+                      }),
+                  const SizedBox(height: 10),
+
+                  // Add Lead Button
+                  CustomButton(
+                    text: "Add Lead",
+                    height: 43,
+                    width: double.maxFinite,
+                    onPressed: () {
+                      if (authVm.formKey1.currentState!.validate()) {
+                        UtilFunctions.loaderPopup(context);
+                        // Handle lead addition logic
+                        Provider.of<LeadsViewmodel>(context, listen: false)
+                            .createLead({
+                          "lead_name": ldNameCTLR.text,
+                          "ld_source": ldSourceCTLR.text,
+                          "lead_category": ldCtgryCTLR.text,
+                          "number_to_be_contacted": cntNoCTLR.text,
+                          "email_id": cntEmailCTLR.text,
+                          "consumer_number": cnsmrNoCTLR.text,
+                          "aadhaar_number": adhrNoCTLR.text,
+                          // "image":
+                          //     "/files/Screenshot from 2024-09-23 12-29-00.png",
+                          // "latitude": "9.1231231",
+                          // "longitude": "76.312312"
+                        }).then(
+                          (value) {
+                            if (value) {
+                              // Handle lead addition logic
+                              Provider.of<LeadsViewmodel>(context,
+                                      listen: false)
+                                  .createLeadAddress({
+                                "address_line1": adrsCTLR.text,
+                                "city": cityCTLR.text,
+                                "links": [
+                                  {
+                                    "link_doctype": "Lead",
+                                    "link_name": "CRM-LEAD-2024-170859"
+                                  }
+                                ]
+                              }).then(
+                                (value) => Navigator.pop(context),
+                              );
+                            } else {
+                              Navigator.pop(context);
+                              toast(
+                                  Provider.of<LeadsViewmodel>(context,
+                                          listen: false)
+                                      .errormsg,
+                                  context,
+                                  isError: true);
+                            }
+                          },
+                        );
+                      } else {
+                        // Handle validation failure
+                        toast(
+                            "Please check if all the fields are added", context,
+                            isError: true);
+                      }
+                    },
                   ),
                   const SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: CustomButton(
-                      text: "Add Lead",
-                      height: 43,
-                      width: double.maxFinite,
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
                 ],
               ),
             ),

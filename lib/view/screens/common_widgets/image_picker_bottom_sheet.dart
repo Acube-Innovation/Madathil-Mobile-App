@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
+import 'package:madathil/viewmodel/customer_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class ImagePickerBottomSheet1 extends StatelessWidget {
@@ -13,7 +14,7 @@ class ImagePickerBottomSheet1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final imagePickerProvider =
-        Provider.of<CommonDataViewmodel>(context, listen: false);
+        Provider.of<CustomerViewmodel>(context, listen: false);
 
     return SafeArea(
       child: Wrap(

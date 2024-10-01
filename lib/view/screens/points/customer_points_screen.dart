@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:madathil/utils/color/app_colors.dart';
-import 'package:madathil/utils/color/util_functions.dart';
+import 'package:madathil/utils/util_functions.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
 import 'package:madathil/view/screens/points/widgets/points_card.dart';
@@ -46,28 +46,25 @@ class _CustomerPointsScreenState extends State<CustomerPointsScreen> {
             )
           ],
         ),
-        body:  Padding(
-          padding: EdgeInsets.all(20.0),
-          child:  Column(
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-        
-              PointsCard(points: "1204 pts"),
-              SizedBox(height: 30,),
-              Text("Recent Activity", style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    height: 0,
-                    color: AppColors.primeryColor,
-                    fontSize: 16, 
-                    fontWeight: FontWeight.w600)),
-        
-                    SizedBox(height: 20,),
-        
-                    const Expanded( child: const ReceentActivityItem())
-        
-        
-        
-        
-            
+              const PointsCard(points: "1204 pts"),
+              const SizedBox(
+                height: 30,
+              ),
+              Text("Recent Activity",
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      height: 0,
+                      color: AppColors.primeryColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600)),
+              const SizedBox(
+                height: 20,
+              ),
+              const Expanded(child: ReceentActivityItem())
             ],
           ),
         ));

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:madathil/utils/color/app_colors.dart';
-import 'package:shimmer/shimmer.dart';
 
 class UtilFunctions {
   static String? validateName(String? value) {
@@ -13,6 +12,15 @@ class UtilFunctions {
       return 'Mobile number is required';
     } else if (!RegExp(r'^\d{10}$').hasMatch(value)) {
       return 'Enter a valid 10-digit mobile number';
+    }
+    return null;
+  }
+
+  static String? validateAadhar(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Aadhar Number is required';
+    } else if (!RegExp(r'^\d{12}$').hasMatch(value)) {
+      return 'Enter a valid 12-digit aadhar number';
     }
     return null;
   }

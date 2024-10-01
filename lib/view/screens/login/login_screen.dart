@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:madathil/utils/color/app_colors.dart';
-import 'package:madathil/utils/color/util_functions.dart';
+import 'package:madathil/utils/util_functions.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
 import 'package:madathil/view/screens/common_widgets/custom_text_field.dart';
@@ -182,7 +182,9 @@ class LoginScreen extends StatelessWidget {
               UtilFunctions.loaderPopup(context);
 
               authVm
-                  .login(username: emailCtlr.text, pwd: passwordCtlr.text)
+                  .login(
+                      username: emailCtlr.text.trim(),
+                      pwd: passwordCtlr.text.trim())
                   .then((value) {
                 if (value) {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
