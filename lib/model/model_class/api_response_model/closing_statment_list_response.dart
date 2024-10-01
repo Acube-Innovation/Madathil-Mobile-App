@@ -1,13 +1,13 @@
 class ClosingStatmentListResponse {
-  List<Data>? data;
+  List<ClosingStatmentList>? data;
 
   ClosingStatmentListResponse({this.data});
 
   ClosingStatmentListResponse.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {
-      data = <Data>[];
+      data = <ClosingStatmentList>[];
       json['data'].forEach((v) {
-        data!.add(Data.fromJson(v));
+        data!.add(ClosingStatmentList.fromJson(v));
       });
     }
   }
@@ -21,7 +21,7 @@ class ClosingStatmentListResponse {
   }
 }
 
-class Data {
+class ClosingStatmentList {
   String? name;
   String? customerName;
   double? projectCost;
@@ -34,7 +34,7 @@ class Data {
   double? itemMargin;
   double? itemExpense;
 
-  Data({
+  ClosingStatmentList({
     this.name,
     this.customerName,
     this.projectCost,
@@ -48,7 +48,7 @@ class Data {
     this.itemExpense,
   });
 
-  Data.fromJson(Map<String, dynamic> json) {
+  ClosingStatmentList.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     customerName = json['customer_name'];
     projectCost =

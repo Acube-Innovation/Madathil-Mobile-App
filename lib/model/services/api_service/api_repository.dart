@@ -2,6 +2,8 @@ import 'package:madathil/model/model_class/api_response_model/add_closing_statme
 import 'package:madathil/model/model_class/api_response_model/attendance_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_response.dart';
+import 'package:madathil/model/model_class/api_response_model/closing_statment_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/closingstatment_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/customer_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/login_response.dart';
@@ -66,5 +68,16 @@ class ApiRepository {
       {Map<String, dynamic>? param}) async {
     return _apiViewModel!.get<CustomerListResponse>(
         apiUrl: ApiUrls.kgetCustomerList, params: param);
+  }
+
+  Future<ClosingStatmentListResponse?> getClosingStatmentList(
+      {Map<String, dynamic>? param}) async {
+    return _apiViewModel!.get<ClosingStatmentListResponse>(
+        apiUrl: ApiUrls.kAddClosingStatment, params: param);
+  }
+
+  Future<ClosingStatmentDetailsResponse ?> getClosingStatmentDetails ({Map<String, dynamic>? param, String? closingId}) async {
+
+    return _apiViewModel!.get<ClosingStatmentDetailsResponse>(apiUrl: '${ApiUrls.kAddClosingStatment}/$closingId',params: param);
   }
 }
