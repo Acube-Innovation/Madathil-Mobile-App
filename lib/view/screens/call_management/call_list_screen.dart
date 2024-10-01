@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:madathil/utils/color/app_colors.dart';
-import 'package:madathil/utils/color/util_functions.dart';
+import 'package:madathil/utils/util_functions.dart';
 import 'package:madathil/view/screens/call_management/add_call_details_screen.dart';
 import 'package:madathil/view/screens/call_management/widgets/call_item_widget.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';

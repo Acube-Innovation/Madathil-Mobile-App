@@ -18,11 +18,17 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     Timer(const Duration(seconds: 6), () {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-            builder: (context) =>
-                const LoginScreen()), // Navigate to LoginScreen
-      );
+      // if (hiveInstance!.getData(DataBoxKey.cookie) != null) {
+      //   Navigator.of(context).pushReplacement(
+      //       MaterialPageRoute(builder: (context) => const HomePage()));
+      // } else
+      {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+              builder: (context) =>
+                  const LoginScreen()), // Navigate to LoginScreen
+        );
+      }
     });
     super.initState();
   }

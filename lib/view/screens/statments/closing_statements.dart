@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:madathil/utils/color/app_colors.dart';
-import 'package:madathil/utils/color/util_functions.dart';
+import 'package:madathil/utils/util_functions.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
 import 'package:madathil/view/screens/points/points_congrats_screen.dart';
@@ -53,10 +53,9 @@ class _ClosingStatmentsListScreenState
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          Provider.of<CommonDataViewmodel>(context, listen: false)
+              .getCustomerList();
 
-          Provider.of<CommonDataViewmodel>(context, listen: false).getCustomerList();
-
-          
           Navigator.push(
               context,
               MaterialPageRoute(

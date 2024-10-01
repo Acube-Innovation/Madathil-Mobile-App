@@ -20,6 +20,10 @@ import 'package:madathil/model/model_class/api_response_model/get_customer_addre
 import 'package:madathil/model/model_class/api_response_model/get_customer_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/image_uploade_response.dart';
 import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/lead_creation_response.dart';
+import 'package:madathil/model/model_class/api_response_model/lead_list_own_response.dart';
+import 'package:madathil/model/model_class/api_response_model/lead_source_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/leads_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/login_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
@@ -189,6 +193,14 @@ class ApiViewModel {
         return ProductListResponse.fromJson(json) as T;
       case ProductDetailResponse:
         return ProductDetailResponse.fromJson(json) as T;
+      case LeadsListOwnResponse:
+        return LeadsListOwnResponse.fromJson(json) as T;
+      case LeadsDetailsResponse:
+        return LeadsDetailsResponse.fromJson(json) as T;
+      case LeadsSourceListResponse:
+        return LeadsSourceListResponse.fromJson(json) as T;
+      case LeadsCreationResponse:
+        return LeadsCreationResponse.fromJson(json) as T;
       case CreateCustomerResponse:
         return CreateCustomerResponse?.fromJson(json) as T;
       case ImageUploadeResponse:
@@ -214,7 +226,7 @@ class FromJsonNotImplementedException implements Exception {
     return 'FromJsonNotImplementedException: From Json Not Implemented. '
         'Possible Fixes: \n '
         '1. Check if Model class matches with API response \n '
-        '2. Check if the response model class is added in the switch case in api_viewmodel.dart (line: 176)';
+        '2. Check if the response model class is added in the switch case in api_viewmodel.dart (line: 140)';
   }
 }
 

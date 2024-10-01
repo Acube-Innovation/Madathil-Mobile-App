@@ -4,7 +4,7 @@ import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:madathil/utils/color/app_colors.dart';
-import 'package:madathil/utils/color/util_functions.dart';
+import 'package:madathil/utils/util_functions.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_text_field.dart';
 // Import the provider
@@ -170,25 +170,25 @@ class AddCallDetailsScreen extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              "${provider.formatSelectedDateTime()}",
+                              provider.formatSelectedDateTime(),
                               style: const TextStyle(
                                   fontSize: 14, color: AppColors.primeryColor),
                             ),
+                            provider.selectedReminderDate != null &&
+                                    provider.selectedReminderTime != null
 
-                            provider.selectedReminderDate != null && provider.selectedReminderTime != null
-
-                            // Clear Reminder button
-                           ? IconButton(
-                              onPressed: () {
-                                // Clear the reminder
-                                provider.clearReminder();
-                              },
-                              icon: const Icon(
-                                Icons.close,
-                                color: AppColors.grey,
-                              ),
-                            )
-                            : const SizedBox(),
+                                // Clear Reminder button
+                                ? IconButton(
+                                    onPressed: () {
+                                      // Clear the reminder
+                                      provider.clearReminder();
+                                    },
+                                    icon: const Icon(
+                                      Icons.close,
+                                      color: AppColors.grey,
+                                    ),
+                                  )
+                                : const SizedBox(),
                           ],
                         ),
                       ],
@@ -196,23 +196,22 @@ class AddCallDetailsScreen extends StatelessWidget {
                   },
                 ),
 
-                const SizedBox(height: 150,),
+                const SizedBox(
+                  height: 150,
+                ),
 
-                   CustomButton(
+                CustomButton(
                   text: "Add",
                   height: 43,
                   width: double.maxFinite,
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
-
                       Navigator.pop(context);
                     } else {
                       toast("Required Field missing", context);
                     }
                   },
                 )
-
-
               ],
             ),
           ),
