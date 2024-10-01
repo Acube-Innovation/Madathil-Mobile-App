@@ -29,6 +29,9 @@ import 'package:madathil/model/model_class/api_response_model/leads_detail_respo
 import 'package:madathil/model/model_class/api_response_model/login_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
+import 'package:madathil/model/model_class/api_response_model/service_history_detailsresponse.dart';
+import 'package:madathil/model/model_class/api_response_model/service_history_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/service_status_list_response.dart';
 import 'package:madathil/model/model_class/local/environment.dart';
 import 'package:madathil/model/services/api_service/api_urls.dart';
 import 'package:madathil/model/services/local_db/hive_constants.dart';
@@ -197,14 +200,19 @@ class ApiViewModel {
         return ProductDetailResponse.fromJson(json) as T;
       case CustomerListResponse:
         return CustomerListResponse.fromJson(json) as T;
-        case ClosingStatmentListResponse:
+      case ClosingStatmentListResponse:
         return ClosingStatmentListResponse.fromJson(json) as T;
-        case ClosingStatmentDetailsResponse:
+      case ClosingStatmentDetailsResponse:
         return ClosingStatmentDetailsResponse.fromJson(json) as T;
+      case ServiceHistoryListResponse:
+        return ServiceHistoryListResponse.fromJson(json) as T;
+      case ServiceHistoryDetailsResponse:
+        return ServiceHistoryDetailsResponse.fromJson(json) as T;
+         case ServiceStatusListResponse:
+        return ServiceStatusListResponse.fromJson(json) as T;
 
         
 
-        
       case LeadsListOwnResponse:
         return LeadsListOwnResponse.fromJson(json) as T;
       case LeadsDetailsResponse:

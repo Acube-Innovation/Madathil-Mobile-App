@@ -21,6 +21,9 @@ import 'package:madathil/model/model_class/api_response_model/leads_detail_respo
 import 'package:madathil/model/model_class/api_response_model/login_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
+import 'package:madathil/model/model_class/api_response_model/service_history_detailsresponse.dart';
+import 'package:madathil/model/model_class/api_response_model/service_history_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/service_status_list_response.dart';
 import 'package:madathil/model/model_class/local/environment.dart';
 import 'package:madathil/model/services/api_service/api_urls.dart';
 import 'package:madathil/model/services/api_service/api_viewmodel.dart';
@@ -88,12 +91,13 @@ class ApiRepository {
         apiUrl: ApiUrls.kAddClosingStatment, params: param);
   }
 
-  Future<ClosingStatmentDetailsResponse ?> getClosingStatmentDetails ({Map<String, dynamic>? param, String? closingId}) async {
-
-    return _apiViewModel!.get<ClosingStatmentDetailsResponse>(apiUrl: '${ApiUrls.kAddClosingStatment}/$closingId',params: param);
+  Future<ClosingStatmentDetailsResponse?> getClosingStatmentDetails(
+      {Map<String, dynamic>? param, String? closingId}) async {
+    return _apiViewModel!.get<ClosingStatmentDetailsResponse>(
+        apiUrl: '${ApiUrls.kAddClosingStatment}/$closingId', params: param);
   }
-  
-    Future<CreateCustomerResponse?> createCustomer(
+
+  Future<CreateCustomerResponse?> createCustomer(
       {Map<String, dynamic>? data}) async {
     return _apiViewModel!.post<CreateCustomerResponse>(
         apiUrl: ApiUrls.kCreateCustomer, data: data);
@@ -159,5 +163,23 @@ class ApiRepository {
   Future<LeadsCreationResponse?> createLead(Map<String, dynamic> data) async {
     return _apiViewModel!
         .post<LeadsCreationResponse>(apiUrl: ApiUrls.kLeadCreation, data: data);
+  }
+
+  Future<ServiceHistoryListResponse?> getServiceHistoryList(
+      {Map<String, dynamic>? param}) async {
+    return _apiViewModel!.get<ServiceHistoryListResponse>(
+        apiUrl: ApiUrls.kServiceHistory, params: param);
+  }
+
+  Future<ServiceHistoryDetailsResponse?> getServiceHistoryDetails(
+      {Map<String, dynamic>? param, String? serviceId}) async {
+    return _apiViewModel!.get<ServiceHistoryDetailsResponse>(
+        apiUrl: '${ApiUrls.kServiceHistory}$serviceId', params: param);
+  }
+
+  Future<ServiceStatusListResponse?> getServiceStatusList(
+      {Map<String, dynamic>? param}) async {
+    return _apiViewModel!.get<ServiceStatusListResponse>(
+        apiUrl: ApiUrls.kServiceStatus, params: param);
   }
 }
