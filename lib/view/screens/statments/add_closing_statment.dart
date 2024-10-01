@@ -221,6 +221,8 @@ class AddClosingStatment extends StatelessWidget {
                         if (value) {
                           toast("Closing Statment added succesfully", context,
                               isError: true);
+
+                              Navigator.pop(context);
                         } else {
                           toast(cdv.errormsg, context);
                         }

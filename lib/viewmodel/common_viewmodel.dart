@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io' as dio;
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +11,8 @@ import 'package:madathil/model/model_class/api_response_model/attendance_list_re
 import 'package:intl/intl.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_response.dart';
+import 'package:madathil/model/model_class/api_response_model/closing_statment_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/closingstatment_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/customer_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/image_uploade_response.dart';
 import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
@@ -538,6 +539,244 @@ class CommonDataViewmodel extends ChangeNotifier {
       }
     } catch (e) {
       _errormsg = e.toString();
+      _isloading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  TextEditingController searchControllerClosingStament =
+      TextEditingController();
+
+  String? closingStatmentSearchfn;
+
+  DateTime? _start;
+  DateTime? _end;
+
+  DateTime? get start => _start;
+  DateTime? get end => _end;
+  String? startFormatted;
+  String? endFormatted;
+
+  void setDateRange(DateTime? start, DateTime? end) {
+    _start = start;
+    _end = end;
+    startFormatted = DateFormat('yyyy-MM-dd').format(start!);
+    endFormatted = DateFormat('yyyy-MM-dd').format(end!);
+    dobController.text = "Start: $startFormatted  End: $endFormatted";
+
+    notifyListeners();
+  }
+
+  void setSearchValue(String val) {
+    closingStatmentSearchfn = val;
+    notifyListeners();
+  }
+
+  clearSearchVal() {
+    closingStatmentSearchfn = null;
+    searchControllerClosingStament.clear();
+    notifyListeners();
+  }
+
+  /*
+  * closing statment list api call
+  * */
+
+  ClosingStatmentListResponse? _closingListResponse;
+  ClosingStatmentListResponse? get closingListResponse => _closingListResponse;
+  List<ClosingStatmentList>? closingList = [];
+
+  Future<bool> getClosingStatmentList({int? page}) async {
+    try {
+      _isloading = true;
+      notifyListeners();
+
+      Map<String, dynamic>? param = {};
+
+      if (startFormatted != null && endFormatted != null) {
+        param = {
+          "fields": jsonEncode([
+            "name",
+            "customer_name",
+            "project_cost",
+            "closing_date",
+            "mobile_number",
+            "select_business",
+            "customer_address",
+            "item",
+            "kw",
+            "item_margin",
+            "item_expense"
+          ]),
+          "filters": jsonEncode({
+            "employee_id": "HR-EMP-00187",
+            "closing_date": [
+              "between",
+              [startFormatted, endFormatted]
+            ],
+            "customer_name": [
+              "like",
+              closingStatmentSearchfn != null
+                  ? "$closingStatmentSearchfn %"
+                  : "%"
+            ]
+          }),
+          "order_by": "modified desc",
+          "limit": 10,
+          "limit_start": page! * 10
+        };
+      } else {
+        param = {
+          "fields": jsonEncode([
+            "name",
+            "customer_name",
+            "project_cost",
+            "closing_date",
+            "mobile_number",
+            "select_business",
+            "customer_address",
+            "item",
+            "kw",
+            "item_margin",
+            "item_expense"
+          ]),
+          "filters": jsonEncode({
+            "employee_id": "HR-EMP-00187",
+            "customer_name": [
+              "like",
+              closingStatmentSearchfn != null
+                  ? "$closingStatmentSearchfn %"
+                  : "%"
+            ]
+          }),
+          "order_by": "modified desc",
+          "limit": 10,
+          "limit_start": page! * 10
+        };
+      }
+
+      ClosingStatmentListResponse? response =
+          await apiRepository.getClosingStatmentList(param: param);
+
+      if (response?.data != null) {
+        closingList?.clear;
+        closingList = response?.data;
+
+        log("closing List------------> ${closingList?.first.toJson() ?? []}");
+
+        _isloading = false;
+        notifyListeners();
+
+        return true;
+      }
+
+      log("Empty list");
+      _isloading = false;
+      notifyListeners();
+
+      return false;
+    } catch (e) {
+      _errormsg = e.toString();
+      _isloading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  int closingCurrentPage = 0;
+  bool closingReachLength = false;
+  List<ClosingStatmentList>? closePost = [];
+  bool _paginationclosing = false;
+  bool get ispaginationclosing => _paginationclosing;
+
+  fetchClosingStatmentList() async {
+    if (_paginationclosing || closingReachLength) {
+      return;
+    }
+
+    _paginationclosing = true;
+
+    await getClosingStatmentList(page: closingCurrentPage);
+    final apiResponse = closingList;
+
+    if (apiResponse != null) {
+      final apiPosts = apiResponse;
+      if (apiPosts.length < 10) {
+        closingReachLength = true;
+      }
+      closePost?.addAll(apiPosts);
+      closingCurrentPage++;
+    }
+    _paginationclosing = false;
+    if ((closePost ?? []).isNotEmpty) {
+      notifyListeners();
+    }
+  }
+
+  void resetClosingPagination() {
+    closingList?.clear();
+    closePost?.clear();
+    closingCurrentPage = 0;
+    _paginationclosing = false;
+    closingReachLength = false;
+    notifyListeners();
+  }
+
+  void clearDateRange() {
+    _start = null;
+    _end = null;
+    startFormatted = null;
+    endFormatted = null;
+    dobController.clear();
+    notifyListeners();
+  }
+
+  /*
+  * closing statment details api call
+  * */
+
+  ClosingStatementDetails? closingStatment;
+
+  Future<bool> getClosingStatmentDetails({String? closingId}) async {
+    try {
+      Map<String, dynamic>? param = {};
+
+      param = {
+        "fields": jsonEncode([
+          "name",
+          "customer_name",
+          "project_cost",
+          "closing_date",
+          "mobile_number",
+          "select_business",
+          "customer_address",
+          "item",
+          "kw",
+          "item_margin",
+          "item_expense"
+        ]),
+      };
+
+      _isloading = true;
+      notifyListeners();
+
+      ClosingStatmentDetailsResponse? response = await apiRepository
+          .getClosingStatmentDetails(param: param, closingId: closingId);
+
+      if (response?.data != null) {
+        closingStatment = null;
+        closingStatment = response?.data;
+        _isloading = false;
+        notifyListeners();
+        return true;
+      }
+      _isloading = false;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _errormsg = e.toString();
+
       _isloading = false;
       notifyListeners();
       return false;

@@ -11,6 +11,8 @@ import 'package:madathil/model/model_class/api_response_model/add_closing_statme
 import 'package:madathil/model/model_class/api_response_model/attendance_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_response.dart';
+import 'package:madathil/model/model_class/api_response_model/closing_statment_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/closingstatment_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/create_address_response_model.dart';
 import 'package:madathil/model/model_class/api_response_model/create_check_out_response_model.dart';
 import 'package:madathil/model/model_class/api_response_model/create_customer_response.dart';
@@ -193,6 +195,16 @@ class ApiViewModel {
         return ProductListResponse.fromJson(json) as T;
       case ProductDetailResponse:
         return ProductDetailResponse.fromJson(json) as T;
+      case CustomerListResponse:
+        return CustomerListResponse.fromJson(json) as T;
+        case ClosingStatmentListResponse:
+        return ClosingStatmentListResponse.fromJson(json) as T;
+        case ClosingStatmentDetailsResponse:
+        return ClosingStatmentDetailsResponse.fromJson(json) as T;
+
+        
+
+        
       case LeadsListOwnResponse:
         return LeadsListOwnResponse.fromJson(json) as T;
       case LeadsDetailsResponse:

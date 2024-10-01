@@ -51,7 +51,11 @@ class _SearchableDropdownState extends State<SearchableDropdown> {
           children: [
             Text(
               _selectedCustomer ?? widget.hintText,
-              style: const TextStyle(fontSize: 16),
+             style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      height: 0,
+                      color: AppColors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500),
             ),
             const Icon(Icons.arrow_drop_down),
           ],
