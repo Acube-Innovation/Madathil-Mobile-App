@@ -35,6 +35,8 @@ class ApiUrls {
   static const kLeadSourceList = '/api/resource/Lead Source';
   static const kLeadCategoryList = '/api/resource/Lead Category';
   static const kLeadCreation = '/api/resource/Lead';
+  static const kcreateAddress = '/api/resource/Address';
+  static const kPaymentHistoryList = '/api/resource/Payment Entry';
 
   //tasks section
   static const ktaskListOthers =

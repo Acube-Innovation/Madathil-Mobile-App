@@ -10,6 +10,7 @@ import 'package:madathil/viewmodel/auth_viewmodel.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:madathil/viewmodel/customer_viewmodel.dart';
 import 'package:madathil/viewmodel/leads_viewmodel.dart';
+import 'package:madathil/viewmodel/payment_viewmodel.dart';
 import 'package:madathil/viewmodel/product_viewmodel.dart';
 import 'package:madathil/viewmodel/task_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -53,6 +54,8 @@ class MyApp extends StatelessWidget {
       ChangeNotifierProvider(
           create: (_) => LeadsViewmodel(apiRepository: ApiRepository())),
       ChangeNotifierProvider(
+          create: (_) => PaymentViewmodel(apiRepository: ApiRepository())),
+        ChangeNotifierProvider(
           create: (_) => TasksViewmodel(apiRepository: ApiRepository())),
     ];
   }
