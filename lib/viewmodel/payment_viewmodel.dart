@@ -3,8 +3,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:madathil/model/model_class/api_response_model/call_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_history_response.dart';
+import 'package:madathil/model/model_class/api_response_model/payment_modes_response.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
 
 class PaymentViewmodel extends ChangeNotifier {
@@ -68,6 +70,8 @@ class PaymentViewmodel extends ChangeNotifier {
   PaymentHistoryListResponse? get paymentHistoryListResponse =>
       _paymentHistoryListResponse;
   List<PaymentHistoryList>? paymentList = [];
+
+  List<String>? paymentModenames = [];
 
   Future<bool> getPaymentHistoryList({int? page}) async {
     try {
@@ -179,6 +183,7 @@ class PaymentViewmodel extends ChangeNotifier {
   int paymentCurrentPage = 0;
   bool paymentReachLength = false;
   List<PaymentHistoryList>? paymentPost = [];
+  PaymentModesModel? paymentModesModel;
   bool _paginationclosing = false;
   bool get ispaginationclosing => _paginationclosing;
 
@@ -234,9 +239,15 @@ class PaymentViewmodel extends ChangeNotifier {
       paymentMode = null;
     } else if (filter == "amount") {
       amount = null;
-    } else {
+    } else if (filter == 'date') {
       // _start = null;
       // _end = null;
+      startFormatted = null;
+      endFormatted = null;
+      dobController.clear();
+    } else {
+      paymentMode = null;
+      amount = null;
       startFormatted = null;
       endFormatted = null;
       dobController.clear();
@@ -247,9 +258,11 @@ class PaymentViewmodel extends ChangeNotifier {
         endFormatted == null) {
       filterOn = false;
     }
-    resetPaymentPagination();
+    if (filter != 'all') {
+      resetPaymentPagination();
+    }
+
     fetchPaymentHistoryList();
-    
 
     notifyListeners();
   }
@@ -303,4 +316,33 @@ class PaymentViewmodel extends ChangeNotifier {
       return false;
     }
   }
+
+  Future<List<String?>?> fetchPaymentModes() async {
+    try {
+      // Call the API to get the list of payment modes
+      PaymentModesModel? paymentModesModel =
+          await apiRepository.getPaymentModes();
+
+      // Check if the response is valid and contains data
+      if (paymentModesModel != null && paymentModesModel.data != null) {
+        // Extract the 'name' field from each PaymentMode object
+        paymentModenames =
+            paymentModesModel.data!.map((mode) => mode.name ?? '').toList();
+        print(
+            'the list of payment modes --------------------------------------- $paymentModenames');
+
+        // Return the list of payment mode names
+        return paymentModenames;
+      } else {
+        // Return an empty list if no data is found
+        return [];
+      }
+    } catch (e) {
+      // Handle errors (e.g., log them or show an error message)
+      print(
+          'Error fetching payment modes: ------------------------------------------- $e');
+      return [];
+    }
+  }
+
 }
