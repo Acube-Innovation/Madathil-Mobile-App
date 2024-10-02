@@ -16,10 +16,14 @@ import 'package:madathil/model/model_class/api_response_model/closingstatment_de
 import 'package:madathil/model/model_class/api_response_model/customer_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/image_uploade_response.dart';
 import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/service_history_detailsresponse.dart';
+import 'package:madathil/model/model_class/api_response_model/service_history_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/service_status_list_response.dart';
 import 'package:madathil/model/model_class/utility_model_class/customer_utility_model.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
+import 'package:madathil/view/screens/service_list/servce_detail.dart';
 
 class CommonDataViewmodel extends ChangeNotifier {
   final ApiRepository apiRepository;
@@ -377,17 +381,10 @@ class CommonDataViewmodel extends ChangeNotifier {
 
   /// filter in service history
 
-  String? _selectedStatus; // Holds the selected filter status
+  // Holds the selected filter status
   String? _selectedDate; // Holds the selected filter date
 
-  String? get selectedStatus => _selectedStatus;
   String? get selectedDate => _selectedDate;
-
-  // Method to set the filter status
-  void setSelectedStatus(String? status) {
-    _selectedStatus = status;
-    notifyListeners();
-  }
 
   // Method to set the selected date
   void setSelectedDate(String? date) {
@@ -781,5 +778,319 @@ class CommonDataViewmodel extends ChangeNotifier {
       notifyListeners();
       return false;
     }
+  }
+
+  /*
+  * service status list api call
+  * */
+
+  List<String>? _statusOptions;
+  List<String>? get statusOptions => _statusOptions;
+
+  Future<bool> getServiceStatusList() async {
+    try {
+      Map<String, dynamic>? param = {};
+
+      param = {
+        "doctype": "Maintenance Visit",
+        "fieldname": "work_completion_status"
+      };
+
+      ServiceStatusListResponse? response =
+          await apiRepository.getServiceStatusList(param: param);
+
+      if (response?.message != null) {
+        _statusOptions = response?.message;
+        notifyListeners();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // Method to set the filter status
+  String? _selectedStatus;
+  String? get selectedStatus => _selectedStatus;
+  void setSelectedStatus(String? status) {
+    _selectedStatus = status;
+
+    log(selectedStatus!);
+    notifyListeners();
+  }
+
+  /*
+  * service history list api call
+  * */
+
+  DateTime? _startservice;
+  DateTime? _endservice;
+
+  DateTime? get startservice => _startservice;
+  DateTime? get endservice => _endservice;
+  String? startDateService;
+  String? endDateService;
+
+  void setServiceDateRange(DateTime? start, DateTime? end) {
+    _startservice = startservice;
+    _endservice = endservice;
+    startDateService = DateFormat('yyyy-MM-dd').format(start!);
+    endDateService = DateFormat('yyyy-MM-dd').format(end!);
+    dobController.text = "Start: $startDateService  End: $endDateService";
+
+    notifyListeners();
+  }
+
+  ServiceHistoryListResponse? _serviceHistoryListResponse;
+  ServiceHistoryListResponse? get serviceHistoryListResponse =>
+      _serviceHistoryListResponse;
+  List<ServiceHistory>? serviceHistoryList = [];
+
+  Future<bool> getServiceHistoryList({int? page}) async {
+    try {
+      _isloading = true;
+      notifyListeners();
+
+      Map<String, dynamic>? param = {};
+
+      if (startDateService != null &&
+          endDateService != null &&
+          selectedStatus == null) {
+        param = {
+          "fields": jsonEncode([
+            "name",
+            "customer",
+            "mntc_date",
+            "mntc_time",
+            "completion_status",
+            "work_completion_status",
+            "maintenance_type"
+          ]),
+          "filters": jsonEncode({
+            "mntc_date": [
+              "between",
+              [startDateService, endDateService]
+            ],
+            // "customer_name": [
+            //   "like",
+            //   closingStatmentSearchfn != null
+            //       ? "$closingStatmentSearchfn %"
+            //       : "%"
+            // ]
+          }),
+          "order_by": "modified desc",
+          "limit": 10,
+          "limit_start": page! * 10
+        };
+      } else if (selectedStatus != null &&
+          startDateService != null &&
+          endDateService != null) {
+        param = {
+          "fields": jsonEncode([
+            "name",
+            "customer",
+            "mntc_date",
+            "mntc_time",
+            "completion_status",
+            "work_completion_status",
+            "maintenance_type"
+          ]),
+          "filters": jsonEncode({
+            "work_completion_status": selectedStatus,
+            "mntc_date": [
+              "between",
+              [startDateService, endDateService]
+            ],
+
+            // "customer_name": [
+            //   "like",
+            //   closingStatmentSearchfn != null
+            //       ? "$closingStatmentSearchfn %"
+            //       : "%"
+            // ]
+          }),
+          "order_by": "modified desc",
+          "limit": 10,
+          "limit_start": page! * 10
+        };
+      } else if (selectedStatus != null &&
+          startDateService == null &&
+          endDateService == null) {
+        param = {
+          "fields": jsonEncode([
+            "name",
+            "customer",
+            "mntc_date",
+            "mntc_time",
+            "completion_status",
+            "work_completion_status",
+            "maintenance_type"
+          ]),
+          "filters": jsonEncode({
+            "work_completion_status": selectedStatus,
+            // "customer_name": [
+            //   "like",
+            //   closingStatmentSearchfn != null
+            //       ? "$closingStatmentSearchfn %"
+            //       : "%"
+            // ]
+          }),
+          "order_by": "modified desc",
+          "limit": 10,
+          "limit_start": page! * 10
+        };
+      } else {
+        param = {
+          "fields": jsonEncode([
+            "name",
+            "customer",
+            "mntc_date",
+            "mntc_time",
+            "completion_status",
+            "work_completion_status",
+            "maintenance_type"
+          ]),
+          "filters": jsonEncode({
+            // "customer_name": [
+            //   "like",
+            //   closingStatmentSearchfn != null
+            //       ? "$closingStatmentSearchfn %"
+            //       : "%"
+            // ]
+          }),
+          "order_by": "modified desc",
+          "limit": 10,
+          "limit_start": page! * 10
+        };
+      }
+
+      ServiceHistoryListResponse? response =
+          await apiRepository.getServiceHistoryList(param: param);
+
+      if (response?.data != null) {
+        serviceHistoryList?.clear();
+        serviceHistoryList = response?.data;
+
+        _isloading = false;
+        notifyListeners();
+        return true;
+      }
+
+      _isloading = false;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _errormsg = e.toString();
+      _isloading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  int serviceHistoryCurrentPage = 0;
+  bool serviceHistoryReachLength = false;
+  List<ServiceHistory>? serviceHistoryPost = [];
+  bool _paginationserviceHistory = false;
+  bool get ispaginationserviceHistory => _paginationserviceHistory;
+
+  fetchServiceHistoryList() async {
+    if (_paginationserviceHistory || serviceHistoryReachLength) {
+      log("not.............");
+      return;
+    }
+
+    _paginationserviceHistory = true;
+
+    log("sure.............");
+
+    await getServiceHistoryList(page: serviceHistoryCurrentPage);
+
+    final apiResponse = serviceHistoryList;
+
+    if (apiResponse != null) {
+      final apiPosts = apiResponse;
+      if (apiPosts.length < 10) {
+        serviceHistoryReachLength = true;
+      }
+      serviceHistoryPost?.addAll(apiPosts);
+      serviceHistoryCurrentPage++;
+    }
+    _paginationserviceHistory = false;
+    if ((serviceHistoryPost ?? []).isNotEmpty) {
+      notifyListeners();
+    }
+  }
+
+  void resetServiceHistoryPagination() {
+    serviceHistoryList?.clear();
+    serviceHistoryPost?.clear();
+    serviceHistoryCurrentPage = 0;
+    _paginationserviceHistory = false;
+    serviceHistoryReachLength = false;
+    notifyListeners();
+  }
+
+  void clearServiceDateRange() {
+    _startservice = null;
+    _endservice = null;
+    startDateService = null;
+    endDateService = null;
+    dobController.clear();
+    notifyListeners();
+  }
+
+  /*
+  * service history details api call
+  * */
+
+  ServiceHistoryDetails? servicePurpose;
+
+  Future<bool> getServiceHistoryDetails({String? serviecId}) async {
+    try {
+      _isloading = true;
+      notifyListeners();
+
+      Map<String, dynamic>? param = {};
+
+      param = {
+        "fields": jsonEncode([
+          "name",
+          "customer",
+          "mntc_date",
+          "mntc_time",
+          "completion_status",
+          "work_completion_status",
+          "status",
+          "purposes"
+        ]),
+      };
+
+      ServiceHistoryDetailsResponse? response = await apiRepository
+          .getServiceHistoryDetails(serviceId: serviecId, param: param);
+
+      if (response?.data != null) {
+        servicePurpose = response?.data;
+
+        log("list -------------- ${response?.data?.toJson()}");
+        _isloading = false;
+        notifyListeners();
+
+        return true;
+      }
+
+      _isloading = false;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _errormsg = e.toString();
+      _isloading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  resetServiceDetails() {
+    servicePurpose = null;
   }
 }

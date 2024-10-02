@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:custom_date_range_picker/custom_date_range_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
@@ -54,8 +57,58 @@ class ServiceHistoryScreen extends StatelessWidget {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  commonVm
-                                      .clearSelectedStatus(); // Clear the filter when close button is clicked
+                                  commonVm.clearSelectedStatus();
+                                  // Clear the filter when close button is clicked
+
+                                  commonVm.resetServiceHistoryPagination();
+                                  commonVm.fetchServiceHistoryList();
+                                },
+                                child: const Icon(
+                                  Icons.close,
+                                  color: AppColors.primeryColor,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+
+                    const SizedBox(
+                      width: 10,
+                    ),
+
+                    if (commonVm.startDateService != null &&
+                        commonVm.endDateService != null)
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppColors.primeryColor),
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(7.0),
+                          child: Row(
+                            children: [
+                              Text(
+                                commonVm.startDateService ??
+                                    '', // Show selected filter
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .copyWith(
+                                      height: 0,
+                                      fontSize: 14,
+                                      color: AppColors.primeryColor,
+                                    ),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  commonVm.clearServiceDateRange();
+
+                                  commonVm.resetServiceHistoryPagination();
+                                  commonVm.fetchServiceHistoryList();
                                 },
                                 child: const Icon(
                                   Icons.close,
@@ -101,6 +154,17 @@ class ServiceHistoryScreen extends StatelessWidget {
 
   void showfilterPopup(BuildContext context) {
     final commonVm = Provider.of<CommonDataViewmodel>(context, listen: false);
+
+    String? tempSelectedStatus = commonVm.selectedStatus;
+
+    DateTime? tempStartDate = commonVm.startDateService != null
+        ? DateTime.parse(commonVm.startDateService!)
+        : null;
+
+    DateTime? tempEndDate = commonVm.endDateService != null
+        ? DateTime.parse(commonVm.endDateService!)
+        : null;
+
     showModalBottomSheet(
       isDismissible: true,
       isScrollControlled: true,
@@ -145,31 +209,74 @@ class ServiceHistoryScreen extends StatelessWidget {
                                       height: 1.7,
                                       color: AppColors.black,
                                     ),
+                              ),
+                              const Spacer(),
+                              GestureDetector(
+                                onTap: () {
+                                  if (commonVm.startDateService != null &&
+                                      commonVm.endDateService != null) {
+                                    commonVm.clearServiceDateRange();
+                                    commonVm.resetServiceHistoryPagination();
+                                    commonVm.fetchServiceHistoryList();
+                                  }
+                                  Navigator.pop(context);
+                                },
+                                child: const Icon(
+                                  Icons.clear,
+                                  color: AppColors.black,
+                                  size: 30,
+                                ),
                               )
                             ],
                           ),
                           const SizedBox(height: 20),
-                          GestureDetector(
-                            onTap: () {
-                              commonVm.selectDate(context);
-                            },
-                            child: AbsorbPointer(
-                              child: CustomTextField(
-                                controller: cdv.dobController,
-                                hint: 'Select date',
-                                suffixIcon: const Icon(Icons.calendar_month),
+                          Consumer<CommonDataViewmodel>(
+                              builder: (context, cdv, _) {
+                            return GestureDetector(
+                              onTap: () {
+                                showCustomDateRangePicker(context,
+                                    dismissible: true,
+                                    minimumDate: DateTime.now()
+                                        .subtract(const Duration(days: 365)),
+                                    maximumDate: DateTime.now()
+                                        .add(const Duration(days: 365)),
+                                    startDate: cdv.startservice,
+                                    endDate: cdv.endservice, onApplyClick:
+                                        (DateTime startDate, DateTime endDate) {
+                                  commonVm.setServiceDateRange(
+                                      startDate, endDate);
+                                  // if (commonVm.startDateService != null &&
+                                  //     commonVm.endDateService != null) {
+                                  //   log("dateee ---- ${commonVm.startDateService}");
+                                  //   commonVm.resetServiceHistoryPagination();
+                                  //   commonVm.fetchServiceHistoryList();
+                                  // }
+                                }, onCancelClick: () {
+                                  commonVm.clearServiceDateRange();
+                                },
+                                    backgroundColor: AppColors.white,
+                                    primaryColor: AppColors.secondaryColor);
+                              },
+                              child: AbsorbPointer(
+                                child: CustomTextField(
+                                  controller: cdv.dobController,
+                                  hint: 'Select date',
+                                  suffixIcon: const Icon(Icons.calendar_month),
+                                ),
                               ),
-                            ),
-                          ),
+                            );
+                          }),
                           const SizedBox(height: 15),
                           CustomDropdown(
                             hint: 'Select Status',
-                            items: const ["Open", "Completed"],
-                            selectedItem: cdv.selectedStatus ??
-                                'Completed', // Default to 'Completed'
+                            items: cdv.statusOptions ?? [],
+                            selectedItem: tempSelectedStatus != null &&
+                                    cdv.statusOptions!
+                                        .contains(tempSelectedStatus)
+                                ? tempSelectedStatus
+                                : null,
                             onChanged: (String? value) {
-                              commonVm.setSelectedStatus(
-                                  value); // Update filter status
+                              tempSelectedStatus = value;
                             },
                           ),
                           const SizedBox(height: 30),
@@ -179,6 +286,22 @@ class ServiceHistoryScreen extends StatelessWidget {
                             width: double.infinity,
                             onPressed: () {
                               Navigator.pop(context);
+
+                              if (commonVm.startDateService != null &&
+                                  commonVm.endDateService != null &&
+                                  tempSelectedStatus == null) {
+                                log("dateee ---- ${commonVm.startDateService}");
+                                commonVm.resetServiceHistoryPagination();
+                                commonVm.fetchServiceHistoryList();
+                              } else if (tempSelectedStatus != null) {
+                                commonVm.setSelectedStatus(tempSelectedStatus);
+                                commonVm.resetServiceHistoryPagination();
+                                commonVm.fetchServiceHistoryList();
+                              } else {
+                                commonVm.setSelectedStatus(tempSelectedStatus);
+                                commonVm.resetServiceHistoryPagination();
+                                commonVm.fetchServiceHistoryList();
+                              }
                             },
                             text: "Apply",
                           )

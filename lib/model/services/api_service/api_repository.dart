@@ -23,6 +23,9 @@ import 'package:madathil/model/model_class/api_response_model/payment_details_re
 import 'package:madathil/model/model_class/api_response_model/payment_history_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
+import 'package:madathil/model/model_class/api_response_model/service_history_detailsresponse.dart';
+import 'package:madathil/model/model_class/api_response_model/service_history_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/service_status_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/task_creation_response.dart';
 import 'package:madathil/model/model_class/api_response_model/task_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/task_list_others_response.dart';
@@ -168,6 +171,23 @@ class ApiRepository {
         .post<LeadsCreationResponse>(apiUrl: ApiUrls.kLeadCreation, data: data);
   }
 
+  Future<ServiceHistoryListResponse?> getServiceHistoryList(
+      {Map<String, dynamic>? param}) async {
+    return _apiViewModel!.get<ServiceHistoryListResponse>(
+        apiUrl: ApiUrls.kServiceHistory, params: param);
+  }
+
+  Future<ServiceHistoryDetailsResponse?> getServiceHistoryDetails(
+      {Map<String, dynamic>? param, String? serviceId}) async {
+    return _apiViewModel!.get<ServiceHistoryDetailsResponse>(
+        apiUrl: '${ApiUrls.kServiceHistory}$serviceId', params: param);
+  }
+
+  Future<ServiceStatusListResponse?> getServiceStatusList(
+      {Map<String, dynamic>? param}) async {
+    return _apiViewModel!.get<ServiceStatusListResponse>(
+        apiUrl: ApiUrls.kServiceStatus, params: param);
+=======
   Future<PaymentHistoryListResponse?> getPaymentHistoryList(
       {Map<String, dynamic>? param}) async {
     return _apiViewModel!.get<PaymentHistoryListResponse>(

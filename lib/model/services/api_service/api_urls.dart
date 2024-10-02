@@ -36,6 +36,8 @@ class ApiUrls {
   static const kLeadCategoryList = '/api/resource/Lead Category';
   static const kLeadCreation = '/api/resource/Lead';
   static const kcreateAddress = '/api/resource/Address';
+  static const kServiceHistory = '/api/resource/Maintenance Visit/';
+  static const kServiceStatus = '/api/method/a3sola_solar_management.api.get_select_field_options';
   static const kPaymentHistoryList = '/api/resource/Payment Entry';
 
   //tasks section
