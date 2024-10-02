@@ -31,6 +31,10 @@ import 'package:madathil/model/model_class/api_response_model/payment_details_re
 import 'package:madathil/model/model_class/api_response_model/payment_history_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
+import 'package:madathil/model/model_class/api_response_model/task_creation_response.dart';
+import 'package:madathil/model/model_class/api_response_model/task_detail_response.dart';
+import 'package:madathil/model/model_class/api_response_model/task_list_others_response.dart';
+import 'package:madathil/model/model_class/api_response_model/task_status_response.dart';
 import 'package:madathil/model/model_class/local/environment.dart';
 import 'package:madathil/model/services/api_service/api_urls.dart';
 import 'package:madathil/model/services/local_db/hive_constants.dart';
@@ -228,6 +232,15 @@ class ApiViewModel {
         return PaymentHistoryListResponse?.fromJson(json) as T;
       case PaymentDetailsResponse:
         return PaymentDetailsResponse?.fromJson(json) as T;
+
+      case TasksListOthersResponse:
+        return TasksListOthersResponse?.fromJson(json) as T;
+      case TasksDetailsResponse:
+        return TasksDetailsResponse?.fromJson(json) as T;
+      case TasksCreationResponse:
+        return TasksCreationResponse?.fromJson(json) as T;
+      case TaskStatusListResponse:
+        return TaskStatusListResponse?.fromJson(json) as T;
 
       default:
         throw FromJsonNotImplementedException();

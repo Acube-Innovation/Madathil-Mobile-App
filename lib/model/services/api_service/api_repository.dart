@@ -23,6 +23,10 @@ import 'package:madathil/model/model_class/api_response_model/payment_details_re
 import 'package:madathil/model/model_class/api_response_model/payment_history_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
+import 'package:madathil/model/model_class/api_response_model/task_creation_response.dart';
+import 'package:madathil/model/model_class/api_response_model/task_detail_response.dart';
+import 'package:madathil/model/model_class/api_response_model/task_list_others_response.dart';
+import 'package:madathil/model/model_class/api_response_model/task_status_response.dart';
 import 'package:madathil/model/model_class/local/environment.dart';
 import 'package:madathil/model/services/api_service/api_urls.dart';
 import 'package:madathil/model/services/api_service/api_viewmodel.dart';
@@ -175,5 +179,33 @@ class ApiRepository {
     return _apiViewModel!.get<PaymentDetailsResponse>(
         apiUrl: 
         '${ApiUrls.kPaymentHistoryList}/$id', params: param);
+  }
+  //tasks
+  Future<TaskStatusListResponse?> getTaskStatusList() async {
+    return _apiViewModel!
+        .get<TaskStatusListResponse>(apiUrl: ApiUrls.ktaskStatusList);
+  }
+
+  Future<TasksCreationResponse?> createTask(Map<String, dynamic> data) async {
+    return _apiViewModel!
+        .post<TasksCreationResponse>(apiUrl: ApiUrls.ktaskCreation, data: data);
+  }
+
+  Future<TasksDetailsResponse?> getTaskDetails(String? id) async {
+    return _apiViewModel!.get<TasksDetailsResponse>(
+        apiUrl:
+            '${ApiUrls.ktaskDetail}$id?fields=["name", "lead_name", "address_line1", "address_line2", "city", "state", "country", "pincode", "ld_source", "lead_category", "number_to_be_contacted", "email_id", "aadhaar_number", "consumer_number", "status", "lead_owner", "creation"]');
+  }
+
+  Future<TasksListOthersResponse?> getTaskListOthers(int page,
+      {DateTime? fromdate, DateTime? todate, String? status}) {
+    return _apiViewModel!.get<TasksListOthersResponse>(
+        apiUrl: fromdate != null && todate != null
+            ? (status ?? "").isNotEmpty
+                ? '${ApiUrls.ktaskListOthers}&&filters={"assigned_user":"maya@gmail.com", "customer": ["like", "Mr%"], "status":"$status", "exp_end_date": ["between", ["${DateFormat('yyyy-MM-dd').format(fromdate)}", "${DateFormat('yyyy-MM-dd').format(todate)}"]]}&limit=10&limit_start=${page * 10}'
+                : '${ApiUrls.ktaskListOthers}&&filters={"assigned_user":"maya@gmail.com", "customer": ["like", "Mr%"], "exp_end_date": ["between", ["${DateFormat('yyyy-MM-dd').format(fromdate)}", "${DateFormat('yyyy-MM-dd').format(todate)}"]]}&limit=10&limit_start=${page * 10}'
+            : (status ?? "").isNotEmpty
+                ? '${ApiUrls.ktaskListOthers}&filters={"assigned_user": "maya@gmail.com", "status":"$status"}&limit=10&limit_start=${page * 10}'
+                : '${ApiUrls.ktaskListOthers}&filters={"assigned_user": "maya@gmail.com"}&limit=10&limit_start=${page * 10}');
   }
 }
