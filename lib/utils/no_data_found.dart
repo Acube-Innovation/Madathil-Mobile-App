@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:madathil/utils/color/app_colors.dart';
 
 class NoDataFOund extends StatelessWidget {
   final void Function()? onRefresh;
@@ -9,6 +10,7 @@ class NoDataFOund extends StatelessWidget {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
           // const Image.Asset(
           //   imageName: "assets/images/no_data.png",
@@ -18,7 +20,10 @@ class NoDataFOund extends StatelessWidget {
           const SizedBox(height: 20),
           Text(
             "No Data Found",
-            style: Theme.of(context).textTheme.titleMedium,
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(color: AppColors.black),
           ),
           if (onRefresh != null)
             IconButton(

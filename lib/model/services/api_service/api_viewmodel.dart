@@ -26,6 +26,7 @@ import 'package:madathil/model/model_class/api_response_model/lead_creation_resp
 import 'package:madathil/model/model_class/api_response_model/lead_list_own_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_source_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/leads_detail_response.dart';
+import 'package:madathil/model/model_class/api_response_model/list_users_response.dart';
 import 'package:madathil/model/model_class/api_response_model/login_response.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_history_response.dart';
@@ -214,7 +215,7 @@ class ApiViewModel {
         return ServiceHistoryListResponse.fromJson(json) as T;
       case ServiceHistoryDetailsResponse:
         return ServiceHistoryDetailsResponse.fromJson(json) as T;
-         case ServiceStatusListResponse:
+      case ServiceStatusListResponse:
         return ServiceStatusListResponse.fromJson(json) as T;
       case LeadsListOwnResponse:
         return LeadsListOwnResponse.fromJson(json) as T;
@@ -240,7 +241,6 @@ class ApiViewModel {
         return PaymentHistoryListResponse?.fromJson(json) as T;
       case PaymentDetailsResponse:
         return PaymentDetailsResponse?.fromJson(json) as T;
-
       case TasksListOthersResponse:
         return TasksListOthersResponse?.fromJson(json) as T;
       case TasksDetailsResponse:
@@ -249,6 +249,8 @@ class ApiViewModel {
         return TasksCreationResponse?.fromJson(json) as T;
       case TaskStatusListResponse:
         return TaskStatusListResponse?.fromJson(json) as T;
+      case ListUsersResponse:
+        return ListUsersResponse?.fromJson(json) as T;
 
       default:
         throw FromJsonNotImplementedException();
