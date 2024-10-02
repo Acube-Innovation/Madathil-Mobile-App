@@ -4,6 +4,7 @@ import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/Referal/referal_screen.dart';
 import 'package:madathil/view/screens/attendance/attendance.dart';
 import 'package:madathil/view/screens/call_management/call_list_screen.dart';
+import 'package:madathil/view/screens/employee/employee_list_scree.dart';
 import 'package:madathil/view/screens/homepage/components/drawer_widget.dart';
 import 'package:madathil/view/screens/homepage/components/home_item_widget.dart';
 import 'package:madathil/view/screens/leads/leads_screen.dart';
@@ -269,7 +270,21 @@ class HomePage extends StatelessWidget {
                                 const ClosingStatmentsListScreen()));
                   },
                 ),
-                const Expanded(child: SizedBox())
+
+                  const SizedBox(width: 8),
+
+                    HomeItemWidget(
+                  image: AppImages.employeesImage,
+                  title: "Employee List",
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const EmployeeListScreen()));
+                  },
+                ),
+               
               ],
             ),
           ],

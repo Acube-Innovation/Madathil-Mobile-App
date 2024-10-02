@@ -8,7 +8,8 @@ import 'package:madathil/viewmodel/leads_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class OtherLeads extends StatefulWidget {
-  const OtherLeads({super.key});
+  final String? employeeId;
+  const OtherLeads({super.key, this.employeeId});
 
   @override
   State<OtherLeads> createState() => _OtherLeadsState();

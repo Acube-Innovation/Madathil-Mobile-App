@@ -6,10 +6,12 @@ import 'package:provider/provider.dart';
 class SearchableDropdown extends StatefulWidget {
   final String hintText;
   final Function(String) onItemSelected;
+  final String? Function(String?)? validator;
 
   SearchableDropdown({
     required this.hintText,
     required this.onItemSelected,
+    this.validator,
   });
 
   @override
@@ -51,11 +53,11 @@ class _SearchableDropdownState extends State<SearchableDropdown> {
           children: [
             Text(
               _selectedCustomer ?? widget.hintText,
-             style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      height: 0,
-                      color: AppColors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500),
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                  height: 0,
+                  color: AppColors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500),
             ),
             const Icon(Icons.arrow_drop_down),
           ],
