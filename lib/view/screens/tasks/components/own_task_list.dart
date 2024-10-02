@@ -1,10 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/utils/custom_loader.dart';
+import 'package:madathil/utils/no_data_found.dart';
 import 'package:madathil/view/screens/tasks/components/task_list_item.dart';
 import 'package:madathil/view/screens/tasks/task_details.dart';
+import 'package:madathil/viewmodel/task_viewmodel.dart';
+import 'package:provider/provider.dart';
 
-class OwnTasks extends StatelessWidget {
+class OwnTasks extends StatefulWidget {
   const OwnTasks({super.key});
+
+  @override
+  State<OwnTasks> createState() => _OwnTasksState();
+}
+
+class _OwnTasksState extends State<OwnTasks> {
+  @override
+  void didChangeDependencies() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<TasksViewmodel>(context, listen: false)
+          .resettasksListOtherPagination();
+      Provider.of<TasksViewmodel>(context, listen: false).getTasksListOther();
+    });
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +33,7 @@ class OwnTasks extends StatelessWidget {
             MaterialPageRoute(builder: (context) => const TaskDetailScreen()));
       },
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
             height: 46,
@@ -49,7 +69,6 @@ class OwnTasks extends StatelessWidget {
                 hintText: "Search",
                 counterText: "",
                 hintStyle: const TextStyle(
-                  // fontFamily: "SF Pro Display",
                   fontSize: 18,
                   fontWeight: FontWeight.w400,
                   height: 1.275,
@@ -59,10 +78,48 @@ class OwnTasks extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 15),
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: 3,
-            itemBuilder: (context, index) => const TaskListItem(),
+          Expanded(
+            child: Consumer<TasksViewmodel>(builder: (context, lvm, _) {
+              return RefreshIndicator(
+                onRefresh: () async {
+                  lvm.clearDates();
+                  lvm.resettasksListOtherPagination();
+                  lvm.getTasksListOther();
+                },
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: (lvm.tasksListOtherList ?? []).length,
+                  itemBuilder: (context, index) {
+                    if (index == (lvm.tasksListOtherList ?? []).length) {
+                      if (lvm.isLoadingtasksListOtherPagination) {
+                        return const CustomLoader();
+                      } else {
+                        if (!lvm.reachedLastPagetasksListOther) {
+                          if (!lvm.isLoadingtasksListOtherPagination) {
+                            lvm.getTasksListOther();
+                          }
+                          return const CustomLoader();
+                        } else {
+                          if (lvm.tasksListOtherList!.isEmpty) {
+                            return NoDataFOund(
+                              onRefresh: () {
+                                lvm.clearDates();
+                                lvm.resettasksListOtherPagination();
+                                lvm.getTasksListOther();
+                              },
+                            );
+                          } else {
+                            return Container();
+                          }
+                        }
+                      }
+                    } else {
+                      return TaskListItem(data: lvm.tasksListOtherList?[index]);
+                    }
+                  },
+                ),
+              );
+            }),
           )
         ],
       ),
