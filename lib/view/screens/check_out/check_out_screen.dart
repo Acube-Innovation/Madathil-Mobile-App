@@ -5,14 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:madathil/app_images.dart';
 import 'package:madathil/model/services/api_service/api_urls.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/utils/color/util_functions.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
+import 'package:madathil/view/screens/common_widgets/custom_text_field.dart';
 import 'package:madathil/view/screens/customer/change_customer.dart';
 import 'package:madathil/view/screens/payment_mode/payment_mode.dart';
 import 'package:madathil/viewmodel/customer_viewmodel.dart';
 import 'package:madathil/viewmodel/product_viewmodel.dart';
 import 'package:provider/provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class CheckOutScreen extends StatelessWidget {
   const CheckOutScreen({super.key});
@@ -20,6 +23,7 @@ class CheckOutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final customerVm = Provider.of<CustomerViewmodel>(context, listen: false);
+    final productVm = Provider.of<ProductViewmodel>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
         title: "Check Out",
@@ -400,12 +404,86 @@ class CheckOutScreen extends StatelessWidget {
                             width: 200,
                             text: "Place Order",
                             onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const PaymentModeScreen(),
-                                  ));
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext ctx) => Dialog(
+                                      shape: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(15)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(15.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const SizedBox(height: 10),
+                                            Text('Initial payment',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge!
+                                                    .copyWith(
+                                                        height: 1.7,
+                                                        color: AppColors
+                                                            .primeryColor)),
+                                            const SizedBox(height: 20),
+                                            Column(
+                                              children: [
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                CustomTextField(
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  hint: "Enter amount",
+                                                  controller: productVm
+                                                      .amountController,
+                                                  validator: UtilFunctions
+                                                      .requiredField,
+                                                ),
+                                                const SizedBox(
+                                                  height: 30,
+                                                ),
+                                                CustomButton(
+                                                  text: "Submit",
+                                                  onPressed: () {
+                                                    if (productVm
+                                                        .amountController
+                                                        .text
+                                                        .isNotEmpty) {
+                                                      Navigator.of(context)
+                                                          .pop();
+
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                const PaymentModeScreen(),
+                                                          ));
+                                                    } else {
+                                                      Fluttertoast.showToast(
+                                                          gravity: ToastGravity
+                                                              .CENTER_RIGHT,
+                                                          backgroundColor:
+                                                              AppColors.red,
+                                                          textColor:
+                                                              AppColors.white,
+                                                          msg:
+                                                              "Please enter Amount",
+                                                          toastLength: Toast
+                                                              .LENGTH_LONG);
+                                                      // toast(
+                                                      //     "Please Enter amount",
+                                                      //     context);
+                                                    }
+                                                  },
+                                                )
+                                              ],
+                                            ),
+                                            const SizedBox(height: 10),
+                                          ],
+                                        ),
+                                      )));
                             },
                           )
                         ],

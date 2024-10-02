@@ -29,9 +29,6 @@ class CustomerViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // String _selectedValue = '';
-
-  // String get selectedValue => _selectedValue;
   Customer? _selectedAddress;
   Customer? get selectedAddress => _selectedAddress;
 
@@ -40,6 +37,9 @@ class CustomerViewmodel extends ChangeNotifier {
     log("selectedAddress----->${_selectedAddress?.toJson()}");
     notifyListeners(); // Notify listeners when the value changes
   }
+  /*
+  *  getCustomerList  api call
+  * */
 
   List<Customer>? customerList = [];
 
@@ -74,6 +74,9 @@ class CustomerViewmodel extends ChangeNotifier {
       return false;
     }
   }
+  /*
+  *  pagination--------------------
+  * */
 
   int cstListCurrentPage = 0;
   bool cstListReachLength = false;
@@ -276,6 +279,9 @@ class CustomerViewmodel extends ChangeNotifier {
     }
   }
 
+  /*
+  *   getCustomerDetail  Api call-------------------->
+  * */
   List<CstDetail>? customerDetails;
 
   Future<bool> getCustomerDetail({String? name}) async {
@@ -303,6 +309,9 @@ class CustomerViewmodel extends ChangeNotifier {
     }
   }
 
+  /*
+  *    getCustomerAddress  Api call-------------------->
+  * */
   List<CustomerAddress>? customerAddress;
 
   Future<bool> getCustomerAddress({String? name}) async {

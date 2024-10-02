@@ -33,14 +33,6 @@ class CommonDataViewmodel extends ChangeNotifier {
 
   TextEditingController dobController = TextEditingController();
 
-  String _selectedpayment = '';
-
-  String get selectedpayment => _selectedpayment;
-  void selectPayment(String value) {
-    _selectedpayment = value;
-    notifyListeners(); // Notify listeners when the value changes
-  }
-
   Future<void> selectDate(BuildContext context) async {
     final DateTime today = DateTime.now();
     final DateTime firstDate =

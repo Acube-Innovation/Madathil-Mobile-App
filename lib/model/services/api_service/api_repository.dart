@@ -10,8 +10,11 @@ import 'package:madathil/model/model_class/api_response_model/create_address_res
 import 'package:madathil/model/model_class/api_response_model/create_check_out_response_model.dart';
 import 'package:madathil/model/model_class/api_response_model/create_customer_response.dart';
 import 'package:madathil/model/model_class/api_response_model/customer_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/general_response.dart';
+import 'package:madathil/model/model_class/api_response_model/get__payment_method.dart';
 import 'package:madathil/model/model_class/api_response_model/get_customer_address_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get_customer_detail_response.dart';
+import 'package:madathil/model/model_class/api_response_model/get_order_response.dart';
 import 'package:madathil/model/model_class/api_response_model/image_uploade_response.dart';
 import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_creation_response.dart';
@@ -228,5 +231,21 @@ class ApiRepository {
             : (status ?? "").isNotEmpty
                 ? '${ApiUrls.ktaskListOthers}&filters={"assigned_user": "maya@gmail.com", "status":"$status"}&limit=10&limit_start=${page * 10}'
                 : '${ApiUrls.ktaskListOthers}&filters={"assigned_user": "maya@gmail.com"}&limit=10&limit_start=${page * 10}');
+  }
+
+  Future<GetOrdersResponse?> getOrdersList({Map<String, dynamic>? data}) async {
+    return _apiViewModel!
+        .get<GetOrdersResponse>(apiUrl: ApiUrls.kGetOrders, params: data);
+  }
+
+  Future<GeneralResponse?> createPayment({Map<String, dynamic>? data}) async {
+    return _apiViewModel!
+        .get<GeneralResponse>(apiUrl: ApiUrls.kCreatePayment, params: data);
+  }
+
+  Future<GetPaymentMethod?> getPaymentMethod(
+      {Map<String, dynamic>? data}) async {
+    return _apiViewModel!
+        .get<GetPaymentMethod>(apiUrl: ApiUrls.kPaymentMethod, params: data);
   }
 }

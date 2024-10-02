@@ -33,4 +33,14 @@ class AppImages {
   static const String shippingIcon = "assets/images/shipping.png";
   static const String serviceIcon = "assets/images/Service_icon.png";
   static const String placeHolder = "assets/images/place_holder.png";
+  static const String pay = "assets/images/pay.png";
+  static const String bankTransfer = "assets/images/bank_transfer.png";
+  static const String cheqPayement = "assets/images/payment-check.png";
+  static const String orderList = "assets/images/order-list.png";
+  static const String draftOrder = "assets/images/draft-order.png";
+  static const String toBillOrder = "assets/images/to-bill.png";
+  static const String toDeliver = "assets/images/to-deliver.png";
+  static const String holdOrder = "assets/images/hold.png";
+  static const String cancelOrder = "assets/images/cancel-order.png";
+  static const String closedOrder = "assets/images/closed-order.png";
 }

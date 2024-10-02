@@ -5,10 +5,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:madathil/model/model_class/api_response_model/create_check_out_response_model.dart';
+import 'package:madathil/model/model_class/api_response_model/get__payment_method.dart';
+import 'package:madathil/model/model_class/api_response_model/get_order_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/utils/color/util_functions.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
 
 class ProductViewmodel extends ChangeNotifier {
@@ -18,6 +21,8 @@ class ProductViewmodel extends ChangeNotifier {
 
   TextEditingController dobController = TextEditingController();
   TextEditingController searchController = TextEditingController();
+  TextEditingController amountController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   String? _errormsg;
   String? get errormsg => _errormsg;
 
@@ -63,6 +68,10 @@ class ProductViewmodel extends ChangeNotifier {
     productSearchfn = null;
     searchController.clear();
     notifyListeners();
+  }
+
+  clearamount() {
+    amountController.clear();
   }
 
   /*
@@ -211,6 +220,9 @@ class ProductViewmodel extends ChangeNotifier {
     dobController.clear();
     notifyListeners();
   }
+  /*
+  *productDetail api call------------------------------------------------
+  * */
 
   Product? productData;
 
@@ -256,6 +268,9 @@ class ProductViewmodel extends ChangeNotifier {
       notifyListeners();
     }
   }
+  /*
+  *     createCheckOut api call------------------------------------------------
+  * */
 
   SaleOrder? checkOutData;
 
@@ -276,8 +291,6 @@ class ProductViewmodel extends ChangeNotifier {
         ]
       });
       if (response?.data?.doctype == "Sales Order") {
-        // _productListResponse = response;
-
         checkOutData = response?.data;
 
         log("checkOut detail------------> ${checkOutData?.toJson() ?? []}");
@@ -294,5 +307,71 @@ class ProductViewmodel extends ChangeNotifier {
       log(e.toString());
       return false;
     }
+  }
+
+  Future<bool> createPayment(
+      {String? orderId, String? payment, String? txnId, int? amount}) async {
+    try {
+      setLoader(true);
+
+      var response = await apiRepository.createPayment(data: {
+        "sales_order_id": orderId,
+        "payment_method": payment,
+        "transaction_id": txnId,
+        "amount": amount
+      });
+      if (UtilFunctions.checkAPIStatus(response!.message?.success)) {
+        log(response.message?.message ?? "");
+
+        setLoader(false);
+
+        return true;
+      } else {
+        setLoader(false);
+        return false;
+      }
+    } catch (e) {
+      setLoader(false);
+      _errormsg = e.toString();
+      log(e.toString());
+      return false;
+    }
+  }
+
+  List<PaymentMethod>? paymentMethod = [];
+
+  Future<bool> getPaymentMethod(
+      {String? orderId, String? payment, String? txnId, int? amount}) async {
+    try {
+      setLoader(true);
+
+      var response = await apiRepository.getPaymentMethod(data: {
+        "fields": jsonEncode(["name"]),
+        "filters": jsonEncode({"enabled": 1}),
+        "order_by": 'modified desc',
+      });
+      if ((response?.data ?? []).isNotEmpty ?? false) {
+        paymentMethod = response?.data;
+        setLoader(false);
+
+        return true;
+      } else {
+        setLoader(false);
+        return false;
+      }
+    } catch (e) {
+      setLoader(false);
+      _errormsg = e.toString();
+      log(e.toString());
+      return false;
+    }
+  }
+
+  String _selectedpayment = '';
+
+  String get selectedpayment => _selectedpayment;
+  void selectPayment(String value) {
+    _selectedpayment = value;
+    notifyListeners(); // Notify listeners when the value changes
   }
 }

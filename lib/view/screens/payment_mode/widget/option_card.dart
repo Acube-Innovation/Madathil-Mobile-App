@@ -39,12 +39,13 @@ class OptionCard extends StatelessWidget {
           ], borderRadius: BorderRadius.circular(10), color: AppColors.white),
           child: Row(
             children: [
-              CustomPngImage(
-                height: 40,
-                width: 50,
-                imageName: icons,
-                boxFit: BoxFit.cover,
-              ),
+              _getIconForTransaction(title),
+              // CustomPngImage(
+              //   height: 40,
+              //   width: 50,
+              //   imageName: icons,
+              //   boxFit: BoxFit.cover,
+              // ),
               const SizedBox(
                 width: 10,
               ),
@@ -59,9 +60,9 @@ class OptionCard extends StatelessWidget {
                         .copyWith(height: 1.7, color: AppColors.black),
                   ),
                   SizedBox(
-                    width: 150,
+                    width: 180,
                     child: Text(
-                      subTitle ?? "",
+                      _getStringForTransaction(title),
                       style: Theme.of(context)
                           .textTheme
                           .bodySmall!
@@ -79,5 +80,77 @@ class OptionCard extends StatelessWidget {
             ],
           )),
     );
+  }
+
+  String _getStringForTransaction(String? name) {
+    switch (name) {
+      case "Cash":
+        return "Pay the amount as cash";
+      case "Bank Draft":
+        return "Pay the amount as Bank Draft";
+      case "Wire Transfer":
+        return "Pay the amount as Wire Transfer";
+      case "Credit Card":
+        return "Pay the amount with Credit Card";
+      case "UPI":
+        return "Pay the amount with UPI";
+      case "Cheque":
+        return "Pay the amount as  cheque";
+
+      default:
+        return "cash";
+    }
+  }
+
+  Widget _getIconForTransaction(String? name) {
+    switch (name) {
+      case "Cash":
+        return const CustomPngImage(
+          imageName: AppImages.cashImage,
+          height: 40,
+          width: 50,
+          boxFit: BoxFit.cover,
+        );
+      case "Bank Draft":
+        return const CustomPngImage(
+          imageName: AppImages.bankTransfer,
+          height: 40,
+          width: 50,
+          // color: AppColors.rSecondaryColor,
+        );
+      case "Wire Transfer":
+      case null:
+        return const CustomPngImage(
+          imageName: AppImages.transactionsImage,
+          height: 40,
+          width: 50,
+          boxFit: BoxFit.cover,
+        );
+      case "Credit Card":
+        return const CustomPngImage(
+          imageName: AppImages.creditcardImage,
+          height: 40,
+          width: 50,
+          boxFit: BoxFit.cover,
+        );
+      case "UPI":
+        return const CustomPngImage(
+          imageName: AppImages.upiImage,
+          height: 40,
+          width: 50,
+          boxFit: BoxFit.cover,
+        );
+      case "Cheque":
+        return const CustomPngImage(
+          imageName: AppImages.cheqPayement,
+          height: 40,
+          width: 50,
+          boxFit: BoxFit.cover,
+        );
+
+      default:
+        return const Icon(Icons.attach_money,
+            color: AppColors.primeryColor, size: 50.0); // Default icon
+    }
   }
 }
