@@ -187,7 +187,8 @@ class ApiRepository {
       {Map<String, dynamic>? param}) async {
     return _apiViewModel!.get<ServiceStatusListResponse>(
         apiUrl: ApiUrls.kServiceStatus, params: param);
-=======
+  }
+
   Future<PaymentHistoryListResponse?> getPaymentHistoryList(
       {Map<String, dynamic>? param}) async {
     return _apiViewModel!.get<PaymentHistoryListResponse>(
@@ -197,9 +198,9 @@ class ApiRepository {
   Future<PaymentDetailsResponse?> getPaymentDetails(
       {Map<String, dynamic>? param, String? id}) async {
     return _apiViewModel!.get<PaymentDetailsResponse>(
-        apiUrl: 
-        '${ApiUrls.kPaymentHistoryList}/$id', params: param);
+        apiUrl: '${ApiUrls.kPaymentHistoryList}/$id', params: param);
   }
+
   //tasks
   Future<TaskStatusListResponse?> getTaskStatusList() async {
     return _apiViewModel!
