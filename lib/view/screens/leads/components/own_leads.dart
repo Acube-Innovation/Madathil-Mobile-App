@@ -83,7 +83,7 @@ class _OwnLeadsState extends State<OwnLeads> {
               },
               child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: (lvm.leadsListOwnList ?? []).length,
+                itemCount: (lvm.leadsListOwnList ?? []).length + 1,
                 itemBuilder: (context, index) {
                   if (index == (lvm.leadsListOwnList ?? []).length) {
                     if (lvm.isLoadingleadsListOwnPagination) {

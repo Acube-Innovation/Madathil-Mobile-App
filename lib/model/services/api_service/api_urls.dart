@@ -55,4 +55,8 @@ class ApiUrls {
 //call management section
   static const kCallList = '/api/resource/Customer Call Records';
   static const kAddCall = '/api/resource/Customer Call Records';
+  static const kListUsers =
+      '/api/resource/User?fields=["name", "full_name"]&filters={"full_name": ["like", "aj%"]}&order_by=modified desc';
+  static const kListTaskType =
+      '/api/resource/Task Type?fields=["name"]&filters={"name": ["like", "ha%"]}&order_by=modified desc';
 }

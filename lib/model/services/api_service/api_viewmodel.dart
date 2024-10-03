@@ -28,6 +28,7 @@ import 'package:madathil/model/model_class/api_response_model/lead_creation_resp
 import 'package:madathil/model/model_class/api_response_model/lead_list_own_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_source_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/leads_detail_response.dart';
+import 'package:madathil/model/model_class/api_response_model/list_users_response.dart';
 import 'package:madathil/model/model_class/api_response_model/login_response.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_history_response.dart';
@@ -254,6 +255,8 @@ class ApiViewModel {
         return TasksCreationResponse?.fromJson(json) as T;
       case TaskStatusListResponse:
         return TaskStatusListResponse?.fromJson(json) as T;
+      case ListUsersResponse:
+        return ListUsersResponse?.fromJson(json) as T;
 
       case CallListResponseModel:
         return CallListResponseModel?.fromJson(json) as T;

@@ -25,6 +25,8 @@ class _OtherTasksState extends State<OtherTasks> {
     super.didChangeDependencies();
   }
 
+  TextEditingController? controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -33,6 +35,13 @@ class _OtherTasksState extends State<OtherTasks> {
         SizedBox(
           height: 46,
           child: TextField(
+            controller: controller,
+            onSubmitted: (value) {
+              Provider.of<TasksViewmodel>(context, listen: false)
+                  .resettasksListOtherPagination();
+              Provider.of<TasksViewmodel>(context, listen: false)
+                  .getTasksListOther(searchTerm: value);
+            },
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.only(left: 30),
               suffixIcon: Container(
@@ -77,42 +86,57 @@ class _OtherTasksState extends State<OtherTasks> {
           child: Consumer<TasksViewmodel>(builder: (context, lvm, _) {
             return RefreshIndicator(
               onRefresh: () async {
+                controller?.clear();
                 lvm.clearDates();
                 lvm.resettasksListOtherPagination();
                 lvm.getTasksListOther();
               },
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: (lvm.tasksListOtherList ?? []).length,
-                itemBuilder: (context, index) {
-                  if (index == (lvm.tasksListOtherList ?? []).length) {
-                    if (lvm.isLoadingtasksListOtherPagination) {
-                      return const CustomLoader();
-                    } else {
-                      if (!lvm.reachedLastPagetasksListOther) {
-                        if (!lvm.isLoadingtasksListOtherPagination) {
-                          lvm.getTasksListOther();
-                        }
-                        return const CustomLoader();
-                      } else {
-                        if (lvm.tasksListOtherList!.isEmpty) {
-                          return NoDataFOund(
-                            onRefresh: () {
-                              lvm.clearDates();
-                              lvm.resettasksListOtherPagination();
-                              lvm.getTasksListOther();
-                            },
-                          );
+              child: (lvm.tasksListOtherList ?? []).isNotEmpty
+                  ? ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: (lvm.tasksListOtherList ?? []).length,
+                      itemBuilder: (context, index) {
+                        if (index ==
+                            (lvm.tasksListOtherList ?? []).length - 1) {
+                          if (lvm.isLoadingtasksListOtherPagination) {
+                            return const CustomLoader();
+                          } else {
+                            if (!lvm.reachedLastPagetasksListOther) {
+                              if (!lvm.isLoadingtasksListOtherPagination) {
+                                lvm.getTasksListOther();
+                              }
+                              return const CustomLoader();
+                            } else {
+                              if ((lvm.tasksListOtherList ?? []).isEmpty) {
+                                return NoDataFOund(
+                                  onRefresh: () {
+                                    controller?.clear();
+                                    lvm.clearDates();
+                                    lvm.resettasksListOtherPagination();
+                                    lvm.getTasksListOther();
+                                  },
+                                );
+                              } else {
+                                return Container();
+                              }
+                            }
+                          }
                         } else {
-                          return Container();
+                          return TaskListItem(
+                              data: lvm.tasksListOtherList?[index]);
                         }
-                      }
-                    }
-                  } else {
-                    return TaskListItem(data: lvm.tasksListOtherList?[index]);
-                  }
-                },
-              ),
+                      },
+                    )
+                  : lvm.isLoadingtasksListOtherPagination
+                      ? const CustomLoader()
+                      : NoDataFOund(
+                          onRefresh: () {
+                            controller?.clear();
+                            lvm.clearDates();
+                            lvm.resettasksListOtherPagination();
+                            lvm.getTasksListOther();
+                          },
+                        ),
             );
           }),
         )

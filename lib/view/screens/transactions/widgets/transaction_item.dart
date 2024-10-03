@@ -35,7 +35,7 @@ class _TransactionItemState extends State<TransactionItem> {
       if ((pvm.paymentPost ?? []).isEmpty) {
         print(
             'Payment post ---------------------------------------- ${pvm.paymentPost}');
-        if (pvm.isLoading!) {
+        if (pvm.isLoading) {
           return const Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

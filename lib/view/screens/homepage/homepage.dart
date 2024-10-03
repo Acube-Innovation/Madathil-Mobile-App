@@ -236,6 +236,8 @@ class HomePage extends StatelessWidget {
                   image: AppImages.tasksImage,
                   title: "Tasks",
                   onTap: () {
+                    Provider.of<TasksViewmodel>(context, listen: false)
+                        .clearFilter();
                     Navigator.push(
                         context,
                         MaterialPageRoute(
