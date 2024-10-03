@@ -1,312 +1,475 @@
+import 'dart:developer';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:madathil/app_images.dart';
+import 'package:madathil/model/model_class/api_response_model/get_order_response.dart';
+import 'package:madathil/model/services/api_service/api_urls.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/utils/color/util_functions.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
+import 'package:madathil/view/screens/orders/widgets/invoice_widgets.dart';
+import 'package:madathil/viewmodel/order_viewmodel.dart';
+import 'package:provider/provider.dart';
+import 'package:open_file/open_file.dart';
 
-class OrderDetailScreen extends StatelessWidget {
-  const OrderDetailScreen({super.key});
+class OrderDetailScreen extends StatefulWidget {
+  final OrderList? item;
+  const OrderDetailScreen({super.key, this.item});
+
+  @override
+  State<OrderDetailScreen> createState() => _OrderDetailScreenState();
+}
+
+class _OrderDetailScreenState extends State<OrderDetailScreen> {
+  @override
+  void didChangeDependencies() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      Provider.of<OrderViewmodel>(context, listen: false)
+          .getOrderDetail(widget.item?.name);
+    });
+
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final orderVM = Provider.of<OrderViewmodel>(context, listen: false);
     return Scaffold(
       appBar: const CustomAppBar(title: "Order Details"),
       body: SingleChildScrollView(
           child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      color: AppColors.bgColor,
-                      border: Border.all(color: AppColors.black),
-                      borderRadius: BorderRadius.circular(10)),
-                  child: const CustomPngImage(
-                    height: 127,
-                    width: 134,
-                    boxFit: BoxFit.contain,
-                    imageName: AppImages.solarImage,
+        child: Consumer<OrderViewmodel>(builder: (context, ovm, _) {
+          var address = ovm.orderDetail?.customerAddress;
+          return ovm.isLoading
+              ? const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CupertinoActivityIndicator(color: AppColors.primeryColor),
+                      SizedBox(height: 10),
+                      Text("Loading..!")
+                    ],
                   ),
-                ),
-                const SizedBox(
-                  width: 30,
-                ),
-                Column(
+                )
+              : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    SizedBox(
+                      height: ovm.item.length > 1 ? 300 : 150,
+                      child: ListView.separated(
+                          separatorBuilder: (context, index) {
+                            return const SizedBox(
+                              height: 10,
+                            );
+                          },
+                          itemCount: ovm.item.length,
+                          itemBuilder: (context, index) {
+                            var pro = orderVM.item[index];
+                            return Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                      color: AppColors.bgColor,
+                                      border:
+                                          Border.all(color: AppColors.black),
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: (pro.image != null) &&
+                                          (pro.image!.isNotEmpty)
+                                      ? Image.network(
+                                          height: 127,
+                                          width: 134,
+                                          "${ApiUrls.kProdBaseURL}${pro.image}",
+                                          fit: BoxFit.contain,
+                                        )
+                                      : const CustomPngImage(
+                                          height: 127,
+                                          width: 134,
+                                          boxFit: BoxFit.contain,
+                                          imageName: AppImages.placeHolder,
+                                        ),
+                                ),
+                                const SizedBox(
+                                  width: 30,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      width: 120,
+                                      child: Text(
+                                        pro.itemName ?? "",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .copyWith(
+                                                color: AppColors.primeryColor),
+                                      ),
+                                    ),
+                                    Text(
+                                      pro.brand ?? "Madathil",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(
+                                            color: AppColors.black,
+                                          ),
+                                    ),
+                                    Text(
+                                      "${pro.qty?.toInt()}  ${pro.uom}",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(
+                                              color: AppColors.black,
+                                              height: 1.7),
+                                    ),
+                                    Text(
+                                      "\$ ${pro.amount?.toInt()}",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .copyWith(
+                                            color: AppColors.black,
+                                          ),
+                                    ),
+                                    const SizedBox(
+                                      height: 30,
+                                    ),
+                                  ],
+                                )
+                              ],
+                            );
+                          }),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Divider(),
+                    ),
                     Text(
-                      "Solar Panel",
+                      "Customer",
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: AppColors.grey,
+                          ),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.person,
+                          color: AppColors.primeryColor,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          ovm.orderDetail?.customerName ?? "",
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(color: AppColors.black, height: 1.7),
+                        ),
+                        const Spacer(),
+                        Container(
+                          padding: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.reefGold.withOpacity(0.1)),
+                          child: const Icon(
+                            Icons.arrow_forward_ios,
+                            color: AppColors.reefGold,
+                            size: 15,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "Delivery Location",
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: AppColors.grey,
+                          ),
+                    ),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.location_on,
+                          color: AppColors.primeryColor,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: SizedBox(
+                            width: 150,
+                            child: Text(
+                              "${address?.addressLine1}, ${address?.addressLine2}, ${address?.city},${address?.state},${address?.country},${address?.pincode}",
+                              // "VHC house, ABC Street  Kerala, India",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .copyWith(
+                                      color: AppColors.black, height: 1.7),
+                              maxLines: 4,
+                            ),
+                          ),
+                        ),
+                        const Spacer(),
+                        Container(
+                          padding: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.reefGold.withOpacity(0.1)),
+                          child: const Icon(
+                            Icons.arrow_forward_ios,
+                            color: AppColors.reefGold,
+                            size: 15,
+                          ),
+                        ),
+                      ],
+                    ),
+                    // const SizedBox(
+                    //   height: 10,
+                    // ),
+                    // Text(
+                    //   "Payment Mode",
+                    //   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    //         color: AppColors.grey,
+                    //       ),
+                    // ),
+                    // Row(
+                    //   children: [
+                    //     const Icon(
+                    //       Icons.attach_money,
+                    //       color: AppColors.reefGold,
+                    //     ),
+                    //     const SizedBox(
+                    //       width: 10,
+                    //     ),
+                    //     Padding(
+                    //       padding: const EdgeInsets.only(top: 8),
+                    //       child: Column(
+                    //         children: [
+                    //           Text(
+                    //             "VISA Classic",
+                    //             style: Theme.of(context)
+                    //                 .textTheme
+                    //                 .bodySmall!
+                    //                 .copyWith(
+                    //                     color: AppColors.black, height: 1.7),
+                    //           ),
+                    //           Text(
+                    //             "******0000",
+                    //             style: Theme.of(context)
+                    //                 .textTheme
+                    //                 .bodySmall!
+                    //                 .copyWith(
+                    //                     color: AppColors.black, height: 1.7),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //     const Spacer(),
+                    //     Container(
+                    //       padding: const EdgeInsets.all(5),
+                    //       decoration: BoxDecoration(
+                    //           shape: BoxShape.circle,
+                    //           color: AppColors.reefGold.withOpacity(0.1)),
+                    //       child: const Icon(
+                    //         Icons.arrow_forward_ios,
+                    //         color: AppColors.reefGold,
+                    //         size: 15,
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Divider(),
+                    ),
+                    Text(
+                      "Order Info",
                       style: Theme.of(context)
                           .textTheme
                           .bodyLarge!
-                          .copyWith(color: AppColors.primeryColor),
-                    ),
-                    Text(
-                      "1200*100",
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: AppColors.black,
-                          ),
-                    ),
-                    Text(
-                      "Madathil",
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium!
                           .copyWith(color: AppColors.black, height: 1.7),
                     ),
-                    Text(
-                      "\$ 1000",
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: AppColors.black,
-                          ),
+                    Row(
+                      children: [
+                        Text(
+                          "Shipment Status",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .copyWith(color: AppColors.grey, height: 1.7),
+                        ),
+                        const Spacer(),
+                        Text(
+                          ovm.orderDetail?.status ?? "",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(color: AppColors.black, height: 1.7),
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        _getStatusIcon(ovm.orderDetail?.status)
+                      ],
                     ),
                     const SizedBox(
-                      height: 30,
+                      height: 10,
                     ),
-                  ],
-                )
-              ],
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: Divider(),
-            ),
-            Text(
-              "Customer",
-              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: AppColors.grey,
-                  ),
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Row(
-              children: [
-                const Icon(
-                  Icons.person,
-                  color: AppColors.reefGold,
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  "George K",
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium!
-                      .copyWith(color: AppColors.black, height: 1.7),
-                ),
-                const Spacer(),
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.reefGold.withOpacity(0.1)),
-                  child: const Icon(
-                    Icons.arrow_forward_ios,
-                    color: AppColors.reefGold,
-                    size: 15,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              "Delivery Location",
-              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: AppColors.grey,
-                  ),
-            ),
-            Row(
-              children: [
-                const Icon(
-                  Icons.location_on,
-                  color: AppColors.reefGold,
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: SizedBox(
-                    width: 150,
-                    child: Text(
-                      "VHC house, ABC Street  Kerala, India",
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall!
-                          .copyWith(color: AppColors.black, height: 1.7),
+                    Row(
+                      children: [
+                        Text(
+                          "Order Date",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .copyWith(color: AppColors.grey, height: 1.7),
+                        ),
+                        const Spacer(),
+                        Text(
+                          "17 jul 2023",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .copyWith(color: AppColors.black, height: 1.7),
+                        ),
+                        // const SizedBox(
+                        //   width: 28,
+                        // ),
+                      ],
                     ),
-                  ),
-                ),
-                const Spacer(),
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.reefGold.withOpacity(0.1)),
-                  child: const Icon(
-                    Icons.arrow_forward_ios,
-                    color: AppColors.reefGold,
-                    size: 15,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              "Payment Mode",
-              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: AppColors.grey,
-                  ),
-            ),
-            Row(
-              children: [
-                const Icon(
-                  Icons.attach_money,
-                  color: AppColors.reefGold,
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Column(
-                    children: [
-                      Text(
-                        "VISA Classic",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall!
-                            .copyWith(color: AppColors.black, height: 1.7),
-                      ),
-                      Text(
-                        "******0000",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall!
-                            .copyWith(color: AppColors.black, height: 1.7),
-                      ),
-                    ],
-                  ),
-                ),
-                const Spacer(),
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.reefGold.withOpacity(0.1)),
-                  child: const Icon(
-                    Icons.arrow_forward_ios,
-                    color: AppColors.reefGold,
-                    size: 15,
-                  ),
-                ),
-              ],
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: Divider(),
-            ),
-            Text(
-              "Order Info",
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge!
-                  .copyWith(color: AppColors.black, height: 1.7),
-            ),
-            Row(
-              children: [
-                Text(
-                  "Shipment Status",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall!
-                      .copyWith(color: AppColors.grey, height: 1.7),
-                ),
-                const Spacer(),
-                Text(
-                  "Delivered",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium!
-                      .copyWith(color: AppColors.black, height: 1.7),
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                const Icon(
-                  Icons.task_alt,
-                  color: AppColors.malachit,
-                )
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                Text(
-                  "Order Date",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall!
-                      .copyWith(color: AppColors.grey, height: 1.7),
-                ),
-                const Spacer(),
-                Text(
-                  "17 jul 2023",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall!
-                      .copyWith(color: AppColors.black, height: 1.7),
-                ),
-                const SizedBox(
-                  width: 28,
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 40,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: CustomButton(
-                color: AppColors.reefGold,
-                onPressed: () {},
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Download Invoice",
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .copyWith(color: AppColors.white),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Divider(),
                     ),
+                    ovm.orderDetail?.invoice != null
+                        ? InvoiceCard(invoice: ovm.orderDetail?.invoice)
+                        : const SizedBox(),
+
                     const SizedBox(
-                      width: 5,
+                      height: 40,
                     ),
-                    const Icon(
-                      Icons.download,
-                      color: AppColors.white,
-                    ),
+
+                    ovm.orderDetail?.invoice != null
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 40),
+                            child: CustomButton(
+                              color: AppColors.reefGold,
+                              onPressed: () {
+                                UtilFunctions.loaderPopup(context);
+                                orderVM
+                                    .getInvoice(ovm.orderDetail?.invoice?.name)
+                                    .then((value) {
+                                  Navigator.pop(context);
+                                  if (value) {
+                                    log("${orderVM.file?.path.toLowerCase()}");
+                                    OpenFile.open(orderVM.file?.path);
+                                  } else {
+                                    toast(orderVM.errorMessage, context);
+                                  }
+                                });
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Download Invoice",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(color: AppColors.white),
+                                  ),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  const Icon(
+                                    Icons.download,
+                                    color: AppColors.white,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : const SizedBox()
                   ],
-                ),
-              ),
-            )
-          ],
-        ),
+                );
+        }),
       )),
     );
+  }
+
+  Widget _getStatusIcon(String? name) {
+    switch (name) {
+      case "Draft":
+        return const CustomPngImage(
+          height: 25,
+          width: 25,
+          imageName: AppImages.statusShipping,
+          boxFit: BoxFit.contain,
+        );
+      case "On Hold":
+        return const CustomPngImage(
+          height: 25,
+          width: 25,
+          imageName: AppImages.holdOrder,
+          boxFit: BoxFit.contain,
+        );
+      case "To Deliver and Bill":
+        return const CustomPngImage(
+          height: 25,
+          width: 25,
+          imageName: AppImages.shippingIcon,
+          boxFit: BoxFit.contain,
+        );
+      case "To Bill":
+        return const CustomPngImage(
+          height: 25,
+          width: 25,
+          imageName: AppImages.toBillOrder,
+          boxFit: BoxFit.contain,
+        );
+
+      case "To Deliver":
+        return const CustomPngImage(
+          height: 25,
+          width: 25,
+          imageName: AppImages.shippingIcon,
+          boxFit: BoxFit.contain,
+        );
+      case "Completed":
+        return const Icon(
+          Icons.task_alt,
+          color: AppColors.malachit,
+        );
+      case "Cancelled":
+        return const Icon(
+          Icons.remove_shopping_cart,
+          color: AppColors.red,
+        );
+      case "Closed":
+        return const Icon(
+          Icons.remove_circle,
+          color: AppColors.red,
+        );
+
+      default:
+        return const Icon(
+          Icons.local_shipping,
+          color: AppColors.amber,
+        );
+    }
   }
 }

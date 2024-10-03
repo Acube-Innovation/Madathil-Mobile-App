@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -138,6 +139,16 @@ class UtilFunctions {
 
   static String? requiredField(String? value) {
     return value == null || value.isEmpty ? 'Required Field' : null;
+  }
+
+  static String? formatDate(String inputDate) {
+    // Parse the input string into a DateTime object
+    DateTime dateTime = DateTime.parse(inputDate);
+
+    // Format the DateTime object to the desired format
+    String formattedDate = DateFormat('MMM d, yyyy').format(dateTime);
+
+    return formattedDate;
   }
 }
 
