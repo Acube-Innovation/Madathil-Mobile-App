@@ -48,7 +48,7 @@ class AddCallDetailsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 18),
                 Text(
-                  "Call title",
+                  "Customer Number",
                   style: Theme.of(context).textTheme.titleMedium!.copyWith(
                         height: 0,
                         color: AppColors.grey,
@@ -59,7 +59,7 @@ class AddCallDetailsScreen extends StatelessWidget {
                 const SizedBox(height: 10),
                 CustomTextField(
                   validator: UtilFunctions.validateCalltitle,
-                  hint: "Enter the call details",
+                  hint: "Enter the Customer Number",
                   controller: callTitleController,
                 ),
                 const SizedBox(height: 18),
@@ -133,23 +133,23 @@ class AddCallDetailsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 18),
 
-                Text(
-                  "Note",
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                        height: 0,
-                        color: AppColors.grey,
-                        fontSize: 12,
-                        fontWeight: FontWeight.normal,
-                      ),
-                ),
-                const SizedBox(height: 10),
-                CustomTextField(
-                  maxLines: 5,
-                  validator: UtilFunctions.validateNote,
-                  hint: "Add note",
-                  controller: noteController,
-                ),
-                const SizedBox(height: 18),
+                // Text(
+                //   "Note",
+                //   style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                //         height: 0,
+                //         color: AppColors.grey,
+                //         fontSize: 12,
+                //         fontWeight: FontWeight.normal,
+                //       ),
+                // ),
+                // const SizedBox(height: 10),
+                // CustomTextField(
+                //   maxLines: 5,
+                //   validator: UtilFunctions.validateNote,
+                //   hint: "Add note",
+                //   controller: noteController,
+                // ),
+                // const SizedBox(height: 18),
 
                 // Reminder
                 // Reminder Section

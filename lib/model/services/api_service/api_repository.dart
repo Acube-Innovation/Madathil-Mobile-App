@@ -2,6 +2,8 @@ import 'package:intl/intl.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:madathil/model/model_class/api_response_model/add_closing_statment_response.dart';
 import 'package:madathil/model/model_class/api_response_model/attendance_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/call_details_response.dart';
+import 'package:madathil/model/model_class/api_response_model/call_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_response.dart';
 import 'package:madathil/model/model_class/api_response_model/closing_statment_list_response.dart';
@@ -22,6 +24,7 @@ import 'package:madathil/model/model_class/api_response_model/list_users_respons
 import 'package:madathil/model/model_class/api_response_model/login_response.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_history_response.dart';
+import 'package:madathil/model/model_class/api_response_model/payment_modes_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
 import 'package:madathil/model/model_class/api_response_model/service_history_detailsresponse.dart';
@@ -202,6 +205,12 @@ class ApiRepository {
         apiUrl: '${ApiUrls.kPaymentHistoryList}/$id', params: param);
   }
 
+  Future<PaymentModesModel?> getPaymentModes() async {
+    return _apiViewModel!.get(
+        apiUrl:
+            '${ApiUrls.kpaymentModeList}?fields=["name"]&filters={"enabled" : 1}&order_by=modified desc');
+  }
+
   //tasks
   Future<TaskStatusListResponse?> getTaskStatusList() async {
     return _apiViewModel!
@@ -270,5 +279,22 @@ class ApiRepository {
   Future<LeadsSourceListResponse?> getListTaskType() async {
     return _apiViewModel!
         .get<LeadsSourceListResponse>(apiUrl: ApiUrls.kListTaskType);
+  }
+
+  Future<CallListResponseModel?> getCallList(
+      {Map<String, dynamic>? param}) async {
+    return _apiViewModel!
+        .get<CallListResponseModel>(apiUrl: ApiUrls.kCallList, params: param);
+  }
+
+  Future<CallDetailsResponseModel?> getCallDetails(
+      {Map<String, dynamic>? param, String? id}) async {
+    return _apiViewModel!
+        .get<CallDetailsResponseModel>(apiUrl: '${ApiUrls.kCallList}/$id', params: param);
+  }
+
+  Future addCall({Map<String, dynamic>? data}) async {
+    return _apiViewModel!
+        .post(apiUrl: ApiUrls.kAddCall, data: data);
   }
 }

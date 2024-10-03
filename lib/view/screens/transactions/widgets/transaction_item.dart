@@ -17,10 +17,12 @@ class _TransactionItemState extends State<TransactionItem> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      Provider.of<PaymentViewmodel>(context, listen: false).clearFilter('all');
       Provider.of<PaymentViewmodel>(context, listen: false)
           .resetPaymentPagination();
       Provider.of<PaymentViewmodel>(context, listen: false)
           .fetchPaymentHistoryList();
+      Provider.of<PaymentViewmodel>(context, listen: false).fetchPaymentModes();
     });
 
     super.initState();

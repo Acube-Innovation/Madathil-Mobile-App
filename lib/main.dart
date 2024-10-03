@@ -7,6 +7,7 @@ import 'package:madathil/model/services/local_db/hive_local.dart';
 import 'package:madathil/size_config.dart';
 import 'package:madathil/view/screens/splash_screen/splash_screen.dart';
 import 'package:madathil/viewmodel/auth_viewmodel.dart';
+import 'package:madathil/viewmodel/call_viewmodel.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:madathil/viewmodel/customer_viewmodel.dart';
 import 'package:madathil/viewmodel/leads_viewmodel.dart';
@@ -57,6 +58,8 @@ class MyApp extends StatelessWidget {
           create: (_) => PaymentViewmodel(apiRepository: ApiRepository())),
         ChangeNotifierProvider(
           create: (_) => TasksViewmodel(apiRepository: ApiRepository())),
+        ChangeNotifierProvider(
+          create: (_) => CallViewModel(apiRepository: ApiRepository())),
     ];
   }
 }
