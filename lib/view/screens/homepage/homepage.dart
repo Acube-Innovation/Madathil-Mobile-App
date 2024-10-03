@@ -9,6 +9,7 @@ import 'package:madathil/view/screens/homepage/components/drawer_widget.dart';
 import 'package:madathil/view/screens/homepage/components/home_item_widget.dart';
 import 'package:madathil/view/screens/leads/leads_screen.dart';
 import 'package:madathil/view/screens/orders/orders_screen.dart';
+import 'package:madathil/view/screens/payment_mode/payment_mode.dart';
 import 'package:madathil/view/screens/products/product_list.dart';
 import 'package:madathil/view/screens/profile/profile_screen.dart';
 import 'package:madathil/view/screens/service_list/service_list.dart';
@@ -225,7 +226,9 @@ class HomePage extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const CallListScreen()));
+                            builder: (context) =>
+                                // const CallListScreen()
+                                const PaymentModeScreen()));
                   },
                 ),
               ],
