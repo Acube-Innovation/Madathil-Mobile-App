@@ -13,6 +13,8 @@ import 'package:madathil/model/model_class/api_response_model/create_address_res
 import 'package:madathil/model/model_class/api_response_model/create_check_out_response_model.dart';
 import 'package:madathil/model/model_class/api_response_model/create_customer_response.dart';
 import 'package:madathil/model/model_class/api_response_model/customer_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/employee_details_response.dart';
+import 'package:madathil/model/model_class/api_response_model/employee_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/general_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get__payment_method.dart';
 import 'package:madathil/model/model_class/api_response_model/get_customer_address_response.dart';
@@ -29,8 +31,11 @@ import 'package:madathil/model/model_class/api_response_model/login_response.dar
 import 'package:madathil/model/model_class/api_response_model/payment_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_history_response.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_modes_response.dart';
+import 'package:madathil/model/model_class/api_response_model/point_dettails_response.dart';
+import 'package:madathil/model/model_class/api_response_model/points_list_model_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
+import 'package:madathil/model/model_class/api_response_model/profile_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/sales_persons_list_response_addservice.dart';
 import 'package:madathil/model/model_class/api_response_model/service_history_detailsresponse.dart';
 import 'package:madathil/model/model_class/api_response_model/service_history_list_response.dart';
@@ -294,13 +299,12 @@ class ApiRepository {
 
   Future<CallDetailsResponseModel?> getCallDetails(
       {Map<String, dynamic>? param, String? id}) async {
-    return _apiViewModel!
-        .get<CallDetailsResponseModel>(apiUrl: '${ApiUrls.kCallList}/$id', params: param);
+    return _apiViewModel!.get<CallDetailsResponseModel>(
+        apiUrl: '${ApiUrls.kCallList}/$id', params: param);
   }
 
   Future addCall({Map<String, dynamic>? data}) async {
-    return _apiViewModel!
-        .post(apiUrl: ApiUrls.kAddCall, data: data);
+    return _apiViewModel!.post(apiUrl: ApiUrls.kAddCall, data: data);
   }
 
   Future<SalesPersonsListResponse?> getSalesPersonsListService(
@@ -311,8 +315,8 @@ class ApiRepository {
 
   Future<AddNewServiceResponse?> addNewService(
       {Map<String, dynamic>? data}) async {
-    return _apiViewModel!
-        .post<AddNewServiceResponse>(apiUrl: ApiUrls.kAddServiceHistory, data: data);
+    return _apiViewModel!.post<AddNewServiceResponse>(
+        apiUrl: ApiUrls.kAddServiceHistory, data: data);
   }
 
   Future<GetOrdersResponse?> getOrdersList({Map<String, dynamic>? data}) async {
@@ -329,5 +333,33 @@ class ApiRepository {
       {Map<String, dynamic>? data}) async {
     return _apiViewModel!
         .get<GetPaymentMethod>(apiUrl: ApiUrls.kPaymentMethod, params: data);
+  }
+
+  Future<EmployeeListResponse?> getEmployeeList(
+      {Map<String, dynamic>? param}) async {
+    return _apiViewModel!.get<EmployeeListResponse>(
+        apiUrl: ApiUrls.kEmployeeList, params: param);
+  }
+
+  Future<EmployeeDetailsResponse?> getEmployeeDetails(
+      {Map<String, dynamic>? param, String? empId}) async {
+    return _apiViewModel!.get<EmployeeDetailsResponse>(
+        apiUrl: '${ApiUrls.kEmployeeDetails}$empId', params: param);
+  }
+
+  Future<ProfileDetailsResponse?> getProfileDetails(
+      {Map<String, dynamic>? param}) async {
+    return _apiViewModel!.get<ProfileDetailsResponse>(
+        apiUrl: ApiUrls.kUserProfile, params: param);
+  }
+
+  Future<PointListResponse?> getPointList({Map<String, dynamic>? param}) async {
+    return _apiViewModel!
+        .get<PointListResponse>(apiUrl: ApiUrls.kPointList, params: param);
+  }
+
+  Future<PointDetailsResponse?> getPointDetails({Map<String, dynamic>? param}) async {
+    return _apiViewModel!
+        .get<PointDetailsResponse>(apiUrl: ApiUrls.kPointDetails, params: param);
   }
 }

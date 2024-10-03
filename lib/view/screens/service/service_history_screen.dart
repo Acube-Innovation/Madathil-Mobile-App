@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:custom_date_range_picker/custom_date_range_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
@@ -70,7 +71,7 @@ class ServiceHistoryScreen extends StatelessWidget {
                                     ),
                               ),
                               const SizedBox(
-                                width: 10,
+                                width: 5,
                               ),
                               GestureDetector(
                                 onTap: () {
@@ -106,8 +107,7 @@ class ServiceHistoryScreen extends StatelessWidget {
                           child: Row(
                             children: [
                               Text(
-                                commonVm.startDateService ??
-                                    '', // Show selected filter
+                                "${commonVm.startDateService != null ? DateFormat('dd/MM').format(DateTime.parse(commonVm.startDateService!)) : ''} - ${commonVm.endDateService != null ? DateFormat('dd/MM').format(DateTime.parse(commonVm.endDateService!)) : ''}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodySmall!

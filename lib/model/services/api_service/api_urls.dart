@@ -66,4 +66,21 @@ class ApiUrls {
       '/api/resource/User?fields=["name", "full_name"]&filters={"full_name": ["like", "aj%"]}&order_by=modified desc';
   static const kListTaskType =
       '/api/resource/Task Type?fields=["name"]&filters={"name": ["like", "ha%"]}&order_by=modified desc';
+
+  // employee list section
+
+  static const kEmployeeList =
+      '/api/method/a3sola_solar_management.api.get_employee_list';
+  static const kEmployeeDetails = '/api/resource/Employee/';
+
+  // profile section
+  static const kUserProfile =
+      '/api/method/a3sola_solar_management.api.get_profile_details';
+
+  //points section
+
+  static const kPointList =
+      '/api/method/a3sola_solar_management.api.total_points_list';
+
+      static const kPointDetails = '/api/method/a3sola_solar_management.api.total_points_details';
 }
