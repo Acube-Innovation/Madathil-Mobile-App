@@ -17,10 +17,12 @@ class _TransactionItemState extends State<TransactionItem> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      Provider.of<PaymentViewmodel>(context, listen: false).clearFilter('all');
       Provider.of<PaymentViewmodel>(context, listen: false)
           .resetPaymentPagination();
       Provider.of<PaymentViewmodel>(context, listen: false)
           .fetchPaymentHistoryList();
+      Provider.of<PaymentViewmodel>(context, listen: false).fetchPaymentModes();
     });
 
     super.initState();
@@ -33,7 +35,7 @@ class _TransactionItemState extends State<TransactionItem> {
       if ((pvm.paymentPost ?? []).isEmpty) {
         print(
             'Payment post ---------------------------------------- ${pvm.paymentPost}');
-        if (pvm.isLoading!) {
+        if (pvm.isLoading) {
           return const Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -123,7 +125,9 @@ class _TransactionItemState extends State<TransactionItem> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => TransactionDetails(item: item,),
+                            builder: (context) => TransactionDetails(
+                              item: item,
+                            ),
                           ));
                     },
                     child: Padding(
@@ -156,18 +160,20 @@ class _TransactionItemState extends State<TransactionItem> {
                                     children: [
                                       SizedBox(
                                         width: 148,
-                                        child: Text(item.partyName ?? "",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium!
-                                                .copyWith(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w400,
-                                                  height: 1.7,
-                                                  color: AppColors.primeryColor,
-                                                ),
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,),
+                                        child: Text(
+                                          item.partyName ?? "",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w400,
+                                                height: 1.7,
+                                                color: AppColors.primeryColor,
+                                              ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                       ),
                                       const SizedBox(
                                         height: 5,
@@ -189,7 +195,8 @@ class _TransactionItemState extends State<TransactionItem> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   SizedBox(
-                                    child: Text(item.paidAmount?.toString() ?? "0.0",
+                                    child: Text(
+                                        item.paidAmount?.toString() ?? "0.0",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium!

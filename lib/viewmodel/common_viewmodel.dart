@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:madathil/model/model_class/api_response_model/add_closing_statment_response.dart';
+import 'package:madathil/model/model_class/api_response_model/add_new_service_response.dart';
 import 'package:madathil/model/model_class/api_response_model/attendance_list_response.dart';
 import 'package:intl/intl.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_list_response.dart';
@@ -16,6 +17,7 @@ import 'package:madathil/model/model_class/api_response_model/closingstatment_de
 import 'package:madathil/model/model_class/api_response_model/customer_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/image_uploade_response.dart';
 import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/sales_persons_list_response_addservice.dart';
 import 'package:madathil/model/model_class/api_response_model/service_history_detailsresponse.dart';
 import 'package:madathil/model/model_class/api_response_model/service_history_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/service_status_list_response.dart';
@@ -812,6 +814,16 @@ class CommonDataViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
+  String? _selectedStatusAdd;
+  String? get selectedStatusAdd => _selectedStatusAdd;
+
+  void setSelectedStatusAdd(String? status) {
+    _selectedStatusAdd = status;
+
+    log(selectedStatusAdd!);
+    notifyListeners();
+  }
+
   /*
   * service history list api call
   * */
@@ -1084,5 +1096,104 @@ class CommonDataViewmodel extends ChangeNotifier {
 
   resetServiceDetails() {
     servicePurpose = null;
+  }
+
+  /* sales person list api call */
+
+  List<String>? _salesPersons;
+  List<String>? get salesPersons => _salesPersons;
+
+  Future<bool> getSalesPersonsListService() async {
+    try {
+      Map<String, dynamic>? param = {};
+
+      param = {
+        "fields": jsonEncode(["name", "sales_person_name"]),
+        "filters": jsonEncode(
+          {
+            "enabled": 1,
+            "sales_person_name": ["like", "Sales%"]
+          },
+        )
+      };
+
+      SalesPersonsListResponse? response =
+          await apiRepository.getSalesPersonsListService(param: param);
+
+      if (response?.data != null) {
+        _salesPersons = response?.data
+            ?.map((person) => person.salesPersonName ?? '')
+            .toList();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      _errormsg = e.toString();
+
+      notifyListeners();
+      return false;
+    }
+  }
+
+  // Method to set the sales person
+  String? _selectedSalesPerson;
+  String? get selectedPerson => _selectedSalesPerson;
+  void setSelectedPerson(String? status) {
+    _selectedSalesPerson = status;
+
+    log(selectedStatus!);
+    notifyListeners();
+  }
+
+  resetAddService() {
+    _selectedSalesPerson = null;
+
+    _selectedStatusAdd = null;
+  }
+
+  /*
+  * add new service api call
+  * */
+
+  Future<bool> addNewService(
+      {String? customer,
+      String? maintenenceType,
+      String? status,
+      String? item,
+      String? servicePerson,
+      String? problem,
+      String? desc,
+      String? work}) async {
+    try {
+      Map<String, dynamic>? data = {};
+
+      data = {
+        "customer": customer,
+        "maintenance_type": maintenenceType,
+        "work_completion_status": status,
+        "purposes": [
+          {
+            "item_code": item,
+            "service_person": servicePerson,
+            "problem_reported": problem,
+            "description": desc,
+            "work_done": work
+          },
+        ]
+      };
+
+      AddNewServiceResponse? response =
+          await apiRepository.addNewService(data: data);
+
+      if (response?.data != null) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+
+      
+      _errormsg = e.toString();
+      return false;
+    }
   }
 }

@@ -8,7 +8,8 @@ import 'package:madathil/viewmodel/leads_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class OtherLeads extends StatefulWidget {
-  const OtherLeads({super.key});
+  final String? employeeId;
+  const OtherLeads({super.key, this.employeeId});
 
   @override
   State<OtherLeads> createState() => _OtherLeadsState();
@@ -89,7 +90,7 @@ class _OtherLeadsState extends State<OtherLeads> {
                 },
                 child: ListView.builder(
                   shrinkWrap: true,
-                  itemCount: (lvm.leadsListOwnList ?? []).length,
+                  itemCount: (lvm.leadsListOwnList ?? []).length + 1,
                   itemBuilder: (context, index) {
                     if (index == (lvm.leadsListOwnList ?? []).length) {
                       if (lvm.isLoadingleadsListOwnPagination) {

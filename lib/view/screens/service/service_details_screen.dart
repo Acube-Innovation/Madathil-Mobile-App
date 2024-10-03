@@ -46,7 +46,7 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(cdv.servicePurpose?.purposes?.first.parenttype ?? '',
+                      Text(cdv.servicePurpose?.purposes?.first.description ?? '',
                           style:
                               Theme.of(context).textTheme.bodySmall!.copyWith(
                                     height: 0,

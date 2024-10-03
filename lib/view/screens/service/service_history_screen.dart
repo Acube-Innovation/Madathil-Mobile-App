@@ -8,6 +8,7 @@ import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
 import 'package:madathil/view/screens/common_widgets/custom_dropdown.dart';
 import 'package:madathil/view/screens/common_widgets/custom_text_field.dart';
 import 'package:madathil/view/screens/service/widgets/service_item.dart';
+import 'package:madathil/view/screens/service_list/add_new_service.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -20,6 +21,22 @@ class ServiceHistoryScreen extends StatelessWidget {
     return Scaffold(
       appBar: const CustomAppBar(
         title: "Service History",
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Provider.of<CommonDataViewmodel>(context, listen: false)
+              .getCustomerList();
+          Provider.of<CommonDataViewmodel>(context, listen: false)
+              .getSalesPersonsListService();
+          Provider.of<CommonDataViewmodel>(context, listen: false)
+              .resetAddService();
+
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const AddService()));
+        },
+        backgroundColor: AppColors.primeryColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: const Icon(Icons.add),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),

@@ -141,121 +141,130 @@ class _TransactionListState extends State<TransactionList> {
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            if (pvm.startFormatted != null &&
-                                pvm.endFormatted != null)
-                              Container(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8),
-                                height: 40,
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: AppColors.primeryColor),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(20))),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      '$formattedStartDate - $formattedEndDate',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .copyWith(
+                        Flexible(
+                          child: Wrap(
+                            runSpacing: 5,
+                            children: [
+                              if (pvm.startFormatted != null &&
+                                  pvm.endFormatted != null)
+                                IntrinsicWidth(
+                                  child: Container(
+                                    padding:
+                                        const EdgeInsets.symmetric(horizontal: 8),
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: AppColors.primeryColor),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(20))),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          '$formattedStartDate - $formattedEndDate',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(
+                                                color: AppColors.primeryColor,
+                                              ),
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            pvm.clearFilter('date');
+                                          },
+                                          child: const Icon(
+                                            Icons.close,
+                                            size: 20,
                                             color: AppColors.primeryColor,
                                           ),
+                                        )
+                                      ],
                                     ),
-                                    InkWell(
-                                      onTap: () {
-                                        pvm.clearFilter('date');
-                                      },
-                                      child: const Icon(
-                                        Icons.close,
-                                        size: 20,
-                                        color: AppColors.primeryColor,
-                                      ),
-                                    )
-                                  ],
+                                  ),
                                 ),
+                              const SizedBox(
+                                width: 5,
                               ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            if (pvm.paymentMode != null)
-                              Container(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8),
-                                height: 40,
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: AppColors.primeryColor),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(20))),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      pvm.paymentMode!,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .copyWith(
+                              if (pvm.paymentMode != null)
+                                IntrinsicWidth(
+                                  child: Container(
+                                    padding:
+                                        const EdgeInsets.symmetric(horizontal: 8),
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: AppColors.primeryColor),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(20))),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          pvm.paymentMode!,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(
+                                                color: AppColors.primeryColor,
+                                              ),
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            pvm.clearFilter('payment Mode');
+                                          },
+                                          child: const Icon(
+                                            Icons.close,
+                                            size: 20,
                                             color: AppColors.primeryColor,
                                           ),
+                                        )
+                                      ],
                                     ),
-                                    InkWell(
-                                      onTap: () {
-                                        pvm.clearFilter('payment Mode');
-                                      },
-                                      child: const Icon(
-                                        Icons.close,
-                                        size: 20,
-                                        color: AppColors.primeryColor,
-                                      ),
-                                    )
-                                  ],
+                                  ),
                                 ),
+                              const SizedBox(
+                                width: 5,
                               ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            if (pvm.amount != null)
-                              Container(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8),
-                                height: 40,
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: AppColors.primeryColor),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(20))),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      pvm.amount.toString(),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .copyWith(
+                              if (pvm.amount != null)
+                                IntrinsicWidth(
+                                  child: Container(
+                                    padding:
+                                        const EdgeInsets.symmetric(horizontal: 8),
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: AppColors.primeryColor),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(20))),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          pvm.amount.toString(),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(
+                                                color: AppColors.primeryColor,
+                                              ),
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            pvm.clearFilter('amount');
+                                          },
+                                          child: const Icon(
+                                            Icons.close,
+                                            size: 20,
                                             color: AppColors.primeryColor,
                                           ),
+                                        )
+                                      ],
                                     ),
-                                    InkWell(
-                                      onTap: () {
-                                        pvm.clearFilter('amount');
-                                      },
-                                      child: const Icon(
-                                        Icons.close,
-                                        size: 20,
-                                        color: AppColors.primeryColor,
-                                      ),
-                                    )
-                                  ],
+                                  ),
                                 ),
-                              ),
-                          ],
+                            ],
+                          ),
                         ),
                         // pvm.filterOn == true
                         //     ?

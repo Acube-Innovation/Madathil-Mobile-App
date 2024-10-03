@@ -86,7 +86,7 @@ class TransactionFilterBottomSheet extends StatelessWidget {
                     ),
                     CustomDropdown(
                       hint: 'Mode',
-                      items: ['Cash', 'UPI', 'Card'],
+                      items: pvm.paymentModenames!,
                       onChanged: (String? value) {
                         mode = value;
                       },

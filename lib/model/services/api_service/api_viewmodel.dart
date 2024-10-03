@@ -8,7 +8,10 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:madathil/constants.dart';
 import 'package:madathil/model/model_class/api_response_model/add_closing_statment_response.dart';
+import 'package:madathil/model/model_class/api_response_model/add_new_service_response.dart';
 import 'package:madathil/model/model_class/api_response_model/attendance_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/call_details_response.dart';
+import 'package:madathil/model/model_class/api_response_model/call_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_response.dart';
 import 'package:madathil/model/model_class/api_response_model/closing_statment_list_response.dart';
@@ -28,11 +31,14 @@ import 'package:madathil/model/model_class/api_response_model/lead_creation_resp
 import 'package:madathil/model/model_class/api_response_model/lead_list_own_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_source_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/leads_detail_response.dart';
+import 'package:madathil/model/model_class/api_response_model/list_users_response.dart';
 import 'package:madathil/model/model_class/api_response_model/login_response.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_history_response.dart';
+import 'package:madathil/model/model_class/api_response_model/payment_modes_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
+import 'package:madathil/model/model_class/api_response_model/sales_persons_list_response_addservice.dart';
 import 'package:madathil/model/model_class/api_response_model/service_history_detailsresponse.dart';
 import 'package:madathil/model/model_class/api_response_model/service_history_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/service_status_list_response.dart';
@@ -242,6 +248,8 @@ class ApiViewModel {
         return PaymentHistoryListResponse?.fromJson(json) as T;
       case PaymentDetailsResponse:
         return PaymentDetailsResponse?.fromJson(json) as T;
+      case PaymentModesModel:
+        return PaymentModesModel?.fromJson(json) as T;
 
       case TasksListOthersResponse:
         return TasksListOthersResponse?.fromJson(json) as T;
@@ -256,6 +264,17 @@ class ApiViewModel {
 
       case GetPaymentMethod:
         return GetPaymentMethod?.fromJson(json) as T;
+      case SalesPersonsListResponse:
+        return SalesPersonsListResponse?.fromJson(json) as T;
+      case AddNewServiceResponse:
+        return AddNewServiceResponse?.fromJson(json) as T;
+      case ListUsersResponse:
+        return ListUsersResponse?.fromJson(json) as T;
+
+      case CallListResponseModel:
+        return CallListResponseModel?.fromJson(json) as T;
+      case CallDetailsResponseModel:
+        return CallDetailsResponseModel?.fromJson(json) as T;
 
       default:
         throw FromJsonNotImplementedException();
