@@ -3,6 +3,8 @@ import 'package:dio/dio.dart' as dio;
 import 'package:madathil/model/model_class/api_response_model/add_closing_statment_response.dart';
 import 'package:madathil/model/model_class/api_response_model/add_new_service_response.dart';
 import 'package:madathil/model/model_class/api_response_model/attendance_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/call_details_response.dart';
+import 'package:madathil/model/model_class/api_response_model/call_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_response.dart';
 import 'package:madathil/model/model_class/api_response_model/closing_statment_list_response.dart';
@@ -19,9 +21,11 @@ import 'package:madathil/model/model_class/api_response_model/lead_creation_resp
 import 'package:madathil/model/model_class/api_response_model/lead_list_own_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_source_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/leads_detail_response.dart';
+import 'package:madathil/model/model_class/api_response_model/list_users_response.dart';
 import 'package:madathil/model/model_class/api_response_model/login_response.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_history_response.dart';
+import 'package:madathil/model/model_class/api_response_model/payment_modes_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
 import 'package:madathil/model/model_class/api_response_model/sales_persons_list_response_addservice.dart';
@@ -203,6 +207,12 @@ class ApiRepository {
         apiUrl: '${ApiUrls.kPaymentHistoryList}/$id', params: param);
   }
 
+  Future<PaymentModesModel?> getPaymentModes() async {
+    return _apiViewModel!.get(
+        apiUrl:
+            '${ApiUrls.kpaymentModeList}?fields=["name"]&filters={"enabled" : 1}&order_by=modified desc');
+  }
+
   //tasks
   Future<TaskStatusListResponse?> getTaskStatusList() async {
     return _apiViewModel!
@@ -221,15 +231,73 @@ class ApiRepository {
   }
 
   Future<TasksListOthersResponse?> getTaskListOthers(int page,
-      {DateTime? fromdate, DateTime? todate, String? status}) {
-    return _apiViewModel!.get<TasksListOthersResponse>(
-        apiUrl: fromdate != null && todate != null
-            ? (status ?? "").isNotEmpty
-                ? '${ApiUrls.ktaskListOthers}&&filters={"assigned_user":"maya@gmail.com", "customer": ["like", "Mr%"], "status":"$status", "exp_end_date": ["between", ["${DateFormat('yyyy-MM-dd').format(fromdate)}", "${DateFormat('yyyy-MM-dd').format(todate)}"]]}&limit=10&limit_start=${page * 10}'
-                : '${ApiUrls.ktaskListOthers}&&filters={"assigned_user":"maya@gmail.com", "customer": ["like", "Mr%"], "exp_end_date": ["between", ["${DateFormat('yyyy-MM-dd').format(fromdate)}", "${DateFormat('yyyy-MM-dd').format(todate)}"]]}&limit=10&limit_start=${page * 10}'
-            : (status ?? "").isNotEmpty
-                ? '${ApiUrls.ktaskListOthers}&filters={"assigned_user": "maya@gmail.com", "status":"$status"}&limit=10&limit_start=${page * 10}'
-                : '${ApiUrls.ktaskListOthers}&filters={"assigned_user": "maya@gmail.com"}&limit=10&limit_start=${page * 10}');
+      {String? fromdate, String? todate, String? status, String? searchTerm}) {
+    String baseUrl =
+        '${ApiUrls.ktaskListOthers}&filters={"assigned_user": "maya@gmail.com"';
+    List<String> filters = [];
+
+    if (status != null && status.isNotEmpty) {
+      filters.add('"status": "$status"');
+    }
+
+    if (searchTerm != null && searchTerm.isNotEmpty) {
+      filters.add('"subject": ["like", "%$searchTerm%"]');
+    }
+
+    if (fromdate != null && todate != null) {
+      filters.add('"exp_end_date": ["between", ["$fromdate", "$todate"]]');
+    }
+
+    String finalFilters = filters.isNotEmpty ? ', ${filters.join(", ")}' : '';
+    String finalUrl =
+        '$baseUrl$finalFilters}&limit=10&limit_start=${page * 10}';
+
+    return _apiViewModel!.get<TasksListOthersResponse>(apiUrl: finalUrl);
+  }
+  // Future<TasksListOthersResponse?> getTaskListOthers(int page,
+  //     {String? fromdate, String? todate, String? status, String? searchTerm}) {
+  //   return _apiViewModel!.get<TasksListOthersResponse>(
+  //       apiUrl: fromdate != null && todate != null
+  //           ? (status ?? "").isNotEmpty
+  //               ? (searchTerm ?? "").isNotEmpty
+  //                   ? '${ApiUrls.ktaskListOthers}&filters={"assigned_user":"maya@gmail.com", "subject": ["like", "%$searchTerm%"], "status":"$status", "exp_end_date": ["between", ["${((fromdate))}", "${((todate))}"]]}&limit=10&limit_start=${page * 10}'
+  //                   : '${ApiUrls.ktaskListOthers}&filters={"assigned_user":"maya@gmail.com", "customer": ["like", "Mr%"], "status":"$status", "exp_end_date": ["between", ["${((fromdate))}", "${((todate))}"]]}&limit=10&limit_start=${page * 10}'
+  //               : (searchTerm ?? "").isNotEmpty
+  //                   ? '${ApiUrls.ktaskListOthers}&filters={"assigned_user":"maya@gmail.com", "subject": ["like", "%$searchTerm%"], "exp_end_date": ["between", ["${((fromdate))}", "${((todate))}"]]}&limit=10&limit_start=${page * 10}'
+  //                   : '${ApiUrls.ktaskListOthers}&filters={"assigned_user":"maya@gmail.com", "customer": ["like", "Mr%"], "exp_end_date": ["between", ["${((fromdate))}", "${((todate))}"]]}&limit=10&limit_start=${page * 10}'
+  //           : (status ?? "").isNotEmpty
+  //               ? (searchTerm ?? "").isNotEmpty
+  //                   ? '${ApiUrls.ktaskListOthers}&filters={"assigned_user": "maya@gmail.com", "subject": ["like", "%$searchTerm%"], "status":"$status"}&limit=10&limit_start=${page * 10}'
+  //                   : '${ApiUrls.ktaskListOthers}&filters={"assigned_user": "maya@gmail.com", "status":"$status"}&limit=10&limit_start=${page * 10}'
+  //               : (searchTerm ?? "").isNotEmpty
+  //                   ? '${ApiUrls.ktaskListOthers}&filters={"assigned_user": "maya@gmail.com", "subject": ["like", "%$searchTerm%"]}&limit=10&limit_start=${page * 10}'
+  //                   : '${ApiUrls.ktaskListOthers}&filters={"assigned_user": "maya@gmail.com"}&limit=10&limit_start=${page * 10}');
+  // }
+
+  Future<ListUsersResponse?> getListUsers() async {
+    return _apiViewModel!.get<ListUsersResponse>(apiUrl: ApiUrls.kListUsers);
+  }
+
+  Future<LeadsSourceListResponse?> getListTaskType() async {
+    return _apiViewModel!
+        .get<LeadsSourceListResponse>(apiUrl: ApiUrls.kListTaskType);
+  }
+
+  Future<CallListResponseModel?> getCallList(
+      {Map<String, dynamic>? param}) async {
+    return _apiViewModel!
+        .get<CallListResponseModel>(apiUrl: ApiUrls.kCallList, params: param);
+  }
+
+  Future<CallDetailsResponseModel?> getCallDetails(
+      {Map<String, dynamic>? param, String? id}) async {
+    return _apiViewModel!
+        .get<CallDetailsResponseModel>(apiUrl: '${ApiUrls.kCallList}/$id', params: param);
+  }
+
+  Future addCall({Map<String, dynamic>? data}) async {
+    return _apiViewModel!
+        .post(apiUrl: ApiUrls.kAddCall, data: data);
   }
 
   Future<SalesPersonsListResponse?> getSalesPersonsListService(

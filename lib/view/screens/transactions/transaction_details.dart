@@ -34,8 +34,10 @@ class _TransactionDetailsState extends State<TransactionDetails> {
     return Scaffold(
       appBar: const CustomAppBar(title: "Transaction Details"),
       body: Consumer<PaymentViewmodel>(builder: (context, pvm, _) {
-        formattedDate = DateFormat('dd-MM-yyyy hh:mm aaa').format(
-            DateTime.parse(pvm.paymentDetails!.creation!));
+        if(pvm.paymentDetails != null) {
+          formattedDate = DateFormat('dd MMM yyyy').format(
+              DateTime.parse(pvm.paymentDetails!.creation!));
+        }
         return pvm.isLoading!
             ? const Center(
                 child: CircularProgressIndicator(
