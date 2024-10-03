@@ -13,6 +13,10 @@ class AppImages {
   static const String assignImage = "assets/images/assign.png";
   static const String sheetsImage = "assets/images/sheet.png";
   static const String statementImage = "assets/images/statement.png";
+  static const String employeesImage = "assets/images/employees.png";
+  static const String maleEmployee = "assets/images/male_user.png";
+  static const String arrow = "assets/images/arrow.png";
+  static const String forward = "assets/images/forward.png";
 
   static const String profileImage = "assets/images/profile.png";
   static const String serviceHistoryImage = "assets/images/service_history.png";

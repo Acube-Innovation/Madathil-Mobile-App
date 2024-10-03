@@ -8,6 +8,7 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:madathil/constants.dart';
 import 'package:madathil/model/model_class/api_response_model/add_closing_statment_response.dart';
+import 'package:madathil/model/model_class/api_response_model/add_new_service_response.dart';
 import 'package:madathil/model/model_class/api_response_model/attendance_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/call_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/call_list_response.dart';
@@ -35,6 +36,7 @@ import 'package:madathil/model/model_class/api_response_model/payment_history_re
 import 'package:madathil/model/model_class/api_response_model/payment_modes_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
+import 'package:madathil/model/model_class/api_response_model/sales_persons_list_response_addservice.dart';
 import 'package:madathil/model/model_class/api_response_model/service_history_detailsresponse.dart';
 import 'package:madathil/model/model_class/api_response_model/service_history_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/service_status_list_response.dart';
@@ -255,6 +257,10 @@ class ApiViewModel {
         return TasksCreationResponse?.fromJson(json) as T;
       case TaskStatusListResponse:
         return TaskStatusListResponse?.fromJson(json) as T;
+      case SalesPersonsListResponse:
+        return SalesPersonsListResponse?.fromJson(json) as T;
+      case AddNewServiceResponse:
+        return AddNewServiceResponse?.fromJson(json) as T;
       case ListUsersResponse:
         return ListUsersResponse?.fromJson(json) as T;
 

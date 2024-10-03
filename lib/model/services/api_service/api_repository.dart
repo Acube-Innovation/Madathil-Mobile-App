@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:madathil/model/model_class/api_response_model/add_closing_statment_response.dart';
+import 'package:madathil/model/model_class/api_response_model/add_new_service_response.dart';
 import 'package:madathil/model/model_class/api_response_model/attendance_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/call_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/call_list_response.dart';
@@ -27,6 +28,7 @@ import 'package:madathil/model/model_class/api_response_model/payment_history_re
 import 'package:madathil/model/model_class/api_response_model/payment_modes_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
+import 'package:madathil/model/model_class/api_response_model/sales_persons_list_response_addservice.dart';
 import 'package:madathil/model/model_class/api_response_model/service_history_detailsresponse.dart';
 import 'package:madathil/model/model_class/api_response_model/service_history_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/service_status_list_response.dart';
@@ -296,5 +298,17 @@ class ApiRepository {
   Future addCall({Map<String, dynamic>? data}) async {
     return _apiViewModel!
         .post(apiUrl: ApiUrls.kAddCall, data: data);
+  }
+
+  Future<SalesPersonsListResponse?> getSalesPersonsListService(
+      {Map<String, dynamic>? param}) async {
+    return _apiViewModel!.get<SalesPersonsListResponse>(
+        apiUrl: ApiUrls.kSalesPersonListServic, params: param);
+  }
+
+  Future<AddNewServiceResponse?> addNewService(
+      {Map<String, dynamic>? data}) async {
+    return _apiViewModel!
+        .post<AddNewServiceResponse>(apiUrl: ApiUrls.kAddServiceHistory, data: data);
   }
 }
