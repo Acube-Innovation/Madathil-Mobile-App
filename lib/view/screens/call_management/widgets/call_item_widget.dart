@@ -18,15 +18,13 @@ class _CallItemWidgetState extends State<CallItemWidget> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      Provider.of<CallViewModel>(context, listen: false)
-          .resetCallPagination();
+      Provider.of<CallViewModel>(context, listen: false).resetCallPagination();
       Provider.of<CallViewModel>(context, listen: false).fetchCallList();
+      Provider.of<CallViewModel>(context, listen: false).getCallStatusList();
     });
 
     super.initState();
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -62,8 +60,7 @@ class _CallItemWidgetState extends State<CallItemWidget> {
           onRefresh: () async {
             Provider.of<CallViewModel>(context, listen: false)
                 .resetCallPagination();
-            Provider.of<CallViewModel>(context, listen: false)
-                .fetchCallList();
+            Provider.of<CallViewModel>(context, listen: false).fetchCallList();
           },
           child: ListView.separated(
               separatorBuilder: (context, index) {
@@ -124,7 +121,8 @@ class _CallItemWidgetState extends State<CallItemWidget> {
                   var item = callVm.callPost![index];
                   var time;
                   if (item.conversationDuration != null) {
-                    time = callVm.formatTimeFromSeconds(item.conversationDuration);
+                    time =
+                        callVm.formatTimeFromSeconds(item.conversationDuration);
                   }
 
                   return InkWell(
@@ -132,7 +130,8 @@ class _CallItemWidgetState extends State<CallItemWidget> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => CallDetailsScreen(item: item)));
+                              builder: (context) =>
+                                  CallDetailsScreen(item: item)));
                     },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(

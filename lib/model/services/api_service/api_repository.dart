@@ -294,13 +294,17 @@ class ApiRepository {
 
   Future<CallDetailsResponseModel?> getCallDetails(
       {Map<String, dynamic>? param, String? id}) async {
-    return _apiViewModel!
-        .get<CallDetailsResponseModel>(apiUrl: '${ApiUrls.kCallList}/$id', params: param);
+    return _apiViewModel!.get<CallDetailsResponseModel>(
+        apiUrl: '${ApiUrls.kCallList}/$id', params: param);
   }
 
-  Future addCall({Map<String, dynamic>? data}) async {
+  Future<Map<String, List<String>>?> getCallStatusList() async {
     return _apiViewModel!
-        .post(apiUrl: ApiUrls.kAddCall, data: data);
+        .get<Map<String, List<String>>>(apiUrl: ApiUrls.kCallStatusList);
+  }
+
+  Future CreateCall({Map<String, dynamic>? data}) async {
+    return _apiViewModel!.post(apiUrl: ApiUrls.kAddCall, data: data);
   }
 
   Future<SalesPersonsListResponse?> getSalesPersonsListService(
@@ -311,8 +315,8 @@ class ApiRepository {
 
   Future<AddNewServiceResponse?> addNewService(
       {Map<String, dynamic>? data}) async {
-    return _apiViewModel!
-        .post<AddNewServiceResponse>(apiUrl: ApiUrls.kAddServiceHistory, data: data);
+    return _apiViewModel!.post<AddNewServiceResponse>(
+        apiUrl: ApiUrls.kAddServiceHistory, data: data);
   }
 
   Future<GetOrdersResponse?> getOrdersList({Map<String, dynamic>? data}) async {

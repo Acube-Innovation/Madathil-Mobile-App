@@ -83,10 +83,10 @@ class _CallListScreenState extends State<CallListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Provider.of<CommonDataViewmodel>(context, listen: false)
-              .clearReminder();
-          Provider.of<CommonDataViewmodel>(context, listen: false)
-              .disposeControllers();
+          // Provider.of<CommonDataViewmodel>(context, listen: false)
+          //     .clearReminder();
+          // Provider.of<CommonDataViewmodel>(context, listen: false)
+          //     .disposeControllers();
 
           Navigator.push(
               context,
@@ -189,3 +189,5 @@ class _CallListScreenState extends State<CallListScreen> {
     );
   }
 }
+
+

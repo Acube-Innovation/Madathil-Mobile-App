@@ -17,6 +17,7 @@ import 'package:madathil/model/model_class/api_response_model/checkin_checkout_r
 import 'package:madathil/model/model_class/api_response_model/closing_statment_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/closingstatment_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/create_address_response_model.dart';
+import 'package:madathil/model/model_class/api_response_model/create_call_response.dart';
 import 'package:madathil/model/model_class/api_response_model/create_check_out_response_model.dart';
 import 'package:madathil/model/model_class/api_response_model/create_customer_response.dart';
 import 'package:madathil/model/model_class/api_response_model/customer_list_response.dart';
@@ -275,6 +276,8 @@ class ApiViewModel {
         return CallListResponseModel?.fromJson(json) as T;
       case CallDetailsResponseModel:
         return CallDetailsResponseModel?.fromJson(json) as T;
+      case CreateCallResponse:
+        return CreateCallResponse?.fromJson(json) as T;
 
       default:
         throw FromJsonNotImplementedException();
