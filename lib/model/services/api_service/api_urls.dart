@@ -40,9 +40,6 @@ class ApiUrls {
   static const kServiceStatus =
       '/api/method/a3sola_solar_management.api.get_select_field_options';
   static const kAddServiceHistory = '/api/resource/Maintenance Visit';
-  static const kServiceStatus = '/api/method/a3sola_solar_management.api.get_select_field_options';
-  static const kServiceStatus =
-      '/api/method/a3sola_solar_management.api.get_select_field_options';
 
   // payment section
   static const kPaymentHistoryList = '/api/resource/Payment Entry';
