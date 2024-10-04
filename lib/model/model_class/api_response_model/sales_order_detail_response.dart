@@ -51,7 +51,9 @@ class OrderDetail {
         customer: json["customer"],
         customerName: json["customer_name"],
         contactMobile: json["contact_mobile"],
-        customerAddress: CustomerAddress.fromJson(json["customer_address"]),
+        customerAddress: json["customer_address"] != null
+            ? CustomerAddress.fromJson(json["customer_address"])
+            : null,
         status: json["status"],
         transactionDate: json["transaction_date"],
         deliveryDate: json["delivery_date"],

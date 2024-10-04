@@ -15,7 +15,8 @@ import 'package:madathil/viewmodel/product_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class ChangeCustomer extends StatefulWidget {
-  const ChangeCustomer({super.key});
+  final bool? isFromCart;
+  const ChangeCustomer({super.key, this.isFromCart});
 
   @override
   State<ChangeCustomer> createState() => _ChangeCustomerState();
@@ -313,28 +314,52 @@ class _ChangeCustomerState extends State<ChangeCustomer> {
                   String nextDayString =
                       "${nextDay.year}-${nextDay.month.toString().padLeft(2, '0')}-${nextDay.day.toString().padLeft(2, '0')}";
                   UtilFunctions.loaderPopup(context);
-
-                  productVm
-                      .createCheckOut(
-                          customer: customerVm.selectedAddress?.customerName,
-                          date: nextDayString,
-                          productData: productVm.productData)
-                      .then((value) {
-                    customerVm.getCustomerAddress(
-                        name: customerVm.selectedAddress?.customerName);
-                    Navigator.of(context).pop();
-
-                    if (value) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const CheckOutScreen(),
-                          ));
-                    } else {
+                  if (widget.isFromCart == true) {
+                    productVm
+                        .createCheckOut(
+                            customer: customerVm.selectedAddress?.customerName,
+                            date: nextDayString,
+                            cartItmes: productVm.cartItmes)
+                        .then((value) {
+                      customerVm.getCustomerAddress(
+                          name: customerVm.selectedAddress?.customerName);
                       Navigator.of(context).pop();
-                      toast(customerVm.errormsg, context);
-                    }
-                  });
+
+                      if (value) {
+                        productVm.clearCart();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const CheckOutScreen(),
+                            ));
+                      } else {
+                        Navigator.of(context).pop();
+                        toast(customerVm.errormsg, context);
+                      }
+                    });
+                  } else {
+                    productVm
+                        .createCheckOut(
+                            customer: customerVm.selectedAddress?.customerName,
+                            date: nextDayString,
+                            productData: productVm.productData)
+                        .then((value) {
+                      customerVm.getCustomerAddress(
+                          name: customerVm.selectedAddress?.customerName);
+                      Navigator.of(context).pop();
+
+                      if (value) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const CheckOutScreen(),
+                            ));
+                      } else {
+                        Navigator.of(context).pop();
+                        toast(customerVm.errormsg, context);
+                      }
+                    });
+                  }
                 },
               ),
             ),
