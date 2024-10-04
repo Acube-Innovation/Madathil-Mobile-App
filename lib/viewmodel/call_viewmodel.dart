@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:madathil/model/model_class/api_response_model/call_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/call_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/create_call_response.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
+import 'package:madathil/utils/color/app_colors.dart';
 
 class CallViewModel extends ChangeNotifier {
   final ApiRepository apiRepository;
@@ -27,6 +29,7 @@ class CallViewModel extends ChangeNotifier {
 
   TextEditingController searchControllerCall = TextEditingController();
   TextEditingController dateController = TextEditingController();
+  TextEditingController durationController = TextEditingController();
 
   String? callSearchfn;
 
@@ -255,5 +258,204 @@ class CallViewModel extends ChangeNotifier {
     }
 
     return formattedTime.trim(); // Trim any extra spaces
+  }
+
+  int calculateDuration(String date1, String date2){
+    DateTime formattedDate1 = DateFormat('dd/MM/yyyy, hh:mm a').parse(date1);
+    DateTime formattedDate2 = DateFormat('dd/MM/yyyy, hh:mm a').parse(date2);
+    print('the formatted date1 is $formattedDate1');
+    String dateTime1 = DateFormat('yyyy-MM-dd HH:mm:ss').format(formattedDate1);
+    String dateTime2 = DateFormat('yyyy-MM-dd HH:mm:ss').format(formattedDate2);
+    DateTime requiredDate1 = DateFormat('yyyy-MM-dd HH:mm:ss').parse(dateTime1);
+    DateTime requiredDate2 = DateFormat('yyyy-MM-dd HH:mm:ss').parse(dateTime2);
+    Duration duration = requiredDate1.difference(requiredDate2);
+    return duration.inSeconds;
+  }
+
+
+  DateTime? selectedStartDate;
+  DateTime? selectedEndDate;
+  TimeOfDay? selectedStartTime;
+  TimeOfDay? selectedEndTime;
+
+  // Function to set the selected date
+  void setReminderDate(DateTime date, bool isEndDate) {
+    if (isEndDate) {
+      selectedEndDate = date;
+    } else {
+      selectedStartDate = date;
+    }
+    notifyListeners();
+  }
+
+  // Function to set the selected time
+  void setReminderTime(TimeOfDay time, bool isEndTime) {
+    if (isEndTime) {
+      selectedEndTime = time;
+    } else {
+      selectedStartTime = time;
+    }
+    notifyListeners();
+  }
+
+  // Function to clear the reminder
+  void clearReminder() {
+    selectedStartDate = null;
+    selectedStartTime = null;
+    notifyListeners();
+  }
+
+
+  // Helper function to format the selected date and time to "dd MM yyyy, hh mm"
+  String formatSelectedDateTime({bool isEndDate = false}) {
+    if (isEndDate) {
+      if (selectedEndDate != null && selectedEndTime != null) {
+        final DateTime fullDateTime = DateTime(
+          selectedEndDate!.year,
+          selectedEndDate!.month,
+          selectedEndDate!.day,
+          selectedEndTime!.hour,
+          selectedEndTime!.minute,
+        );
+        return DateFormat('dd/MM/yyyy, hh:mm aa')
+            .format(fullDateTime); // Changed format to "dd MM yyyy, hh mm"
+      } else if (selectedEndDate != null) {
+        return DateFormat('dd/MM/yyyy').format(selectedEndDate!); // Only date
+      } else {
+        return "Unable to select time";
+      }
+    } else {
+      if (selectedStartDate != null && selectedStartTime != null) {
+        final DateTime fullDateTime = DateTime(
+          selectedStartDate!.year,
+          selectedStartDate!.month,
+          selectedStartDate!.day,
+          selectedStartTime!.hour,
+          selectedStartTime!.minute,
+        );
+        return DateFormat('dd/MM/yyyy, hh:mm aa')
+            .format(fullDateTime); // Changed format to "dd MM yyyy, hh mm"
+      } else if (selectedStartDate != null) {
+        return DateFormat('dd MM yyyy').format(selectedStartDate!); // Only date
+      } else {
+        return "Unable to select time";
+      }
+    }
+  }
+
+  // Function to pick a date
+  Future<void> selectDateR(BuildContext context,
+      {bool isEndDate = false}) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate:selectedStartDate ?? DateTime.now(),
+      firstDate: DateTime(DateTime.now().month - 1),
+      lastDate: selectedStartDate ?? DateTime.now(),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: AppColors.primeryColor, // Header color
+              onPrimary: Colors.white, // Header text color
+              onSurface: Colors.black, // Text color
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.primeryColor, // Button color
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (pickedDate != null) {
+      setReminderDate(pickedDate, isEndDate);
+    }
+  }
+
+  // Function to pick a time
+  Future<void> selectTime(BuildContext context,
+      {bool isEndDate = false}) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: AppColors.primeryColor, // Header color
+              onPrimary: Colors.white, // Header text color
+              onSurface: Colors.black, // Text color
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.primeryColor, // Button color
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (pickedTime != null) {
+      setReminderTime(pickedTime, isEndDate);
+    }
+  }
+
+  List<String>? callStatus = [];
+
+  Future<void> getCallStatusList() async {
+    try{
+      var response = await apiRepository.getCallStatusList();
+      if(response?['message'] != null){
+        callStatus = response?['message'];
+      }
+    } catch(e){
+      print(e);
+    }
+  }
+
+ /* create call api 
+ */
+
+
+  CreateCall? createCallData;
+
+  Future<bool> createCall(String? customerName, String? customerNumber, int? conversationDuration) async {
+    try {
+      var response = await apiRepository.CreateCall(data: {
+   "customer": customerName,
+    "called_number": customerNumber,
+    "caller_number": "9632587410",
+    "called_date": selectedStartDate,
+    "call_date_time": '$selectedStartDate $selectedStartTime',
+    "call_start_time": '$selectedStartDate $selectedStartTime',
+    "call_end_time": "$selectedEndDate $selectedEndTime",
+    "conversation_duration": conversationDuration,
+    "track_calls": [
+        {
+            "date_and_time": "2024-09-27 12:12:12",
+            "status": "Lead",
+            "feedback": "test feedback",
+            "userlink": "acubeadmin@gmail.com"
+        }
+    ]
+      });
+
+      if (response?.data.doctype == "Customer Call Records") {
+        createCallData = response?.data;
+
+        setLoader(false);
+        return true;
+      } else {
+        setLoader(false);
+        return false;
+      }
+    } catch (e) {
+      _errormsg = e.toString();
+      setLoader(false);
+      return false;
+    }
   }
 }

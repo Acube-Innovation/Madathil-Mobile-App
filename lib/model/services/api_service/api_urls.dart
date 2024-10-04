@@ -61,6 +61,8 @@ class ApiUrls {
 //call management section
   static const kCallList = '/api/resource/Customer Call Records';
   static const kAddCall = '/api/resource/Customer Call Records';
+  static const kCallStatusList =
+      '/api/method/a3sola_solar_management.api.get_select_field_options?doctype=Voxbay Call Track&fieldname=status';
   static const kListUsers =
       '/api/resource/User?fields=["name", "full_name"]&filters={"full_name": ["like", "aj%"]}&order_by=modified desc';
   static const kListTaskType =

@@ -314,6 +314,12 @@ class ApiRepository {
         apiUrl: '${ApiUrls.kCallList}/$id', params: param);
   }
 
+  Future<Map<String, List<String>>?> getCallStatusList() async {
+    return _apiViewModel!
+        .get<Map<String, List<String>>>(apiUrl: ApiUrls.kCallStatusList);
+  }
+
+  Future CreateCall({Map<String, dynamic>? data}) async {
   Future addCall({Map<String, dynamic>? data}) async {
     return _apiViewModel!.post(apiUrl: ApiUrls.kAddCall, data: data);
   }
