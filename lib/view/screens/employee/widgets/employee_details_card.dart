@@ -10,7 +10,13 @@ class EmployeeDetailsCard extends StatelessWidget {
   final String? value3;
 
   const EmployeeDetailsCard(
-      {super.key, this.data, this.data2, this.value, this.value2, this.data3, this.value3});
+      {super.key,
+      this.data,
+      this.data2,
+      this.value,
+      this.value2,
+      this.data3,
+      this.value3});
 
   @override
   Widget build(BuildContext context) {
@@ -64,8 +70,7 @@ class EmployeeDetailsCard extends StatelessWidget {
               ),
             ],
           ),
-
-           const Padding(
+          const Padding(
             padding: EdgeInsets.symmetric(vertical: 10),
             child: Divider(),
           ),
@@ -79,14 +84,15 @@ class EmployeeDetailsCard extends StatelessWidget {
                     ),
               ),
               const Spacer(),
-              Text(
-                
-                value3 ?? "",
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      height: 1.7,
-                      color: AppColors.black,
-                    ),
-                    textAlign: TextAlign.right,
+              Expanded(
+                child: Text(
+                  value3 ?? "",
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        height: 1.7,
+                        color: AppColors.black,
+                      ),
+                  textAlign: TextAlign.right,
+                ),
               ),
             ],
           ),

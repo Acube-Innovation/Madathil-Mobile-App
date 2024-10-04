@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:madathil/app_images.dart';
 import 'package:madathil/constants.dart';
 import 'package:madathil/model/services/api_service/api_urls.dart';
@@ -166,7 +167,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       ProfileCards(
                         data: "Date of Birth",
-                        value: cdv.profileData?.dateOfBirth ?? 'N/A',
+                        value: cdv.profileData?.dateOfBirth != null
+                            ? DateFormat('dd MMM yyyy').format(DateTime.parse(
+                                cdv.profileData?.dateOfBirth?.toString() ?? ''))
+                            : '',
                         data2: "Consumer Number",
                         value2: "N/A",
                       )
