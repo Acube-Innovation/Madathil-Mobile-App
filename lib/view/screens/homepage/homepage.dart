@@ -13,6 +13,7 @@ import 'package:madathil/view/screens/orders/orders_screen.dart';
 import 'package:madathil/view/screens/payment_mode/payment_mode.dart';
 import 'package:madathil/view/screens/products/product_list.dart';
 import 'package:madathil/view/screens/profile/profile_screen.dart';
+import 'package:madathil/view/screens/service/service_history_screen.dart';
 import 'package:madathil/view/screens/service_list/service_list.dart';
 import 'package:madathil/view/screens/tasks/task_screen.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
@@ -261,10 +262,10 @@ class HomePage extends StatelessWidget {
                   image: AppImages.serviceListImage,
                   title: "Service List",
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ServiceList()));
+                       Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ServiceHistoryScreen()));
                   },
                 ),
               ],

@@ -95,4 +95,6 @@ class ApiUrls {
 
   static const kHomeDataUrl =
       '/api/method/a3sola_solar_management.api.get_home_details';
+
+  static const kOrderTransactionList = '/api/resource/Payment Entry';
 }

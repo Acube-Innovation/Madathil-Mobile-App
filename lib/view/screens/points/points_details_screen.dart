@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:madathil/model/model_class/api_response_model/points_list_model_response.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/utils/no_data_found.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
@@ -30,6 +31,10 @@ class _PointsDetailsScreenState extends State<PointsDetailsScreen> {
     return Scaffold(
       appBar: const CustomAppBar(title: "Details"),
       body: Consumer<CommonDataViewmodel>(builder: (ctx, cdv, _) {
+        if((cdv.pointDetailsMessage ?? []).isEmpty){
+
+         return NoDataFOund();
+        }
         return cdv.isloading!
             ? const Center(
                 child: CircularProgressIndicator(
@@ -83,7 +88,7 @@ class _PointsDetailsScreenState extends State<PointsDetailsScreen> {
                           height: 12,
                         ),
                         Text(
-                          cdv.pointDetailsMessage?.first.item ?? '',
+                          cdv.pointDetailsMessage?.first.item ?? 'N/A',
                           style: Theme.of(context)
                               .textTheme
                               .titleMedium!
@@ -120,7 +125,9 @@ class _PointsDetailsScreenState extends State<PointsDetailsScreen> {
                                               fontWeight: FontWeight.normal),
                                     ),
                                     Text(
-                                      cdv.pointDetailsMessage?.first.customerName ?? '',
+                                      cdv.pointDetailsMessage?.first
+                                              .customerName ??
+                                          'N/A',
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleMedium!
@@ -151,11 +158,16 @@ class _PointsDetailsScreenState extends State<PointsDetailsScreen> {
                                               fontWeight: FontWeight.normal),
                                     ),
                                     Text(
-                                       cdv.pointDetailsMessage?.first.closingDate != null
-                                    ? DateFormat('dd MMM yyyy').format(
-                                        DateTime.parse(
-                                            cdv.pointDetailsMessage?.first.closingDate ?? ''))
-                                    : '',
+                                      cdv.pointDetailsMessage?.first
+                                                  .closingDate !=
+                                              null
+                                          ? DateFormat('dd MMM yyyy').format(
+                                              DateTime.parse(cdv
+                                                      .pointDetailsMessage
+                                                      ?.first
+                                                      .closingDate ??
+                                                  ''))
+                                          : '',
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleMedium!
@@ -186,7 +198,9 @@ class _PointsDetailsScreenState extends State<PointsDetailsScreen> {
                                               fontWeight: FontWeight.normal),
                                     ),
                                     Text(
-                                      cdv.pointDetailsMessage?.first.projectCost.toString() ?? '',
+                                      cdv.pointDetailsMessage?.first.projectCost
+                                              .toString() ??
+                                          '',
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleMedium!
@@ -217,7 +231,8 @@ class _PointsDetailsScreenState extends State<PointsDetailsScreen> {
                                               fontWeight: FontWeight.normal),
                                     ),
                                     Text(
-                                      cdv.pointDetailsMessage?.first.item ?? 'N/A',
+                                      cdv.pointDetailsMessage?.first.item ??
+                                          'N/A',
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleMedium!

@@ -63,6 +63,7 @@ class PaymentDetails {
   String? customerAddress;
   String? referenceNo;
   String? referenceDate;
+  String? modeofPayement;
   String? project;
   String? projectId;
   String? projectName;
@@ -78,7 +79,7 @@ class PaymentDetails {
   List<Tax>? taxes;
   List<Deduction>? deductions;
 
- PaymentDetails(
+  PaymentDetails(
       {this.name,
       this.owner,
       this.creation,
@@ -86,6 +87,7 @@ class PaymentDetails {
       this.modifiedBy,
       this.idx,
       this.docstatus,
+      this.modeofPayement,
       this.namingSeries,
       this.paymentType,
       this.paymentOrderStatus,
@@ -148,6 +150,7 @@ class PaymentDetails {
     modifiedBy = json['modified_by'];
     idx = json['idx'];
     docstatus = json['docstatus'];
+    modeofPayement = json['mode_of_payment'];
     namingSeries = json['naming_series'];
     paymentType = json['payment_type'];
     paymentOrderStatus = json['payment_order_status'];
@@ -232,6 +235,7 @@ class PaymentDetails {
     data['modified'] = this.modified;
     data['modified_by'] = this.modifiedBy;
     data['idx'] = this.idx;
+    data['mode_of_payment'] = this.modeofPayement;
     data['docstatus'] = this.docstatus;
     data['naming_series'] = this.namingSeries;
     data['payment_type'] = this.paymentType;

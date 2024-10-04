@@ -6,6 +6,7 @@ import 'package:madathil/view/screens/login/login_screen.dart';
 import 'package:madathil/view/screens/points/customer_points_screen.dart';
 import 'package:madathil/view/screens/profile/profile_screen.dart';
 import 'package:madathil/view/screens/service/service_history_screen.dart';
+import 'package:madathil/view/screens/orders/transactions_list_screen.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -71,7 +72,12 @@ class DrawerWidget extends StatelessWidget {
             );
           }),
           const SizedBox(height: 20),
-          drawerItem("Settings", AppImages.settingsImage, () {}),
+          drawerItem("Settings", AppImages.settingsImage, () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const OrderTranscationList()));
+          }),
           const SizedBox(height: 20),
           const Divider(indent: 20, endIndent: 20),
           const SizedBox(height: 20),

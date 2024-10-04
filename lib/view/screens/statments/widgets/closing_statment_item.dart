@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:madathil/app_images.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/utils/no_data_found.dart';
 import 'package:madathil/view/screens/statments/closing_statment_details.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -44,11 +45,18 @@ class _ClosingStatementItemState extends State<ClosingStatementItem> {
             ),
           );
         } else {
-          return const Center(
+          return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("No Closing Statments available."),
+                NoDataFOund(
+                  onRefresh: () async {
+                    Provider.of<CommonDataViewmodel>(context, listen: false)
+                        .resetClosingPagination();
+                    Provider.of<CommonDataViewmodel>(context, listen: false)
+                        .fetchClosingStatmentList();
+                  },
+                ),
               ],
             ),
           );
@@ -95,10 +103,7 @@ class _ClosingStatementItemState extends State<ClosingStatementItem> {
                     }
                   } else {
                     if (cdv.closePost!.isEmpty) {
-                      return const Center(
-                          child: Text(
-                        "No Closing Staments available.",
-                      ));
+                      return const Center(child: NoDataFOund());
                     } else {
                       return const Column(
                         children: [
