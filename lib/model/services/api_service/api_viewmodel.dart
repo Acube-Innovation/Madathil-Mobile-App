@@ -26,6 +26,7 @@ import 'package:madathil/model/model_class/api_response_model/get_customer_addre
 import 'package:madathil/model/model_class/api_response_model/get_customer_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get_order_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get_order_status_response.dart';
+import 'package:madathil/model/model_class/api_response_model/home_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/image_uploade_response.dart';
 import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_creation_response.dart';
@@ -281,6 +282,9 @@ class ApiViewModel {
         return GetOrderStatusResponse?.fromJson(json) as T;
       case SalesOrderDetailResponse:
         return SalesOrderDetailResponse?.fromJson(json) as T;
+
+      case HomeDetailResponse:
+        return HomeDetailResponse?.fromJson(json) as T;
 
       default:
         throw FromJsonNotImplementedException();

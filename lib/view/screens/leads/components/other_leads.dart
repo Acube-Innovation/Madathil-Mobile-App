@@ -90,9 +90,9 @@ class _OtherLeadsState extends State<OtherLeads> {
                 },
                 child: ListView.builder(
                   shrinkWrap: true,
-                  itemCount: (lvm.leadsListOwnList ?? []).length + 1,
+                  itemCount: (lvm.leadsListOwnList ?? []).length,
                   itemBuilder: (context, index) {
-                    if (index == (lvm.leadsListOwnList ?? []).length) {
+                    if (index == (lvm.leadsListOwnList ?? []).length - 1) {
                       if (lvm.isLoadingleadsListOwnPagination) {
                         return const CustomLoader();
                       } else {

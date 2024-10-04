@@ -37,7 +37,8 @@ class HiveLocal {
 
   logout() async {
     await deleteData(DataBoxKey.kUserID);
-    await deleteData(DataBoxKey.kusername);
+    await deleteData(DataBoxKey.kUserName);
+    await deleteData(DataBoxKey.kEmpId);
     await deleteData(DataBoxKey.kFcmToken);
   }
 }

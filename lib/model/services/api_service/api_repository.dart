@@ -22,6 +22,7 @@ import 'package:madathil/model/model_class/api_response_model/get_customer_addre
 import 'package:madathil/model/model_class/api_response_model/get_customer_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get_order_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get_order_status_response.dart';
+import 'package:madathil/model/model_class/api_response_model/home_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/image_uploade_response.dart';
 import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_creation_response.dart';
@@ -69,13 +70,17 @@ class ApiRepository {
   }
 
   Future<CheckInCheckOutListResponse?> employeeCheckinList() async {
-    return _apiViewModel!
-        .get<CheckInCheckOutListResponse>(apiUrl: ApiUrls.kCheckinCheckoutList);
+    return _apiViewModel!.get<CheckInCheckOutListResponse>(
+        apiUrl:
+            '${ApiUrls.kCheckinCheckoutList}&filters={"employee": "$employeeId", "date": "${DateFormat('yyyy-MM-dd').format(DateTime.now())}"}&order_by=modified desc');
   }
 
-  Future<AttendanceList?> getAttendanceList() async {
-    return _apiViewModel!
-        .get<AttendanceList>(apiUrl: ApiUrls.kAttendanceHistory);
+  Future<AttendanceList?> getAttendanceList(int page,
+      {String? fromdate, String? todate}) async {
+    return _apiViewModel!.get<AttendanceList>(
+        apiUrl: (fromdate ?? "").isNotEmpty && (todate ?? "").isNotEmpty
+            ? '${ApiUrls.kAttendanceHistory}&filters={"employee": "$employeeId", "attendance_date": ["between", ["$fromdate", "$todate"]]}&order_by=attendance_date desc&limit=10&limit_start=${page * 10}'
+            : '${ApiUrls.kAttendanceHistory}&filters={"employee": "$employeeId"}&order_by=attendance_date desc&limit=10&limit_start=${page * 10}');
   }
 
   Future<AddClosingStatmentResponse?> addClosingStatment(
@@ -165,11 +170,15 @@ class ApiRepository {
   }
 
   Future<LeadsListOwnResponse?> getLeadsListOwn(int page,
-      {DateTime? fromdate, DateTime? todate}) {
+      {String? fromdate, String? todate, String? searchTerm}) {
     return _apiViewModel!.get<LeadsListOwnResponse>(
         apiUrl: fromdate != null && todate != null
-            ? '${ApiUrls.kleadListOwn}&filters={"lead_owner": "biju@gmail.com", "date": ["between", ["${DateFormat('yyyy-MM-dd').format(fromdate)}", "${DateFormat('yyyy-MM-dd').format(todate)}"]]}&limit=10&limit_start=${page * 10}'
-            : '${ApiUrls.kleadListOwn}&filters={"lead_owner": "biju@gmail.com"}&limit=10&limit_start=${page * 10}');
+            ? (searchTerm ?? "").isNotEmpty
+                ? '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$username", "date": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}&filters={"lead_name": ["like", "%$searchTerm%"]}'
+                : '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$username", "date": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}'
+            : (searchTerm ?? "").isNotEmpty
+                ? '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$username"}&limit=10&limit_start=${page * 10}&filters={"lead_name": ["like", "%$searchTerm%"]}'
+                : '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$username"}&limit=10&limit_start=${page * 10}');
   }
 
   Future<LeadsSourceListResponse?> getSourceList() async {
@@ -372,5 +381,10 @@ class ApiRepository {
 
     final response = await http.get(url, headers: headers);
     return response;
+  }
+  
+  Future<HomeDetailResponse?> getHomeDetails() async {
+    return _apiViewModel!.get<HomeDetailResponse>(
+        apiUrl: '${ApiUrls.kHomeDataUrl}?user=$username');
   }
 }
