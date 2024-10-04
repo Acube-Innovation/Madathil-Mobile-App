@@ -506,7 +506,7 @@ class CallViewModel extends ChangeNotifier {
         trackCall = points.map((point) {
           return {
             "date_and_time":
-                "2024-09-27 12:12:12", // You can replace this with dynamic data if needed
+                DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()), // You can replace this with dynamic data if needed
             "status": status ?? "Lead", // Default to "Lead" if status is null
             "feedback": point, // Use the feedback from the points list
             "userlink":
