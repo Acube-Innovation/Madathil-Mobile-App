@@ -29,12 +29,12 @@ class LeadsListOwnList {
   String? city;
   String? state;
   String? country;
-  Null pincode;
+  dynamic pincode;
   String? ldSource;
   String? leadCategory;
   String? numberToBeContacted;
-  Null emailId;
-  Null aadhaarNumber;
+  dynamic emailId;
+  dynamic aadhaarNumber;
   String? consumerNumber;
   String? status;
   String? leadOwner;

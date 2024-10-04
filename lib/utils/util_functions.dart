@@ -160,7 +160,7 @@ void toast(msg, BuildContext context, {bool? isError = false}) {
             .bodySmall!
             .copyWith(fontSize: 17, color: AppColors.white),
       ),
-      backgroundColor: isError! ? AppColors.green : AppColors.red,
+      backgroundColor: !isError! ? AppColors.green : AppColors.red,
       behavior: SnackBarBehavior.floating,
       margin: const EdgeInsets.all(32),
       elevation: 18,
