@@ -278,25 +278,6 @@ class ApiRepository {
 
     return _apiViewModel!.get<TasksListOthersResponse>(apiUrl: finalUrl);
   }
-  // Future<TasksListOthersResponse?> getTaskListOthers(int page,
-  //     {String? fromdate, String? todate, String? status, String? searchTerm}) {
-  //   return _apiViewModel!.get<TasksListOthersResponse>(
-  //       apiUrl: fromdate != null && todate != null
-  //           ? (status ?? "").isNotEmpty
-  //               ? (searchTerm ?? "").isNotEmpty
-  //                   ? '${ApiUrls.ktaskListOthers}&filters={"assigned_user":"maya@gmail.com", "subject": ["like", "%$searchTerm%"], "status":"$status", "exp_end_date": ["between", ["${((fromdate))}", "${((todate))}"]]}&limit=10&limit_start=${page * 10}'
-  //                   : '${ApiUrls.ktaskListOthers}&filters={"assigned_user":"maya@gmail.com", "customer": ["like", "Mr%"], "status":"$status", "exp_end_date": ["between", ["${((fromdate))}", "${((todate))}"]]}&limit=10&limit_start=${page * 10}'
-  //               : (searchTerm ?? "").isNotEmpty
-  //                   ? '${ApiUrls.ktaskListOthers}&filters={"assigned_user":"maya@gmail.com", "subject": ["like", "%$searchTerm%"], "exp_end_date": ["between", ["${((fromdate))}", "${((todate))}"]]}&limit=10&limit_start=${page * 10}'
-  //                   : '${ApiUrls.ktaskListOthers}&filters={"assigned_user":"maya@gmail.com", "customer": ["like", "Mr%"], "exp_end_date": ["between", ["${((fromdate))}", "${((todate))}"]]}&limit=10&limit_start=${page * 10}'
-  //           : (status ?? "").isNotEmpty
-  //               ? (searchTerm ?? "").isNotEmpty
-  //                   ? '${ApiUrls.ktaskListOthers}&filters={"assigned_user": "maya@gmail.com", "subject": ["like", "%$searchTerm%"], "status":"$status"}&limit=10&limit_start=${page * 10}'
-  //                   : '${ApiUrls.ktaskListOthers}&filters={"assigned_user": "maya@gmail.com", "status":"$status"}&limit=10&limit_start=${page * 10}'
-  //               : (searchTerm ?? "").isNotEmpty
-  //                   ? '${ApiUrls.ktaskListOthers}&filters={"assigned_user": "maya@gmail.com", "subject": ["like", "%$searchTerm%"]}&limit=10&limit_start=${page * 10}'
-  //                   : '${ApiUrls.ktaskListOthers}&filters={"assigned_user": "maya@gmail.com"}&limit=10&limit_start=${page * 10}');
-  // }
 
   Future<ListUsersResponse?> getListUsers() async {
     return _apiViewModel!.get<ListUsersResponse>(apiUrl: ApiUrls.kListUsers);
@@ -324,7 +305,6 @@ class ApiRepository {
         .get<Map<String, List<String>>>(apiUrl: ApiUrls.kCallStatusList);
   }
 
-  Future CreateCall({Map<String, dynamic>? data}) async {
   Future addCall({Map<String, dynamic>? data}) async {
     return _apiViewModel!.post(apiUrl: ApiUrls.kAddCall, data: data);
   }
@@ -380,10 +360,12 @@ class ApiRepository {
         .get<PointListResponse>(apiUrl: ApiUrls.kPointList, params: param);
   }
 
-  Future<PointDetailsResponse?> getPointDetails({Map<String, dynamic>? param}) async {
-    return _apiViewModel!
-        .get<PointDetailsResponse>(apiUrl: ApiUrls.kPointDetails, params: param);
-=======
+  Future<PointDetailsResponse?> getPointDetails(
+      {Map<String, dynamic>? param}) async {
+    return _apiViewModel!.get<PointDetailsResponse>(
+        apiUrl: ApiUrls.kPointDetails, params: param);
+  }
+
   Future<GetOrderStatusResponse?> getOrderStatus(
       {Map<String, dynamic>? data}) async {
     return _apiViewModel!.get<GetOrderStatusResponse>(
@@ -420,9 +402,11 @@ class ApiRepository {
     final response = await http.get(url, headers: headers);
     return response;
   }
-  
+
   Future<HomeDetailResponse?> getHomeDetails() async {
     return _apiViewModel!.get<HomeDetailResponse>(
         apiUrl: '${ApiUrls.kHomeDataUrl}?user=$username');
   }
+
+  Future CreateCall({Map<String, dynamic>? data}) async {}
 }
