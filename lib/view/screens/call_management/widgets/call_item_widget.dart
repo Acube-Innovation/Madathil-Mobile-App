@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/utils/custom_loader.dart';
+import 'package:madathil/utils/no_data_found.dart';
 import 'package:madathil/view/screens/call_management/call_details_screen.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
 import 'package:madathil/viewmodel/call_viewmodel.dart';
@@ -20,7 +22,7 @@ class _CallItemWidgetState extends State<CallItemWidget> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       Provider.of<CallViewModel>(context, listen: false).resetCallPagination();
       Provider.of<CallViewModel>(context, listen: false).fetchCallList();
-      Provider.of<CallViewModel>(context, listen: false).getCallStatusList();
+      // Provider.of<CallViewModel>(context, listen: false).getCallStatusList();
     });
 
     super.initState();
@@ -35,23 +37,15 @@ class _CallItemWidgetState extends State<CallItemWidget> {
             'call post ---------------------------------------- ${cvm.callPost}');
         if (cvm.isLoading!) {
           return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CupertinoActivityIndicator(color: AppColors.primeryColor),
-                SizedBox(height: 10),
-                Text("Loading..!")
-              ],
-            ),
+            child: CustomLoader()
           );
         } else {
-          return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("No Call Recordings to show."),
-              ],
-            ),
+          return Center(
+            child: NoDataFOund(onRefresh: (){
+              Provider.of<CallViewModel>(context, listen: false)
+                  .resetCallPagination();
+              Provider.of<CallViewModel>(context, listen: false).fetchCallList();
+            },)
           );
         }
       } else {
@@ -99,10 +93,12 @@ class _CallItemWidgetState extends State<CallItemWidget> {
                       if (cvm.callPost!.isEmpty) {
                         print(
                             'call post ---------------------------------------- ${cvm.callPost}');
-                        return const Center(
-                            child: Text(
-                          "No Call Recordings to show.",
-                        ));
+                        return Center(
+                            child: NoDataFOund(onRefresh: (){
+              Provider.of<CallViewModel>(context, listen: false)
+                  .resetCallPagination();
+              Provider.of<CallViewModel>(context, listen: false).fetchCallList();
+            },));
                       } else {
                         return const Column(
                           children: [
@@ -123,6 +119,8 @@ class _CallItemWidgetState extends State<CallItemWidget> {
                   if (item.conversationDuration != null) {
                     time =
                         callVm.formatTimeFromSeconds(item.conversationDuration);
+                  } else {
+                    time = item.callStatus;
                   }
 
                   return InkWell(
