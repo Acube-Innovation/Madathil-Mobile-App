@@ -118,6 +118,7 @@ class ApiRepository {
 
   Future<CustomerListResponse?> getCustomerList(
       {Map<String, dynamic>? param}) async {
+    log(param.toString());
     return _apiViewModel!.get<CustomerListResponse>(
         apiUrl: ApiUrls.kgetCustomerList, params: param);
   }
@@ -359,7 +360,8 @@ class ApiRepository {
   }
 
   Future<CreateCallResponse?> createCall({Map<String, dynamic>? data}) async {
-    return _apiViewModel!.post<CreateCallResponse>(apiUrl: ApiUrls.kAddCall, data: data);
+    return _apiViewModel!
+        .post<CreateCallResponse>(apiUrl: ApiUrls.kAddCall, data: data);
   }
 
   Future<SalesPersonsListResponse?> getSalesPersonsListService(
@@ -464,7 +466,6 @@ class ApiRepository {
     return _apiViewModel!.get<HomeDetailResponse>(
         apiUrl: '${ApiUrls.kHomeDataUrl}?user=$username');
   }
-
 
   Future<PaymentHistoryListResponse?> getOrderTransactionList(
       {Map<String, dynamic>? param}) async {

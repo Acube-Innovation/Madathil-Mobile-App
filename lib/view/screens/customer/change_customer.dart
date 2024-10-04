@@ -63,6 +63,8 @@ class _ChangeCustomerState extends State<ChangeCustomer> {
               SizedBox(
                 height: 46,
                 child: TextField(
+                  controller: csv.searchController,
+                  onChanged: (val) {},
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.only(left: 30),
                     suffixIcon: Container(
@@ -70,10 +72,30 @@ class _ChangeCustomerState extends State<ChangeCustomer> {
                           shape: BoxShape.circle,
                           color: AppColors.primeryColor,
                         ),
-                        child: const Icon(
-                          Icons.search,
-                          color: Colors.white,
-                        )),
+                        child: csv.customerSearchfn != null
+                            ? GestureDetector(
+                                onTap: () {
+                                  customerVm.clearSearch();
+                                  customerVm.resetCustomerPagination();
+                                  customerVm.fetchCustomerList();
+                                },
+                                child: const Icon(
+                                  Icons.clear,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : GestureDetector(
+                                onTap: () {
+                                  customerVm.setSearchValue(
+                                      customerVm.searchController.text);
+                                  customerVm.resetCustomerPagination();
+                                  customerVm.fetchCustomerList();
+                                },
+                                child: const Icon(
+                                  Icons.search,
+                                  color: Colors.white,
+                                ),
+                              )),
                     enabled: true,
                     disabledBorder: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(5.0)),

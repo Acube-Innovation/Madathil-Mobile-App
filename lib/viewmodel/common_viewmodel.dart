@@ -690,8 +690,6 @@ class CommonDataViewmodel extends ChangeNotifier {
 
       Map<String, dynamic>? param = {};
 
-
-
       if (startFormatted != null && endFormatted != null) {
         param = {
           "fields": jsonEncode([
@@ -1603,7 +1601,7 @@ class CommonDataViewmodel extends ChangeNotifier {
       notifyListeners();
       Map<String, dynamic>? param = {};
 
-     // String? email = hiveInstance!.getData(DataBoxKey.kEmpId);
+      // String? email = hiveInstance!.getData(DataBoxKey.kEmpId);
       log("email ---- $username");
 
       param = {"user": username, "name": id};
@@ -1641,7 +1639,7 @@ class CommonDataViewmodel extends ChangeNotifier {
       _transactionInvoiceListResponse;
   List<PaymentHistoryList>? orderTransactionList = [];
 
-  Future<bool> getOrderTransactionList({int? page}) async {
+  Future<bool> getOrderTransactionList({int? page, String? txnid}) async {
     try {
       _isloading = true;
       notifyListeners();
@@ -1663,7 +1661,7 @@ class CommonDataViewmodel extends ChangeNotifier {
           "status"
         ]),
         "filters": jsonEncode([
-          ["Payment Entry Reference", "reference_name", "=", "SINV-24-00004"]
+          ["Payment Entry Reference", "reference_name", "=", txnid]
         ]),
         "limit_start": page! * 10,
         "limit": 10,
@@ -1697,14 +1695,15 @@ class CommonDataViewmodel extends ChangeNotifier {
   bool _paginationorederTransaction = false;
   bool get ispaginationorederTransaction => _paginationorederTransaction;
 
-  fetchOrderTransactionList() async {
+  fetchOrderTransactionList(String? txnid) async {
     if (_paginationorederTransaction || orederTransactionReachLength) {
       return;
     }
 
     _paginationorederTransaction = true;
 
-    await getOrderTransactionList(page: orederTransactionCurrentPage);
+    await getOrderTransactionList(
+        page: orederTransactionCurrentPage, txnid: txnid);
 
     final apiResponse = orderTransactionList;
     if (apiResponse != null) {

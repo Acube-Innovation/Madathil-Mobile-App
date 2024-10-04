@@ -10,7 +10,8 @@ import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class OrderTransactionCard extends StatefulWidget {
-  const OrderTransactionCard({super.key});
+  final String? txnid;
+  const OrderTransactionCard({super.key, this.txnid});
 
   @override
   State<OrderTransactionCard> createState() => _OrderTransactionCardState();
@@ -23,7 +24,7 @@ class _OrderTransactionCardState extends State<OrderTransactionCard> {
       Provider.of<CommonDataViewmodel>(context, listen: false)
           .resetOrderTransactionPagination();
       Provider.of<CommonDataViewmodel>(context, listen: false)
-          .fetchOrderTransactionList();
+          .fetchOrderTransactionList(widget.txnid);
     });
     super.initState();
   }
@@ -53,7 +54,7 @@ class _OrderTransactionCardState extends State<OrderTransactionCard> {
                     Provider.of<CommonDataViewmodel>(context, listen: false)
                         .resetOrderTransactionPagination();
                     Provider.of<CommonDataViewmodel>(context, listen: false)
-                        .fetchOrderTransactionList();
+                        .fetchOrderTransactionList(widget.txnid);
                   },
                 ),
               ],
@@ -67,11 +68,11 @@ class _OrderTransactionCardState extends State<OrderTransactionCard> {
             Provider.of<CommonDataViewmodel>(context, listen: false)
                 .resetOrderTransactionPagination();
             Provider.of<CommonDataViewmodel>(context, listen: false)
-                .fetchOrderTransactionList();
+                .fetchOrderTransactionList(widget.txnid);
           },
           child: ListView.separated(
               separatorBuilder: (context, index) {
-                return SizedBox();
+                return const SizedBox();
               },
               itemCount: (cdv.orederTransactionPost ?? []).length + 1,
               itemBuilder: (context, index) {
@@ -83,7 +84,7 @@ class _OrderTransactionCardState extends State<OrderTransactionCard> {
                     if (!cdv.orederTransactionReachLength) {
                       if (!cdv.ispaginationorederTransaction) {
                         WidgetsBinding.instance.addPostFrameCallback((_) {
-                          cdv.fetchOrderTransactionList();
+                          cdv.fetchOrderTransactionList(widget.txnid);
                         });
                         return const Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -106,7 +107,7 @@ class _OrderTransactionCardState extends State<OrderTransactionCard> {
                                 .resetOrderTransactionPagination();
                             Provider.of<CommonDataViewmodel>(context,
                                     listen: false)
-                                .fetchOrderTransactionList();
+                                .fetchOrderTransactionList(widget.txnid);
                           },
                         ));
                       } else {
@@ -239,6 +240,7 @@ class _OrderTransactionCardState extends State<OrderTransactionCard> {
                     ),
                   );
                 }
+                return null;
               }),
         );
       }

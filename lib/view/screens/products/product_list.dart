@@ -106,16 +106,18 @@ class _PrdoductListState extends State<PrdoductList> {
               height: 46,
               child: Consumer<ProductViewmodel>(builder: (context, pvm, _) {
                 return TextField(
-                  controller: productVm.searchController,
+                  controller: pvm.searchController,
                   onChanged: (val) {
                     log(val);
                   },
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.only(left: 30),
                     suffixIcon: Container(
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: AppColors.primeryColor,
+                          color: pvm.productSearchfn != null
+                              ? AppColors.red
+                              : AppColors.primeryColor,
                         ),
                         child: pvm.productSearchfn != null
                             ? GestureDetector(
