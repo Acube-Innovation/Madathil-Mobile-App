@@ -1,14 +1,20 @@
+import 'dart:developer';
+
 import 'package:custom_date_range_picker/custom_date_range_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:madathil/app_images.dart';
+import 'package:madathil/model/model_class/api_response_model/create_check_out_response_model.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/utils/color/util_functions.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
 import 'package:madathil/view/screens/common_widgets/custom_dropdown.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
 import 'package:madathil/view/screens/common_widgets/custom_text_field.dart';
 import 'package:madathil/view/screens/orders/order_detail_screen.dart';
+import 'package:madathil/view/screens/statments/widgets/searchable_dropdown.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:madathil/viewmodel/order_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +33,8 @@ class _OrderHistoryState extends State<OrderHistory> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final orderVm = Provider.of<OrderViewmodel>(context, listen: false);
       orderVm.resetOrderPagination();
-      orderVm.fetchOrderList();
+      await orderVm.fetchOrderList();
+      await orderVm.getOrderStatus();
     });
 
     super.initState();
@@ -140,13 +147,15 @@ class _OrderHistoryState extends State<OrderHistory> {
                     }
                   } else {
                     var item = orderVm.orderListPost![index];
+
                     return GestureDetector(
                       onTap: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    const OrderDetailScreen()));
+                                builder: (context) => OrderDetailScreen(
+                                      item: item,
+                                    )));
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(
@@ -189,23 +198,43 @@ class _OrderHistoryState extends State<OrderHistory> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    SizedBox(
+                                      width: 130,
+                                      child: Text(
+                                        item.customerName ?? "",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(color: AppColors.black),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
                                     Text(
-                                      item.customerName ?? "",
+                                      item.name ?? "",
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyMedium!
                                           .copyWith(color: AppColors.grey),
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                    // Text(
-                                    //   index == 0
-                                    //       ? "Solar Panel"
-                                    //       : "Air Conditioner",
-                                    //   style: Theme.of(context)
-                                    //       .textTheme
-                                    //       .bodyMedium!
-                                    //       .copyWith(
-                                    //           color: AppColors.primeryColor),
-                                    // ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      item.billingStatus ?? "",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(
+                                              color: AppColors.blue
+                                                  .withOpacity(0.5)),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
                                     Text(
                                       "\$ ${item.grandTotal ?? 0.0}",
                                       style: Theme.of(context)
@@ -236,7 +265,7 @@ class _OrderHistoryState extends State<OrderHistory> {
                             Row(
                               children: [
                                 Text(
-                                  index == 0 ? "Delivered" : "Shipping",
+                                  item.status ?? "",
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
@@ -245,20 +274,12 @@ class _OrderHistoryState extends State<OrderHistory> {
                                 const SizedBox(
                                   width: 10,
                                 ),
-                                index == 0
-                                    ? const Icon(
-                                        Icons.task_alt,
-                                        color: AppColors.malachit,
-                                      )
-                                    : const CustomPngImage(
-                                        height: 25,
-                                        width: 25,
-                                        imageName: AppImages.shippingIcon,
-                                        boxFit: BoxFit.contain,
-                                      ),
+                                _getStatusIcon(item.status),
                                 const Spacer(),
                                 Text(
-                                  "24 jun 2021",
+                                  UtilFunctions.formatDate(
+                                          item.transactionDate ?? "") ??
+                                      "",
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodySmall!
@@ -305,9 +326,71 @@ class _OrderHistoryState extends State<OrderHistory> {
     }
   }
 
+  Widget _getStatusIcon(String? name) {
+    switch (name) {
+      case "Draft":
+        return const CustomPngImage(
+          height: 25,
+          width: 25,
+          imageName: AppImages.statusShipping,
+          boxFit: BoxFit.contain,
+        );
+      case "On Hold":
+        return const CustomPngImage(
+          height: 25,
+          width: 25,
+          imageName: AppImages.holdOrder,
+          boxFit: BoxFit.contain,
+        );
+      case "To Deliver and Bill":
+        return const CustomPngImage(
+          height: 25,
+          width: 25,
+          imageName: AppImages.shippingIcon,
+          boxFit: BoxFit.contain,
+        );
+      case "To Bill":
+        return const CustomPngImage(
+          height: 25,
+          width: 25,
+          imageName: AppImages.toBillOrder,
+          boxFit: BoxFit.contain,
+        );
+
+      case "To Deliver":
+        return const CustomPngImage(
+          height: 25,
+          width: 25,
+          imageName: AppImages.shippingIcon,
+          boxFit: BoxFit.contain,
+        );
+      case "Completed":
+        return const Icon(
+          Icons.task_alt,
+          color: AppColors.malachit,
+        );
+      case "Cancelled":
+        return const Icon(
+          Icons.remove_shopping_cart,
+          color: AppColors.red,
+        );
+      case "Closed":
+        return const Icon(
+          Icons.remove_circle,
+          color: AppColors.red,
+        );
+
+      default:
+        return const Icon(
+          Icons.local_shipping,
+          color: AppColors.amber,
+        );
+    }
+  }
+
   void showfilterPopup(BuildContext context) {
     // Wrap the logic that accesses MediaQuery in a Builder
-    final commonVm = Provider.of<CommonDataViewmodel>(context, listen: false);
+    final orderVm = Provider.of<OrderViewmodel>(context, listen: false);
 
     TextEditingController nameController = TextEditingController();
     showModalBottomSheet(
@@ -353,57 +436,85 @@ class _OrderHistoryState extends State<OrderHistory> {
                                       height: 1.7,
                                       color: AppColors.black,
                                     ),
+                              ),
+                              const Spacer(),
+                              GestureDetector(
+                                onTap: () {
+                                  orderVm.clearFilter();
+                                  orderVm.resetOrderPagination();
+                                  orderVm.fetchOrderList();
+                                  Navigator.pop(context);
+
+                                  // orderVm.resetOrderPagination();
+                                  // orderVm.fetchOrderList();
+                                },
+                                child: const Icon(
+                                  Icons.clear,
+                                  color: AppColors.black,
+                                ),
                               )
                             ],
                           ),
                           const SizedBox(height: 20),
-                          GestureDetector(
-                            onTap: () {
-                              // showCustomDateRangePicker(context,
-                              //         dismissible: true,
-                              //         minimumDate: DateTime.now()
-                              //             .subtract(const Duration(days: 365)),
-                              //         maximumDate: DateTime.now()
-                              //             .add(const Duration(days: 365)),
-                              //         startDate: pvm.start,
-                              //         endDate: pvm.end, onApplyClick:
-                              //             (DateTime startDate,
-                              //                 DateTime endDate) {
 
-                              //     }, onCancelClick: () {
+                          Consumer<OrderViewmodel>(builder: (context, pvm, _) {
+                            return GestureDetector(
+                              onTap: () {
+                                // productVm.selectDate(context);
 
-                              //     },
-                              //         backgroundColor: AppColors.white,
-                              //         primaryColor: AppColors.secondaryColor);
-                            },
-                            child: AbsorbPointer(
-                              child: CustomTextField(
-                                controller: cdv.dobController,
-                                hint: 'Enter DOB',
-                                suffixIcon: const Icon(Icons.calendar_month),
+                                showCustomDateRangePicker(context,
+                                    dismissible: true,
+                                    minimumDate: DateTime.now()
+                                        .subtract(const Duration(days: 365)),
+                                    maximumDate: DateTime.now()
+                                        .add(const Duration(days: 365)),
+                                    startDate: pvm.start,
+                                    endDate: pvm.end, onApplyClick:
+                                        (DateTime startDate, DateTime endDate) {
+                                  orderVm.setDateRange(startDate, endDate);
+                                }, onCancelClick: () {
+                                  orderVm.clearDateRange();
+                                  orderVm.resetOrderPagination();
+
+                                  orderVm.fetchOrderList();
+                                },
+                                    backgroundColor: AppColors.white,
+                                    primaryColor: AppColors.secondaryColor);
+                              },
+                              child: AbsorbPointer(
+                                child: CustomTextField(
+                                  controller: cdv.dobController,
+                                  hint: 'Enter DOB',
+                                  suffixIcon: const Icon(Icons.calendar_month),
+                                ),
                               ),
-                            ),
-                          ),
-                          const SizedBox(height: 15),
-                          CustomTextField(
-                            controller: nameController,
-                            hint: 'Enter customer name',
-                          ),
-                          const SizedBox(height: 15),
+                            );
+                          }),
 
-                          CustomDropdown(
-                            hint: 'Select Product',
-                            items: const ["solar", "Ac"],
-                            // selectedItem: "solar",
-                            onChanged: (String? value) {},
+                          const SizedBox(height: 15),
+                          SearchableDropdown(
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please select a customer';
+                              }
+                              return null;
+                            },
+                            hintText: "Select Customer",
+                            onItemSelected: (selectedCustomer) {
+                              orderVm.setSelCustomer(selectedCustomer);
+                            },
                           ),
+
                           const SizedBox(height: 15),
 
                           CustomDropdown(
                             hint: 'Status',
-                            items: const ["Deliverd", "shipping"],
-                            // selectedItem: "Deliverd",
-                            onChanged: (String? value) {},
+                            items: orderVm.orderStatus ?? [],
+                            selectedItem: orderVm.selectedStatus,
+                            onChanged: (String? value) {
+                              log(value.toString());
+                              orderVm.setSelStatus(value);
+                            },
                           ),
 
                           const SizedBox(height: 30),
@@ -415,6 +526,10 @@ class _OrderHistoryState extends State<OrderHistory> {
                             width: double.infinity,
                             onPressed: () {
                               Navigator.pop(context);
+
+                              orderVm.resetOrderPagination();
+
+                              orderVm.fetchOrderList();
                             },
                             text: "Apply",
                           )

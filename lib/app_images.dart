@@ -47,4 +47,6 @@ class AppImages {
   static const String holdOrder = "assets/images/hold.png";
   static const String cancelOrder = "assets/images/cancel-order.png";
   static const String closedOrder = "assets/images/closed-order.png";
+  static const String statusShipping = "assets/images/shopping-cart.png";
+  static const String trans = "assets/images/trans.png";
 }

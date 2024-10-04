@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:madathil/model/model_class/api_response_model/create_address_response_model.dart';
-import 'package:madathil/model/model_class/api_response_model/general_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_creation_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_list_own_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_source_list_response.dart';
@@ -20,13 +19,13 @@ class LeadsViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  DateTime? _fromdate;
-  DateTime? get fromdate => _fromdate;
+  String? _fromdate;
+  String? get fromdate => _fromdate;
 
-  DateTime? _todate;
-  DateTime? get todate => _todate;
+  String? _todate;
+  String? get todate => _todate;
 
-  addFromToTime(DateTime fromdate, DateTime todate) {
+  addFromToTime(String fromdate, String todate) {
     _fromdate = fromdate;
     _todate = todate;
     notifyListeners();
@@ -46,9 +45,6 @@ class LeadsViewmodel extends ChangeNotifier {
   LeadsDetailsResponse? get leadsDetails => _leadsDetails;
 
   Future<bool> getLeadsDetails({String? id}) async {
-    if ((leadsDetails?.data) != null) {
-      notifyListeners();
-    }
     try {
       LeadsDetailsResponse? leadsDetailsResponse =
           await apiRepository.getLeadsDetails(id);
@@ -77,9 +73,6 @@ class LeadsViewmodel extends ChangeNotifier {
   List<String>? get leadsSourceDetails => _leadsSourceDetails;
 
   Future<bool> getLeadsSourceList() async {
-    if ((leadsDetails?.data) != null) {
-      notifyListeners();
-    }
     try {
       LeadsSourceListResponse? leadsSourceDetailsResponse =
           await apiRepository.getSourceList();
@@ -111,9 +104,6 @@ class LeadsViewmodel extends ChangeNotifier {
   List<String>? get leadsCategoryDetails => _leadsCategoryDetails;
 
   Future<bool> getLeadsCategoryDetails() async {
-    if ((leadsDetails?.data) != null) {
-      notifyListeners();
-    }
     try {
       LeadsSourceListResponse? leadsCategoryDetailsResponse =
           await apiRepository.getCategoryList();
@@ -198,13 +188,11 @@ class LeadsViewmodel extends ChangeNotifier {
   LeadsListOwnResponse? get leadsListOwnResponse => _leadsListOwnResponse;
 
   Future<bool> getLeadsListOwnApi(int page,
-      {DateTime? fromdate, DateTime? todate}) async {
-    if ((leadsListOwnResponse?.data ?? []).isNotEmpty) {
-      notifyListeners();
-    }
+      {String? fromdate, String? todate, String? searchTerm}) async {
     try {
-      LeadsListOwnResponse? leadsListOwnResponse = await apiRepository
-          .getLeadsListOwn(page, fromdate: fromdate, todate: todate);
+      LeadsListOwnResponse? leadsListOwnResponse =
+          await apiRepository.getLeadsListOwn(page,
+              fromdate: fromdate, todate: todate, searchTerm: searchTerm);
       if ((leadsListOwnResponse?.data ?? []).isNotEmpty) {
         notifyListeners();
         _leadsListOwnResponse = leadsListOwnResponse;
@@ -234,13 +222,13 @@ class LeadsViewmodel extends ChangeNotifier {
   bool _reachedLastPageleadsListOwn = false;
   bool get reachedLastPageleadsListOwn => _reachedLastPageleadsListOwn;
 
-  Future<void> getLeadsListOwn() async {
+  Future<void> getLeadsListOwn({String? searchTerm}) async {
     if (_isLoadingleadsListOwnPagination || _reachedLastPageleadsListOwn) {
       return;
     }
     _isLoadingleadsListOwnPagination = true;
     await getLeadsListOwnApi(_leadsListOwnCurrentPage,
-        fromdate: fromdate, todate: todate);
+        fromdate: fromdate, todate: todate, searchTerm: searchTerm);
     final apiResponse = leadsListOwnResponse;
     if (apiResponse != null) {
       final apiPosts = apiResponse.data ?? [];

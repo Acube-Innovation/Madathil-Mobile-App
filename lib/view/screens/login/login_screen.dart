@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:madathil/constants.dart';
+import 'package:madathil/model/services/local_db/hive_constants.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/utils/util_functions.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
@@ -10,6 +12,7 @@ import 'package:madathil/view/screens/customer_registration/customer_registratio
 import 'package:madathil/view/screens/homepage/homepage.dart';
 import 'package:madathil/view/screens/products/product_list.dart';
 import 'package:madathil/viewmodel/auth_viewmodel.dart';
+import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -187,6 +190,10 @@ class LoginScreen extends StatelessWidget {
                       pwd: passwordCtlr.text.trim())
                   .then((value) {
                 if (value) {
+                  hiveInstance?.saveData(
+                      DataBoxKey.kUserName, emailCtlr.text.trim());
+                  Provider.of<CommonDataViewmodel>(context, listen: false)
+                      .getHomeDetails();
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (context) => const HomePage()));
                 } else {

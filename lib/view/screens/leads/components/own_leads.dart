@@ -25,6 +25,8 @@ class _OwnLeadsState extends State<OwnLeads> {
     super.didChangeDependencies();
   }
 
+  TextEditingController? controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -33,6 +35,13 @@ class _OwnLeadsState extends State<OwnLeads> {
         SizedBox(
           height: 46,
           child: TextField(
+            controller: controller,
+            onSubmitted: (value) {
+              Provider.of<LeadsViewmodel>(context, listen: false)
+                  .resetleadsListOwnPagination();
+              Provider.of<LeadsViewmodel>(context, listen: false)
+                  .getLeadsListOwn(searchTerm: value);
+            },
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.only(left: 30),
               suffixIcon: Container(
@@ -77,54 +86,66 @@ class _OwnLeadsState extends State<OwnLeads> {
           child: Consumer<LeadsViewmodel>(builder: (context, lvm, _) {
             return RefreshIndicator(
               onRefresh: () async {
+                controller?.clear();
                 lvm.clearDates();
                 lvm.resetleadsListOwnPagination();
                 lvm.getLeadsListOwn();
               },
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: (lvm.leadsListOwnList ?? []).length + 1,
-                itemBuilder: (context, index) {
-                  if (index == (lvm.leadsListOwnList ?? []).length) {
-                    if (lvm.isLoadingleadsListOwnPagination) {
-                      return const CustomLoader();
-                    } else {
-                      if (!lvm.reachedLastPageleadsListOwn) {
-                        if (!lvm.isLoadingleadsListOwnPagination) {
-                          lvm.getLeadsListOwn();
-                        }
-                        return const CustomLoader();
-                      } else {
-                        if (lvm.leadsListOwnList!.isEmpty) {
-                          return NoDataFOund(
-                            onRefresh: () {
-                              lvm.clearDates();
-                              lvm.resetleadsListOwnPagination();
-                              lvm.getLeadsListOwn();
-                            },
-                          );
+              child: (lvm.leadsListOwnList ?? []).isEmpty
+                  ? NoDataFOund(
+                      onRefresh: () {
+                        controller?.clear();
+                        lvm.clearDates();
+                        lvm.resetleadsListOwnPagination();
+                        lvm.getLeadsListOwn();
+                      },
+                    )
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: (lvm.leadsListOwnList ?? []).length,
+                      itemBuilder: (context, index) {
+                        if (index == (lvm.leadsListOwnList ?? []).length - 1) {
+                          if (lvm.isLoadingleadsListOwnPagination) {
+                            return const CustomLoader();
+                          } else {
+                            if (!lvm.reachedLastPageleadsListOwn) {
+                              if (!lvm.isLoadingleadsListOwnPagination) {
+                                lvm.getLeadsListOwn();
+                              }
+                              return const CustomLoader();
+                            } else {
+                              if (lvm.leadsListOwnList!.isEmpty) {
+                                return NoDataFOund(
+                                  onRefresh: () {
+                                    controller?.clear();
+                                    lvm.clearDates();
+                                    lvm.resetleadsListOwnPagination();
+                                    lvm.getLeadsListOwn();
+                                  },
+                                );
+                              } else {
+                                return const CustomLoader();
+                              }
+                            }
+                          }
                         } else {
-                          return const CustomLoader();
+                          return InkWell(
+                              onTap: () {
+                                Provider.of<LeadsViewmodel>(context,
+                                        listen: false)
+                                    .getLeadsDetails(
+                                        id: lvm.leadsListOwnList?[index].name);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const LeadDetailScreen()));
+                              },
+                              child: LeadListItem(
+                                  data: lvm.leadsListOwnList?[index]));
                         }
-                      }
-                    }
-                  } else {
-                    return InkWell(
-                        onTap: () {
-                          Provider.of<LeadsViewmodel>(context, listen: false)
-                              .getLeadsDetails(
-                                  id: lvm.leadsListOwnList?[index].name);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const LeadDetailScreen()));
-                        },
-                        child:
-                            LeadListItem(data: lvm.leadsListOwnList?[index]));
-                  }
-                },
-              ),
+                      },
+                    ),
             );
           }),
         )

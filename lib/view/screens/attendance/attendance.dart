@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:madathil/model/model_class/api_response_model/checkin_checkout_list_response.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/utils/no_data_found.dart';
 import 'package:madathil/utils/util_functions.dart';
 import 'package:madathil/view/screens/attendance/attendance_history.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
@@ -49,16 +50,25 @@ class AttendancePage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Expanded(
-                child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: (cdv.checkOutListResponse?.data ?? []).length,
-              itemBuilder: (context, index) {
-                if ((cdv.checkOutListResponse?.data ?? []).isEmpty &&
-                    !cdv.isloading!) return const CupertinoActivityIndicator();
-                return CheckinItem(
-                    data: cdv.checkOutListResponse?.data?[index]);
-              },
-            )),
+                child: (cdv.checkOutListResponse?.data ?? []).isEmpty
+                    ? NoDataFOund(
+                        onRefresh: () {
+                          cdv.employeeCheckinList();
+                        },
+                      )
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        itemCount:
+                            (cdv.checkOutListResponse?.data ?? []).length,
+                        itemBuilder: (context, index) {
+                          if ((cdv.checkOutListResponse?.data ?? []).isEmpty &&
+                              !cdv.isloading!) {
+                            return const CupertinoActivityIndicator();
+                          }
+                          return CheckinItem(
+                              data: cdv.checkOutListResponse?.data?[index]);
+                        },
+                      )),
             InkWell(
               onTap: () {
                 // Implement check-in logic
@@ -70,12 +80,19 @@ class AttendancePage extends StatelessWidget {
                                 (isCheckIn(cdv
                                         .checkOutListResponse?.data?.first) ??
                                     false))
-                            ? "IN"
-                            : "OUT")
+                            ? "OUT"
+                            : "IN")
                     .then(
                   (value) {
-                    Navigator.pop(context);
-                    cdv.employeeCheckinList();
+                    if (value) {
+                      cdv
+                          .employeeCheckinList()
+                          .then((value) => Navigator.pop(context));
+                    } else {
+                      toast("Something went wrong, Please try again", context,
+                          isError: true);
+                      Navigator.pop(context);
+                    }
                   },
                 );
               },
@@ -122,7 +139,6 @@ class AttendancePage extends StatelessWidget {
                 height: 43,
                 width: double.maxFinite,
                 onPressed: () {
-                  cdv.getAttendanceList();
                   Navigator.push(
                       context,
                       MaterialPageRoute(

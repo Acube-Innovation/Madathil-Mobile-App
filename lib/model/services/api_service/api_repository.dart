@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:intl/intl.dart';
 import 'package:dio/dio.dart' as dio;
+import 'package:madathil/constants.dart';
 import 'package:madathil/model/model_class/api_response_model/add_closing_statment_response.dart';
 import 'package:madathil/model/model_class/api_response_model/add_new_service_response.dart';
 import 'package:madathil/model/model_class/api_response_model/attendance_list_response.dart';
@@ -18,6 +21,8 @@ import 'package:madathil/model/model_class/api_response_model/get__payment_metho
 import 'package:madathil/model/model_class/api_response_model/get_customer_address_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get_customer_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get_order_response.dart';
+import 'package:madathil/model/model_class/api_response_model/get_order_status_response.dart';
+import 'package:madathil/model/model_class/api_response_model/home_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/image_uploade_response.dart';
 import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_creation_response.dart';
@@ -31,6 +36,7 @@ import 'package:madathil/model/model_class/api_response_model/payment_history_re
 import 'package:madathil/model/model_class/api_response_model/payment_modes_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
+import 'package:madathil/model/model_class/api_response_model/sales_order_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/sales_persons_list_response_addservice.dart';
 import 'package:madathil/model/model_class/api_response_model/service_history_detailsresponse.dart';
 import 'package:madathil/model/model_class/api_response_model/service_history_list_response.dart';
@@ -42,6 +48,8 @@ import 'package:madathil/model/model_class/api_response_model/task_status_respon
 import 'package:madathil/model/model_class/local/environment.dart';
 import 'package:madathil/model/services/api_service/api_urls.dart';
 import 'package:madathil/model/services/api_service/api_viewmodel.dart';
+import 'package:madathil/model/services/local_db/hive_constants.dart';
+import 'package:http/http.dart' as http;
 
 class ApiRepository {
   ApiViewModel? _apiViewModel;
@@ -62,13 +70,17 @@ class ApiRepository {
   }
 
   Future<CheckInCheckOutListResponse?> employeeCheckinList() async {
-    return _apiViewModel!
-        .get<CheckInCheckOutListResponse>(apiUrl: ApiUrls.kCheckinCheckoutList);
+    return _apiViewModel!.get<CheckInCheckOutListResponse>(
+        apiUrl:
+            '${ApiUrls.kCheckinCheckoutList}&filters={"employee": "$employeeId", "date": "${DateFormat('yyyy-MM-dd').format(DateTime.now())}"}&order_by=modified desc');
   }
 
-  Future<AttendanceList?> getAttendanceList() async {
-    return _apiViewModel!
-        .get<AttendanceList>(apiUrl: ApiUrls.kAttendanceHistory);
+  Future<AttendanceList?> getAttendanceList(int page,
+      {String? fromdate, String? todate}) async {
+    return _apiViewModel!.get<AttendanceList>(
+        apiUrl: (fromdate ?? "").isNotEmpty && (todate ?? "").isNotEmpty
+            ? '${ApiUrls.kAttendanceHistory}&filters={"employee": "$employeeId", "attendance_date": ["between", ["$fromdate", "$todate"]]}&order_by=attendance_date desc&limit=10&limit_start=${page * 10}'
+            : '${ApiUrls.kAttendanceHistory}&filters={"employee": "$employeeId"}&order_by=attendance_date desc&limit=10&limit_start=${page * 10}');
   }
 
   Future<AddClosingStatmentResponse?> addClosingStatment(
@@ -158,11 +170,15 @@ class ApiRepository {
   }
 
   Future<LeadsListOwnResponse?> getLeadsListOwn(int page,
-      {DateTime? fromdate, DateTime? todate}) {
+      {String? fromdate, String? todate, String? searchTerm}) {
     return _apiViewModel!.get<LeadsListOwnResponse>(
         apiUrl: fromdate != null && todate != null
-            ? '${ApiUrls.kleadListOwn}&filters={"lead_owner": "biju@gmail.com", "date": ["between", ["${DateFormat('yyyy-MM-dd').format(fromdate)}", "${DateFormat('yyyy-MM-dd').format(todate)}"]]}&limit=10&limit_start=${page * 10}'
-            : '${ApiUrls.kleadListOwn}&filters={"lead_owner": "biju@gmail.com"}&limit=10&limit_start=${page * 10}');
+            ? (searchTerm ?? "").isNotEmpty
+                ? '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$username", "date": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}&filters={"lead_name": ["like", "%$searchTerm%"]}'
+                : '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$username", "date": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}'
+            : (searchTerm ?? "").isNotEmpty
+                ? '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$username"}&limit=10&limit_start=${page * 10}&filters={"lead_name": ["like", "%$searchTerm%"]}'
+                : '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$username"}&limit=10&limit_start=${page * 10}');
   }
 
   Future<LeadsSourceListResponse?> getSourceList() async {
@@ -304,6 +320,7 @@ class ApiRepository {
   }
 
   Future CreateCall({Map<String, dynamic>? data}) async {
+  Future addCall({Map<String, dynamic>? data}) async {
     return _apiViewModel!.post(apiUrl: ApiUrls.kAddCall, data: data);
   }
 
@@ -333,5 +350,47 @@ class ApiRepository {
       {Map<String, dynamic>? data}) async {
     return _apiViewModel!
         .get<GetPaymentMethod>(apiUrl: ApiUrls.kPaymentMethod, params: data);
+  }
+
+  Future<GetOrderStatusResponse?> getOrderStatus(
+      {Map<String, dynamic>? data}) async {
+    return _apiViewModel!.get<GetOrderStatusResponse>(
+        apiUrl: ApiUrls.korderStatus, params: data);
+  }
+
+  Future<SalesOrderDetailResponse?> getOrderDetail(
+      {Map<String, dynamic>? data}) async {
+    return _apiViewModel!.get<SalesOrderDetailResponse>(
+        apiUrl: ApiUrls.korderDetails, params: data);
+  }
+  //  Future<SalesOrderDetailResponse?> getInvoice(
+  //     {Map<String, dynamic>? data}) async {
+  //   return _apiViewModel!.get<SalesOrderDetailResponse>(
+  //       apiUrl: ApiUrls.kgetInvoice, params: data);
+  // }
+
+  Future<dynamic> getInvoice(String? orderID) async {
+    final url =
+        Uri.parse('${ApiUrls.kProdBaseURL}${ApiUrls.kgetInvoice}$orderID');
+    Map<String, dynamic>? savedCookies =
+        hiveInstance?.getData(DataBoxKey.cookie);
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'lang': 'en',
+    };
+    if (savedCookies != null && savedCookies.isNotEmpty) {
+      String cookieHeader =
+          savedCookies.entries.map((e) => '${e.key}=${e.value}').join('; ');
+      headers[HttpHeaders.cookieHeader] =
+          cookieHeader; // Add cookies to headers
+    }
+
+    final response = await http.get(url, headers: headers);
+    return response;
+  }
+  
+  Future<HomeDetailResponse?> getHomeDetails() async {
+    return _apiViewModel!.get<HomeDetailResponse>(
+        apiUrl: '${ApiUrls.kHomeDataUrl}?user=$username');
   }
 }

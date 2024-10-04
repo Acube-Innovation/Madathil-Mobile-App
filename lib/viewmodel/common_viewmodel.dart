@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io' as dio;
-import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:madathil/constants.dart';
 import 'package:madathil/model/model_class/api_response_model/add_closing_statment_response.dart';
 import 'package:madathil/model/model_class/api_response_model/add_new_service_response.dart';
 import 'package:madathil/model/model_class/api_response_model/attendance_list_response.dart';
@@ -15,17 +13,16 @@ import 'package:madathil/model/model_class/api_response_model/checkin_checkout_r
 import 'package:madathil/model/model_class/api_response_model/closing_statment_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/closingstatment_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/customer_list_response.dart';
-import 'package:madathil/model/model_class/api_response_model/image_uploade_response.dart';
+import 'package:madathil/model/model_class/api_response_model/home_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/sales_persons_list_response_addservice.dart';
 import 'package:madathil/model/model_class/api_response_model/service_history_detailsresponse.dart';
 import 'package:madathil/model/model_class/api_response_model/service_history_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/service_status_list_response.dart';
-import 'package:madathil/model/model_class/utility_model_class/customer_utility_model.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
+import 'package:madathil/model/services/local_db/hive_constants.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
-import 'package:madathil/view/screens/service_list/servce_detail.dart';
 
 class CommonDataViewmodel extends ChangeNotifier {
   final ApiRepository apiRepository;
@@ -124,9 +121,10 @@ class CommonDataViewmodel extends ChangeNotifier {
   Future<bool> employeeCheckin({String? logType}) async {
     try {
       _isloading = true;
+      notifyListeners();
       CheckInCheckOutResponse? response =
           await apiRepository.employeeCheckin(data: {
-        "employee": "HR-EMP-00278",
+        "employee": employeeId,
         "log_type": logType,
         "latitude": "9.76686867",
         "longitude": "76.12312312"
@@ -156,7 +154,7 @@ class CommonDataViewmodel extends ChangeNotifier {
   CheckInCheckOutListResponse? get checkOutListResponse =>
       _checkOutListResponse;
 
-  Future<bool> employeeCheckinList({String? username, String? pwd}) async {
+  Future<bool> employeeCheckinList() async {
     try {
       _isloading = true;
       CheckInCheckOutListResponse? response =
@@ -173,6 +171,34 @@ class CommonDataViewmodel extends ChangeNotifier {
       }
     } catch (e) {
       _isloading = false;
+      _errormsg = e.toString();
+      return false;
+    }
+  }
+
+  /*
+  * home detail api call
+  * */
+
+  HomeDetailResponse? _homeDetailData;
+  HomeDetailResponse? get homeDetailData => _homeDetailData;
+
+  Future<bool> getHomeDetails() async {
+    try {
+      HomeDetailResponse? response = await apiRepository.getHomeDetails();
+      if (response?.message != null) {
+        _homeDetailData = response;
+        if (response?.message?.employeeId != null) {
+          hiveInstance?.saveData(
+              DataBoxKey.kEmpId, response?.message?.employeeId);
+        }
+        notifyListeners();
+        return true;
+      } else {
+        notifyListeners();
+        return false;
+      }
+    } catch (e) {
       _errormsg = e.toString();
       return false;
     }
@@ -376,8 +402,7 @@ class CommonDataViewmodel extends ChangeNotifier {
   /// filter in service history
 
   // Holds the selected filter status
-  String? _selectedDate; // Holds the selected filter date
-
+  String? _selectedDate;
   String? get selectedDate => _selectedDate;
 
   // Method to set the selected date
@@ -405,10 +430,12 @@ class CommonDataViewmodel extends ChangeNotifier {
   AttendanceList? _attendanceList;
   AttendanceList? get attendanceList => _attendanceList;
 
-  Future<bool> getAttendanceList() async {
+  Future<bool> getAttendanceList(int page,
+      {String? fromdate, String? todate}) async {
     try {
       _isloading = true;
-      AttendanceList? response = await apiRepository.getAttendanceList();
+      AttendanceList? response = await apiRepository.getAttendanceList(page,
+          fromdate: fromdate, todate: todate);
       if ((response?.data ?? []).isNotEmpty) {
         _attendanceList = response;
         _isloading = false;
@@ -426,6 +453,67 @@ class CommonDataViewmodel extends ChangeNotifier {
     }
   }
 
+  String? _fromdate;
+  String? get fromdate => _fromdate;
+
+  String? _todate;
+  String? get todate => _todate;
+
+  addFromToTime(String fromdate, String todate) {
+    _fromdate = fromdate;
+    _todate = todate;
+    notifyListeners();
+  }
+
+  void clearDates() {
+    _fromdate = null;
+    _todate = null;
+    notifyListeners();
+  }
+
+  //attendance list pagination
+
+  List<AttendanceListData>? _attendanceListData = [];
+  List<AttendanceListData>? get attendanceListData => _attendanceListData;
+  bool _isLoadingattendanceListPagination = false;
+  bool get isLoadingattendanceListPagination =>
+      _isLoadingattendanceListPagination;
+  int _attendanceListCurrentPage = 0;
+  bool _reachedLastPageattendanceList = false;
+  bool get reachedLastPageattendanceList => _reachedLastPageattendanceList;
+
+  Future<void> getattendanceListOwn() async {
+    if (_isLoadingattendanceListPagination || _reachedLastPageattendanceList) {
+      return;
+    }
+    _isLoadingattendanceListPagination = true;
+    await getAttendanceList(_attendanceListCurrentPage,
+        fromdate: fromdate, todate: todate);
+    final apiResponse = attendanceList;
+    if (apiResponse != null) {
+      final apiPosts = apiResponse.data ?? [];
+      if (apiPosts.length < 10) {
+        _reachedLastPageattendanceList = true;
+      }
+      if (apiPosts.isNotEmpty) {
+        _attendanceListData?.addAll(apiPosts);
+      }
+      _attendanceListCurrentPage++;
+    }
+    _isLoadingattendanceListPagination = false;
+    if ((_attendanceListData ?? []).isNotEmpty) {
+      notifyListeners();
+    }
+  }
+
+  void resetattendanceListPagination() {
+    _attendanceListData = [];
+    _attendanceListCurrentPage = 0;
+    _isLoadingattendanceListPagination = false;
+    _reachedLastPageattendanceList = false;
+    notifyListeners();
+  }
+
   /*
   * customer list api call
   * */
@@ -438,7 +526,6 @@ class CommonDataViewmodel extends ChangeNotifier {
       _isloading = true;
 
       Map<String, dynamic>? param = {};
-
       if (searchItem != null && searchItem.isNotEmpty) {
         param = {
           "fields": jsonEncode(["name", "customer_name"]),
@@ -1190,8 +1277,6 @@ class CommonDataViewmodel extends ChangeNotifier {
       }
       return false;
     } catch (e) {
-
-      
       _errormsg = e.toString();
       return false;
     }

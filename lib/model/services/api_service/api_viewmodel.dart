@@ -26,6 +26,8 @@ import 'package:madathil/model/model_class/api_response_model/get__payment_metho
 import 'package:madathil/model/model_class/api_response_model/get_customer_address_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get_customer_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get_order_response.dart';
+import 'package:madathil/model/model_class/api_response_model/get_order_status_response.dart';
+import 'package:madathil/model/model_class/api_response_model/home_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/image_uploade_response.dart';
 import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_creation_response.dart';
@@ -39,6 +41,7 @@ import 'package:madathil/model/model_class/api_response_model/payment_history_re
 import 'package:madathil/model/model_class/api_response_model/payment_modes_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
+import 'package:madathil/model/model_class/api_response_model/sales_order_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/sales_persons_list_response_addservice.dart';
 import 'package:madathil/model/model_class/api_response_model/service_history_detailsresponse.dart';
 import 'package:madathil/model/model_class/api_response_model/service_history_list_response.dart';
@@ -278,6 +281,13 @@ class ApiViewModel {
         return CallDetailsResponseModel?.fromJson(json) as T;
       case CreateCallResponse:
         return CreateCallResponse?.fromJson(json) as T;
+      case GetOrderStatusResponse:
+        return GetOrderStatusResponse?.fromJson(json) as T;
+      case SalesOrderDetailResponse:
+        return SalesOrderDetailResponse?.fromJson(json) as T;
+
+      case HomeDetailResponse:
+        return HomeDetailResponse?.fromJson(json) as T;
 
       default:
         throw FromJsonNotImplementedException();
