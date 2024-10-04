@@ -259,7 +259,10 @@ class OrderViewmodel extends ChangeNotifier {
       http.Response res = await apiRepository.getInvoice(orderID);
       dynamic getInvoiceData = res.bodyBytes;
       if (getInvoiceData != null) {
-        final Directory? appDir = await getExternalStorageDirectory();
+        final Directory? appDir = Platform.isAndroid
+            ? await getExternalStorageDirectory()
+            : await getApplicationDocumentsDirectory();
+        // await getExternalStorageDirectory();
 
         String tempPath = appDir!.path;
         final String fileName = '$orderID.pdf';
@@ -270,6 +273,8 @@ class OrderViewmodel extends ChangeNotifier {
         }
         await file.writeAsBytes(getInvoiceData);
         _file = file;
+        log("after api call--->${file.path.toString()}");
+        setLoader(false);
         notifyListeners();
         return true;
       }

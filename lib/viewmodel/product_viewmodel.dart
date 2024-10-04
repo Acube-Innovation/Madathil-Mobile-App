@@ -4,11 +4,13 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'package:madathil/model/model_class/api_response_model/create_check_out_response_model.dart';
 import 'package:madathil/model/model_class/api_response_model/get__payment_method.dart';
 import 'package:madathil/model/model_class/api_response_model/get_order_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
+import 'package:madathil/model/model_class/utility_model_class/cart_item_model.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/utils/color/util_functions.dart';
@@ -275,20 +277,42 @@ class ProductViewmodel extends ChangeNotifier {
   SaleOrder? checkOutData;
 
   Future<bool> createCheckOut(
-      {String? customer, String? date, Product? productData}) async {
+      {String? customer,
+      String? date,
+      Product? productData,
+      List<CartItem>? cartItmes}) async {
     try {
       setLoader(true);
+      List<Map<String, dynamic>> items = [];
+
+      if (cartItmes != null && cartItmes.isNotEmpty) {
+        for (var cartItem in cartItmes) {
+          items.add({
+            "item_code": cartItem.product?.itemCode,
+            "qty": cartItem.quantity,
+            "rate": cartItem.product?.rate?.toInt()
+          });
+        }
+      } else if (productData != null) {
+        // If no cartItems are provided, use the single product data
+        items.add({
+          "item_code": productData.itemCode,
+          "qty": quantity, // Default to 1 if no quantity is provided
+          "rate": productData.rate?.toInt()
+        });
+      }
 
       var response = await apiRepository.createCheckOut(data: {
         "customer": customer,
         "delivery_date": date,
-        "items": [
-          {
-            "item_code": productData?.itemCode,
-            "qty": quantity,
-            "rate": productData?.rate?.toInt()
-          }
-        ]
+        "items": items
+        // "items": [
+        //   {
+        //     "item_code": productData?.itemCode,
+        //     "qty": quantity,
+        //     "rate": productData?.rate?.toInt()
+        //   }
+        // ]
       });
       if (response?.data?.doctype == "Sales Order") {
         checkOutData = response?.data;
@@ -373,5 +397,40 @@ class ProductViewmodel extends ChangeNotifier {
   void selectPayment(String value) {
     _selectedpayment = value;
     notifyListeners(); // Notify listeners when the value changes
+  }
+//cart funtions-----------------
+
+  bool isCartCheckout = false;
+  setCartCheckOut(bool val) {
+    isCartCheckout = val;
+  }
+
+  List<CartItem> cartItmes = [];
+  void addToCart({Product? product, int? quantity}) {
+    final existingCartItemIndex =
+        cartItmes.indexWhere((item) => item.product == product);
+
+    if (existingCartItemIndex >= 0) {
+      var currentQuantity = cartItmes[existingCartItemIndex].quantity ?? 0;
+      cartItmes[existingCartItemIndex].quantity =
+          currentQuantity + (quantity ?? 0);
+    } else {
+      cartItmes.add(CartItem(product: product, quantity: quantity));
+    }
+    notifyListeners();
+  }
+
+  void removeFromCart(Product product) {
+    cartItmes.removeWhere((item) => item.product == product);
+    notifyListeners();
+  }
+
+  int getTotalQuantity() {
+    return cartItmes.fold(0, (total, item) => total + item.quantity!);
+  }
+
+  clearCart() {
+    cartItmes.clear();
+    notifyListeners();
   }
 }

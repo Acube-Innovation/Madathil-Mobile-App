@@ -55,144 +55,165 @@ class CheckOutScreen extends StatelessWidget {
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: AppColors.primeryColor),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Image and Text Column
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  // Image Container
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: AppColors.grey.withOpacity(0.1),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    padding: const EdgeInsets.all(5),
-                                    child:
+                      SizedBox(
+                        height: 300,
+                        child: ListView.separated(
+                            separatorBuilder: (context, index) {
+                              return const SizedBox(
+                                height: 10,
+                              );
+                            },
+                            itemCount: pvm.checkOutData?.items?.length ?? 0,
+                            itemBuilder: (context, index) {
+                              var item = productVm.checkOutData?.items?[index];
+                              return Container(
+                                padding: const EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: AppColors.primeryColor),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Image and Text Column
+                                    Expanded(
+                                      child: Row(
+                                        children: [
+                                          // Image Container
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              color: AppColors.grey
+                                                  .withOpacity(0.1),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            padding: const EdgeInsets.all(5),
+                                            child: (item?.image != null) &&
+                                                    (item!.image!.isNotEmpty)
+                                                ?
 
-                                        // pvm.checkOutData?.items?.first
-                                        //             .image !=
-                                        //         null
-                                        //     ? Image.network(
-                                        //         height: 121,
-                                        //         width: 114,
-                                        //         "${ApiUrls.kProdBaseURL}${pvm.checkOutData?.items?.first.image}",
-                                        //         fit: BoxFit.cover,
-                                        //       )
-                                        //     :
+                                                // pvm.checkOutData?.items?.first
+                                                //             .image !=
+                                                //         null
+                                                Image.network(
+                                                    height: 121,
+                                                    width: 114,
+                                                    "${ApiUrls.kProdBaseURL}${item.image}",
+                                                    fit: BoxFit.contain,
+                                                  )
+                                                :
+                                                //     :
 
-                                        const CustomPngImage(
-                                      imageName: AppImages.placeHolder,
-                                      height: 121,
-                                      width: 114,
-                                      boxFit: BoxFit.contain,
+                                                const CustomPngImage(
+                                                    imageName:
+                                                        AppImages.placeHolder,
+                                                    height: 121,
+                                                    width: 114,
+                                                    boxFit: BoxFit.contain,
+                                                  ),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          // Text Information
+                                          Flexible(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  item?.brand ?? "Brand",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .copyWith(
+                                                        height: 1.7,
+                                                        color: AppColors.grey,
+                                                      ),
+                                                ),
+                                                Text(
+                                                  item?.itemName ??
+                                                      "Solar Panel ",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .titleMedium!
+                                                      .copyWith(
+                                                        height: 1.7,
+                                                        color: AppColors
+                                                            .primeryColor,
+                                                      ),
+                                                ),
+                                                Text(
+                                                  "Quantity",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .copyWith(
+                                                        height: 1.7,
+                                                        color: AppColors.grey,
+                                                      ),
+                                                ),
+                                                Text(
+                                                  " ${item?.qty?.toInt()}" ??
+                                                      "1",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .labelMedium!
+                                                      .copyWith(
+                                                        height: 1.7,
+                                                        color: AppColors
+                                                            .primeryColor,
+                                                      ),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                                const SizedBox(
+                                                  height: 20,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  // Text Information
-                                  Flexible(
-                                    child: Column(
+                                    // Right side with Arrow and Text
+                                    Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                          CrossAxisAlignment.end,
                                       children: [
-                                        Text(
-                                          pvm.checkOutData?.items?.first
-                                                  .brand ??
-                                              "Brand",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .copyWith(
-                                                height: 1.7,
-                                                color: AppColors.grey,
-                                              ),
+                                        // Vertically centering the arrow icon
+                                        SizedBox(
+                                          height:
+                                              105, // Same height as the image
+                                          child: Align(
+                                            alignment: Alignment.center,
+                                            child: Container(
+                                              padding: const EdgeInsets.all(5),
+                                              decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: AppColors.grey
+                                                      .withOpacity(0.1)),
+                                              child: const Icon(
+                                                  Icons.arrow_forward_ios),
+                                            ),
+                                          ),
                                         ),
+                                        // Text placed at the bottom right
                                         Text(
-                                          pvm.checkOutData?.items?.first
-                                                  .itemName ??
-                                              "Solar Panel ",
+                                          "\$ ${item?.rate?.toInt()}" ?? "1000",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .titleMedium!
-                                              .copyWith(
-                                                height: 1.7,
-                                                color: AppColors.primeryColor,
-                                              ),
-                                        ),
-                                        Text(
-                                          "Quantity",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .copyWith(
-                                                height: 1.7,
-                                                color: AppColors.grey,
-                                              ),
-                                        ),
-                                        Text(
-                                          " ${pvm.checkOutData?.items?.first.qty?.toInt()}" ??
-                                              "1",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .labelMedium!
+                                              .titleLarge!
                                               .copyWith(
                                                 height: 1.7,
                                                 color: AppColors.primeryColor,
                                               ),
-                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                        const SizedBox(
-                                          height: 20,
-                                        )
                                       ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            // Right side with Arrow and Text
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                // Vertically centering the arrow icon
-                                SizedBox(
-                                  height: 105, // Same height as the image
-                                  child: Align(
-                                    alignment: Alignment.center,
-                                    child: Container(
-                                      padding: const EdgeInsets.all(5),
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color:
-                                              AppColors.grey.withOpacity(0.1)),
-                                      child:
-                                          const Icon(Icons.arrow_forward_ios),
-                                    ),
-                                  ),
+                                  ],
                                 ),
-                                // Text placed at the bottom right
-                                Text(
-                                  "\$ ${pvm.checkOutData?.items?.first.rate?.toInt()}" ??
-                                      "1000",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleLarge!
-                                      .copyWith(
-                                        height: 1.7,
-                                        color: AppColors.primeryColor,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                              );
+                            }),
                       ),
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 10),
@@ -458,7 +479,10 @@ class CheckOutScreen extends StatelessWidget {
                                                           context,
                                                           MaterialPageRoute(
                                                             builder: (context) =>
-                                                                const PaymentModeScreen(),
+                                                                const PaymentModeScreen(
+                                                              isfromCheckOut:
+                                                                  true,
+                                                            ),
                                                           ));
                                                     } else {
                                                       Fluttertoast.showToast(

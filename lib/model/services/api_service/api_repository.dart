@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:intl/intl.dart';
@@ -427,30 +428,34 @@ class ApiRepository {
     return _apiViewModel!.get<SalesOrderDetailResponse>(
         apiUrl: ApiUrls.korderDetails, params: data);
   }
-  //  Future<SalesOrderDetailResponse?> getInvoice(
-  //     {Map<String, dynamic>? data}) async {
-  //   return _apiViewModel!.get<SalesOrderDetailResponse>(
-  //       apiUrl: ApiUrls.kgetInvoice, params: data);
-  // }
 
-  Future<dynamic> getInvoice(String? orderID) async {
-    final url =
-        Uri.parse('${ApiUrls.kProdBaseURL}${ApiUrls.kgetInvoice}$orderID');
+  Future<http.Response> getInvoice(String? orderID) async {
+    final url = Uri.parse(
+        '${ApiUrls.kProdBaseURL}${ApiUrls.kgetInvoice}?doctype=Sales Invoice&name=$orderID');
     Map<String, dynamic>? savedCookies =
         hiveInstance?.getData(DataBoxKey.cookie);
+
     final Map<String, String> headers = {
-      'Content-Type': 'application/json; charset=UTF-8',
-      'lang': 'en',
+      'Accept': 'application/pdf',
     };
+
     if (savedCookies != null && savedCookies.isNotEmpty) {
       String cookieHeader =
           savedCookies.entries.map((e) => '${e.key}=${e.value}').join('; ');
-      headers[HttpHeaders.cookieHeader] =
-          cookieHeader; // Add cookies to headers
+      headers[HttpHeaders.cookieHeader] = cookieHeader;
     }
 
+    // Make the GET request
     final response = await http.get(url, headers: headers);
-    return response;
+
+    // Check the status code for errors
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      log(response.body);
+      throw HttpException(
+          'Failed to fetch invoice. Status code: ${response.statusCode}');
+    }
   }
 
   Future<HomeDetailResponse?> getHomeDetails() async {
