@@ -65,6 +65,12 @@ class ApiUrls {
       '/api/resource/User?fields=["name", "full_name"]&filters={"full_name": ["like", "aj%"]}&order_by=modified desc';
   static const kListTaskType =
       '/api/resource/Task Type?fields=["name"]&filters={"name": ["like", "ha%"]}&order_by=modified desc';
+  static const korderStatus =
+      '/api/method/a3sola_solar_management.api.get_select_field_options';
+  static const korderDetails =
+      '/api/method/a3sola_solar_management.api.get_order_and_invoice_details';
+  static const kgetInvoice =
+      '/api/method/frappe.utils.print_format.download_pdf';
 
   static const kHomeDataUrl =
       '/api/method/a3sola_solar_management.api.get_home_details';
