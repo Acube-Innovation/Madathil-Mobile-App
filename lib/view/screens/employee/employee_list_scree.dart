@@ -13,6 +13,7 @@ class EmployeeListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final commonVm = Provider.of<CommonDataViewmodel>(context, listen: false);
     return Scaffold(
       appBar: const CustomAppBar(title: "Employee List"),
       body: Padding(
@@ -23,7 +24,7 @@ class EmployeeListScreen extends StatelessWidget {
               height: 46,
               child: Consumer<CommonDataViewmodel>(builder: (ctx, cdv, _) {
                 return TextField(
-                  // controller: commonVm.searchControllerClosingStament,
+                  controller: commonVm.employeesearchController,
                   onChanged: (val) {
                     log(val);
                   },
@@ -34,14 +35,14 @@ class EmployeeListScreen extends StatelessWidget {
                           shape: BoxShape.circle,
                           color: AppColors.primeryColor,
                         ),
-                        child: cdv.closingStatmentSearchfn != null
+                        child: cdv.employeeSearchfn != null
                             ? GestureDetector(
                                 onTap: () {
-                                  // commonVm.clearSearchVal();
+                                  commonVm.clearEmployeeSearchVal();
 
-                                  // commonVm.resetClosingPagination();
+                                  commonVm.resetEmployeePagination();
 
-                                  // commonVm.fetchClosingStatmentList();
+                                  commonVm.fetchEmployeeList();
                                 },
                                 child: const Icon(
                                   Icons.clear,
@@ -50,12 +51,12 @@ class EmployeeListScreen extends StatelessWidget {
                               )
                             : GestureDetector(
                                 onTap: () {
-                                  // commonVm.setSearchValue(commonVm
-                                  //     .searchControllerClosingStament.text);
+                                  commonVm.setEmployeeSearchValue(
+                                      commonVm.employeesearchController.text);
 
-                                  // commonVm.resetClosingPagination();
+                                  commonVm.resetEmployeePagination();
 
-                                  // commonVm.fetchClosingStatmentList();
+                                  commonVm.fetchEmployeeList();
                                 },
                                 child: const Icon(
                                   Icons.search,

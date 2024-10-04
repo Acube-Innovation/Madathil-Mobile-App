@@ -4,7 +4,7 @@ import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
 
 class PointsCard extends StatelessWidget {
-  final String points; // Dynamic points
+  final String points;
 
   const PointsCard({
     Key? key,
@@ -37,14 +37,16 @@ class PointsCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  points, // Dynamic points
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                      height: 0,
-                      color: AppColors.white,
-                      fontSize: screenWidth * 0.1, // Responsive font size
-                      fontWeight: FontWeight.w400),
-                ),
+                
+                  Text(
+                    points, // Dynamic points
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        height: 0,
+                        color: AppColors.white,
+                        fontSize: 35, // Responsive font size
+                        fontWeight: FontWeight.w400),
+                  ),
+               
                 Text(
                   "Total points achieved", // Static description
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(

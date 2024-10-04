@@ -13,8 +13,14 @@ import 'package:madathil/model/model_class/api_response_model/checkin_checkout_r
 import 'package:madathil/model/model_class/api_response_model/closing_statment_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/closingstatment_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/customer_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/employee_details_response.dart';
+import 'package:madathil/model/model_class/api_response_model/employee_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/image_uploade_response.dart';
 import 'package:madathil/model/model_class/api_response_model/home_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/point_dettails_response.dart';
+import 'package:madathil/model/model_class/api_response_model/points_list_model_response.dart';
+import 'package:madathil/model/model_class/api_response_model/profile_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/sales_persons_list_response_addservice.dart';
 import 'package:madathil/model/model_class/api_response_model/service_history_detailsresponse.dart';
 import 'package:madathil/model/model_class/api_response_model/service_history_list_response.dart';
@@ -1278,6 +1284,333 @@ class CommonDataViewmodel extends ChangeNotifier {
       return false;
     } catch (e) {
       _errormsg = e.toString();
+      return false;
+    }
+  }
+
+  /*
+  * closing statment details api call
+  * */
+
+  String? employeeSearchfn;
+
+  TextEditingController employeesearchController = TextEditingController();
+
+  void setEmployeeSearchValue(String val) {
+    employeeSearchfn = val;
+    notifyListeners();
+  }
+
+  clearEmployeeSearchVal() {
+    employeeSearchfn = null;
+    employeesearchController.clear();
+    notifyListeners();
+  }
+
+  /*
+  * closing statment details api call
+  * */
+
+  EmployeeListResponse? _employeeListResponse;
+  EmployeeListResponse? get employeeListResponse => _employeeListResponse;
+  List<Employees>? employeeList = [];
+
+  Future<bool> getEmployeeList({int? page}) async {
+    try {
+      _isloading = true;
+
+      notifyListeners();
+
+      Map<String, dynamic>? param = {};
+
+      param = {
+        "user": "zm@gmail.com",
+        "limit": 10,
+        "limit_start": page! * 10,
+        "filters": jsonEncode({
+          "employee_name": [
+            "like",
+            employeeSearchfn != null ? "$employeeSearchfn %" : "%"
+          ]
+        }),
+      };
+
+      EmployeeListResponse? response =
+          await apiRepository.getEmployeeList(param: param);
+
+      if (response?.message?.employees != null) {
+        employeeList = response?.message?.employees;
+
+        _isloading = false;
+        notifyListeners();
+        return true;
+      }
+
+      _isloading = false;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _errormsg = e.toString();
+      _isloading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  int employeeCurrentPage = 0;
+  bool employeeReachLength = false;
+  List<Employees>? employeePost = [];
+  bool paginationemployee = false;
+  bool get ispaginationemployee => paginationemployee;
+
+  fetchEmployeeList() async {
+    if (paginationemployee || employeeReachLength) {
+      return;
+    }
+    paginationemployee = true;
+
+    await getEmployeeList(page: employeeCurrentPage);
+
+    final apiResponse = employeeList;
+
+    if (apiResponse != null) {
+      final apiPost = apiResponse;
+
+      if (apiPost.length < 10) {
+        employeeReachLength = true;
+      }
+
+      employeePost?.addAll(apiPost);
+      employeeCurrentPage++;
+    }
+
+    paginationemployee = false;
+    if ((employeePost ?? []).isNotEmpty) {
+      notifyListeners();
+    }
+  }
+
+  void resetEmployeePagination() {
+    employeeList?.clear();
+    employeeCurrentPage = 0;
+    employeeReachLength = false;
+    employeePost?.clear();
+    paginationemployee = false;
+    notifyListeners();
+  }
+
+  /*
+  * employee details api call
+  * */
+
+  EmployeeData? employeeData;
+
+  Future<bool> getEmployeeDetails({String? empId}) async {
+    try {
+      _isloading = true;
+
+      notifyListeners();
+
+      Map<String, dynamic>? param = {};
+
+      param = {
+        "fields": jsonEncode([
+          "name",
+          "employee_name",
+          "designation",
+          "employee_zone",
+          "employee_region",
+          "employee_area",
+          "employee_panchayat",
+          "user_id",
+          "cell_number",
+          "permanent_address",
+          "current_address"
+        ]),
+      };
+
+      EmployeeDetailsResponse? response =
+          await apiRepository.getEmployeeDetails(param: param, empId: empId);
+
+      if (response?.data != null) {
+        employeeData = response?.data;
+        _isloading = false;
+        notifyListeners();
+        return true;
+      }
+
+      _isloading = false;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _errormsg = e.toString();
+      _isloading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  /*
+  * profile details api call
+  * */
+
+  Profile? profileData;
+
+  Future<bool> getProfileDetails({String? emailId}) async {
+    try {
+      _isloading = true;
+      notifyListeners();
+      Map<String, dynamic>? param = {};
+
+      param = {
+        "user": "zakkir@mi.com",
+      };
+
+      ProfileDetailsResponse? response =
+          await apiRepository.getProfileDetails(param: param);
+
+      if (response?.message?.profile != null) {
+        profileData = response?.message?.profile;
+
+        _isloading = false;
+        notifyListeners();
+        return true;
+      }
+      _isloading = false;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _errormsg = e.toString();
+      _isloading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  clearprofileDate() {
+    profileData = null;
+    notifyListeners();
+  }
+
+  /*
+  * get point list api call
+  * */
+
+  DateTime? _startPoints;
+  DateTime? _endPoints;
+
+  DateTime? get startPoints => _startPoints;
+  DateTime? get endPoints => _endPoints;
+  String? startDate;
+  String? endDate;
+
+  void setPointsDateRange(DateTime? start, DateTime? end) {
+    _startPoints = startPoints;
+    _endPoints = endPoints;
+    startDate = DateFormat('yyyy-MM-dd').format(start!);
+    endDate = DateFormat('yyyy-MM-dd').format(end!);
+    dobController.text = "Start: $startDate  End: $endDate";
+
+    notifyListeners();
+  }
+
+  void clearPointsDateRange() {
+    _startPoints = null;
+    _endPoints = null;
+    startDate = null;
+    endDate = null;
+    dobController.clear();
+    notifyListeners();
+  }
+
+  PointsMessage? pointsMessage;
+
+  List<ClosingStatements>? closingStatements;
+
+  Future<bool> getPointsList() async {
+    try {
+      _isloading = true;
+      notifyListeners();
+      Map<String, dynamic>? param = {};
+
+      if (startDate != null && endDate != null) {
+        param = {
+          "user": "kirankumars@gmail.com",
+          "filters": jsonEncode({
+            "closing_date": [
+              "between",
+              [startDate, endDate]
+            ],
+          }),
+        };
+      } else {
+        param = {
+          "user": "kirankumars@gmail.com",
+        };
+      }
+
+      PointListResponse? response =
+          await apiRepository.getPointList(param: param);
+
+      if (response?.message != null) {
+        closingStatements = response?.message?.closingStatements;
+        pointsMessage = response?.message;
+
+        log("closing statment -------------${closingStatements.toString()}");
+        _isloading = false;
+        notifyListeners();
+        return true;
+      }
+      _isloading = false;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _errormsg = e.toString();
+      _isloading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  void clearPointList() {
+    closingStatements = null;
+    pointsMessage = null;
+    notifyListeners();
+  }
+
+  /*
+  * get point details api call
+  * */
+
+  List<PointDetailsMessage>? pointDetailsMessage;
+
+  Future<bool> getPointDetails({String? emailId, String? id}) async {
+    try {
+      _isloading = true;
+      notifyListeners();
+      Map<String, dynamic>? param = {};
+
+      param = {"user": "kirankumars@gmail.com", "name": id};
+
+      PointDetailsResponse? response =
+          await apiRepository.getPointDetails(param: param);
+      if (response != null) {
+        pointDetailsMessage = response.message;
+
+        log("point details -------------${pointDetailsMessage.toString()}");
+
+        _isloading = false;
+        notifyListeners();
+        return true;
+      }
+      _isloading = false;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _errormsg = e.toString();
+      log("$_errormsg");
+      _isloading = false;
+      notifyListeners();
       return false;
     }
   }

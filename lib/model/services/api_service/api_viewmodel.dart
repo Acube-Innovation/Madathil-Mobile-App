@@ -21,6 +21,8 @@ import 'package:madathil/model/model_class/api_response_model/create_call_respon
 import 'package:madathil/model/model_class/api_response_model/create_check_out_response_model.dart';
 import 'package:madathil/model/model_class/api_response_model/create_customer_response.dart';
 import 'package:madathil/model/model_class/api_response_model/customer_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/employee_details_response.dart';
+import 'package:madathil/model/model_class/api_response_model/employee_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/general_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get__payment_method.dart';
 import 'package:madathil/model/model_class/api_response_model/get_customer_address_response.dart';
@@ -39,8 +41,11 @@ import 'package:madathil/model/model_class/api_response_model/login_response.dar
 import 'package:madathil/model/model_class/api_response_model/payment_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_history_response.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_modes_response.dart';
+import 'package:madathil/model/model_class/api_response_model/point_dettails_response.dart';
+import 'package:madathil/model/model_class/api_response_model/points_list_model_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
+import 'package:madathil/model/model_class/api_response_model/profile_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/sales_order_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/sales_persons_list_response_addservice.dart';
 import 'package:madathil/model/model_class/api_response_model/service_history_detailsresponse.dart';
@@ -279,6 +284,16 @@ class ApiViewModel {
         return CallListResponseModel?.fromJson(json) as T;
       case CallDetailsResponseModel:
         return CallDetailsResponseModel?.fromJson(json) as T;
+      case EmployeeListResponse:
+        return EmployeeListResponse?.fromJson(json) as T;
+      case EmployeeDetailsResponse:
+        return EmployeeDetailsResponse?.fromJson(json) as T;
+      case ProfileDetailsResponse:
+        return ProfileDetailsResponse?.fromJson(json) as T;
+      case PointListResponse:
+        return PointListResponse?.fromJson(json) as T;
+      case PointDetailsResponse:
+        return PointDetailsResponse?.fromJson(json) as T;
       case CreateCallResponse:
         return CreateCallResponse?.fromJson(json) as T;
       case GetOrderStatusResponse:

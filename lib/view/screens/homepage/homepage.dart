@@ -276,21 +276,17 @@ class HomePage extends StatelessWidget {
                                 const ClosingStatmentsListScreen()));
                   },
                 ),
-
-                  const SizedBox(width: 8),
-
-                    HomeItemWidget(
+                const SizedBox(width: 8),
+                HomeItemWidget(
                   image: AppImages.employeesImage,
                   title: "Employee List",
                   onTap: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                const EmployeeListScreen()));
+                            builder: (context) => const EmployeeListScreen()));
                   },
                 ),
-               
               ],
             ),
           ],
