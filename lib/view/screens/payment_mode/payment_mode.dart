@@ -76,12 +76,12 @@ class _PaymentModeScreenState extends State<PaymentModeScreen> {
         Navigator.of(context).pop();
         if (value) {
           productVm.clearamount();
-          toast(isError: true, "SUCCESS: ${response.paymentId}", context);
+          toast("SUCCESS: ${response.paymentId}", context);
 
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => const HomePage()));
         } else {
-          toast(productVm.errormsg, context);
+          toast(isError: false, productVm.errormsg, context);
         }
       });
     }

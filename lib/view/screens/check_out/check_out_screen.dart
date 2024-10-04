@@ -56,7 +56,7 @@ class CheckOutScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        height: 300,
+                        height: pvm.checkOutData!.items!.length > 1 ? 300 : 150,
                         child: ListView.separated(
                             separatorBuilder: (context, index) {
                               return const SizedBox(

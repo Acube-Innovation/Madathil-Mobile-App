@@ -118,6 +118,7 @@ class ApiRepository {
 
   Future<CustomerListResponse?> getCustomerList(
       {Map<String, dynamic>? param}) async {
+    log(param.toString());
     return _apiViewModel!.get<CustomerListResponse>(
         apiUrl: ApiUrls.kgetCustomerList, params: param);
   }
