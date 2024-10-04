@@ -41,7 +41,7 @@ class _SearchableDropdownState extends State<ItemSearchableDropdown> {
     return GestureDetector(
       onTap: () => _showSearchableDropdown(context),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 12),
+        padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 15),
         decoration: BoxDecoration(
           border: Border.all(color: AppColors.primeryColor),
           borderRadius: BorderRadius.circular(8),
@@ -53,7 +53,9 @@ class _SearchableDropdownState extends State<ItemSearchableDropdown> {
               _selectedItem ?? widget.hintText,
               style: Theme.of(context).textTheme.titleMedium!.copyWith(
                       height: 0,
-                      color: AppColors.black,
+                      color: _selectedItem != null
+                     ? AppColors.black
+                     : AppColors.grey.withOpacity(0.5),
                       fontSize: 16,
                       fontWeight: FontWeight.w500),
             ),

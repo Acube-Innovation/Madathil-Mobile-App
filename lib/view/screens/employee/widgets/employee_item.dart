@@ -34,7 +34,14 @@ class _EmployeeItemState extends State<EmployeeItem> {
         if (cdv.isloading!) {
           return const CustomLoader();
         } else {
-          return const NoDataFOund();
+          return NoDataFOund(
+            onRefresh: () async {
+              Provider.of<CommonDataViewmodel>(context, listen: false)
+                  .resetEmployeePagination();
+              Provider.of<CommonDataViewmodel>(context, listen: false)
+                  .fetchEmployeeList();
+            },
+          );
         }
       } else {
         return RefreshIndicator(
@@ -80,9 +87,15 @@ class _EmployeeItemState extends State<EmployeeItem> {
                           }
                         } else {
                           if (cdv.employeePost!.isEmpty) {
-                            return const Center(
-                                child: Text(
-                              "No Service History available.",
+                            return Center(child: NoDataFOund(
+                              onRefresh: () {
+                                Provider.of<CommonDataViewmodel>(context,
+                                        listen: false)
+                                    .resetEmployeePagination();
+                                Provider.of<CommonDataViewmodel>(context,
+                                        listen: false)
+                                    .fetchEmployeeList();
+                              },
                             ));
                           } else {
                             return const Column(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:madathil/app_images.dart';
+import 'package:madathil/constants.dart';
 import 'package:madathil/model/services/api_service/api_urls.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
@@ -72,13 +73,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       cdv.profileData!.image!.isNotEmpty
                                   ? NetworkImage(
                                       "${ApiUrls.kProdBaseURL}${cdv.profileData?.image}")
-                                  : Image.asset(AppImages.maleEmployee,
-                                      width: 60) as ImageProvider,
+                                  : const AssetImage(AppImages.maleEmployee),
                             ),
                           ),
                         ),
                       ),
-
                       const SizedBox(
                         height: 20,
                       ),
@@ -94,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       Center(
                         child: Text(
-                          "testuser@gmail.com",
+                          username ?? '',
                           style:
                               Theme.of(context).textTheme.labelMedium!.copyWith(
                                     height: 1.7,
@@ -155,16 +154,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         padding: const EdgeInsets.only(left: 15),
                         child: Text(
                           "Personal Details",
-                          style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                                height: 1.7,
-                                color: AppColors.grey,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.labelMedium!.copyWith(
+                                    height: 1.7,
+                                    color: AppColors.grey,
+                                  ),
                         ),
                       ),
                       const SizedBox(
                         height: 5,
                       ),
-                       ProfileCards(
+                      ProfileCards(
                         data: "Date of Birth",
                         value: cdv.profileData?.dateOfBirth ?? 'N/A',
                         data2: "Consumer Number",

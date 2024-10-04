@@ -43,7 +43,7 @@ class _SearchableDropdownState extends State<SearchableDropdown> {
     return GestureDetector(
       onTap: () => _showSearchableDropdown(context),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+        padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 15),
         decoration: BoxDecoration(
           border: Border.all(color: AppColors.primeryColor),
           borderRadius: BorderRadius.circular(8),
