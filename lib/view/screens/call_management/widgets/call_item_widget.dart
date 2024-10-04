@@ -36,17 +36,16 @@ class _CallItemWidgetState extends State<CallItemWidget> {
         print(
             'call post ---------------------------------------- ${cvm.callPost}');
         if (cvm.isLoading!) {
-          return const Center(
-            child: CustomLoader()
-          );
+          return const Center(child: CustomLoader());
         } else {
-          return Center(
-            child: NoDataFOund(onRefresh: (){
+          return Center(child: NoDataFOund(
+            onRefresh: () {
               Provider.of<CallViewModel>(context, listen: false)
                   .resetCallPagination();
-              Provider.of<CallViewModel>(context, listen: false).fetchCallList();
-            },)
-          );
+              Provider.of<CallViewModel>(context, listen: false)
+                  .fetchCallList();
+            },
+          ));
         }
       } else {
         return RefreshIndicator(
@@ -93,12 +92,14 @@ class _CallItemWidgetState extends State<CallItemWidget> {
                       if (cvm.callPost!.isEmpty) {
                         print(
                             'call post ---------------------------------------- ${cvm.callPost}');
-                        return Center(
-                            child: NoDataFOund(onRefresh: (){
-              Provider.of<CallViewModel>(context, listen: false)
-                  .resetCallPagination();
-              Provider.of<CallViewModel>(context, listen: false).fetchCallList();
-            },));
+                        return Center(child: NoDataFOund(
+                          onRefresh: () {
+                            Provider.of<CallViewModel>(context, listen: false)
+                                .resetCallPagination();
+                            Provider.of<CallViewModel>(context, listen: false)
+                                .fetchCallList();
+                          },
+                        ));
                       } else {
                         return const Column(
                           children: [
@@ -119,9 +120,10 @@ class _CallItemWidgetState extends State<CallItemWidget> {
                   if (item.conversationDuration != null) {
                     time =
                         callVm.formatTimeFromSeconds(item.conversationDuration);
-                  } else {
-                    time = item.callStatus;
-                  }
+                  } 
+                  // else {
+                  //   time = item.callStatus;
+                  // }
 
                   return InkWell(
                     onTap: () {
@@ -171,17 +173,19 @@ class _CallItemWidgetState extends State<CallItemWidget> {
                                           // )
                                         ],
                                       ),
-                                      Text(
-                                        time ?? 'N/A',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleLarge!
-                                            .copyWith(
-                                                height: 0,
-                                                color: AppColors.primeryColor,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.normal),
-                                      ),
+                                      if (time != null)
+                                        Text(
+                                          time ?? 'N/A',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge!
+                                              .copyWith(
+                                                  height: 0,
+                                                  color: AppColors.primeryColor,
+                                                  fontSize: 14,
+                                                  fontWeight:
+                                                      FontWeight.normal),
+                                        ),
                                       Text(
                                         item.calledDate ?? 'N/A',
                                         style: Theme.of(context)
@@ -195,11 +199,32 @@ class _CallItemWidgetState extends State<CallItemWidget> {
                                       ),
                                     ],
                                   ),
-                                  const CustomPngImage(
-                                    imageName:
-                                        "assets/images/arrow_forward.png",
-                                    boxFit: BoxFit.contain,
-                                    height: 23,
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      const CustomPngImage(
+                                        imageName:
+                                            "assets/images/arrow_forward.png",
+                                        boxFit: BoxFit.contain,
+                                        height: 23,
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      if (item.callStatus != null)
+                                        Text(
+                                          item.callStatus ?? 'N/A',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge!
+                                              .copyWith(
+                                                  height: 0,
+                                                  color: AppColors.primeryColor,
+                                                  fontSize: 14,
+                                                  fontWeight:
+                                                      FontWeight.normal),
+                                        ),
+                                    ],
                                   ),
                                 ],
                               )
