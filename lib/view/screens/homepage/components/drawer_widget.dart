@@ -6,7 +6,7 @@ import 'package:madathil/view/screens/login/login_screen.dart';
 import 'package:madathil/view/screens/points/customer_points_screen.dart';
 import 'package:madathil/view/screens/profile/profile_screen.dart';
 import 'package:madathil/view/screens/service/service_history_screen.dart';
-import 'package:madathil/view/screens/transactions_order_details/transactions_list_screen.dart';
+import 'package:madathil/view/screens/orders/transactions_list_screen.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:provider/provider.dart';
 
