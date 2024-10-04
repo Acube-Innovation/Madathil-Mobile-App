@@ -1,6 +1,4 @@
 import 'dart:developer';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
@@ -39,9 +37,7 @@ class EmployeeListScreen extends StatelessWidget {
                             ? GestureDetector(
                                 onTap: () {
                                   commonVm.clearEmployeeSearchVal();
-
                                   commonVm.resetEmployeePagination();
-
                                   commonVm.fetchEmployeeList();
                                 },
                                 child: const Icon(
@@ -53,9 +49,7 @@ class EmployeeListScreen extends StatelessWidget {
                                 onTap: () {
                                   commonVm.setEmployeeSearchValue(
                                       commonVm.employeesearchController.text);
-
                                   commonVm.resetEmployeePagination();
-
                                   commonVm.fetchEmployeeList();
                                 },
                                 child: const Icon(

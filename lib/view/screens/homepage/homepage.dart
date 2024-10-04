@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:madathil/app_images.dart';
 import 'package:madathil/utils/color/app_colors.dart';
@@ -59,89 +60,96 @@ class HomePage extends StatelessWidget {
   }
 
   getDashboardDetails(String? login, BuildContext context) {
-    return Card(
-      elevation: 5,
-      child: SizedBox(
-        height: 120,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            InkWell(
-              onTap: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const LeadsScreen())),
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "10",
-                    style: TextStyle(
-                        color: AppColors.primaryLightColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22),
-                  ),
-                  Text(
-                    "New Leads",
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
+    return Consumer<CommonDataViewmodel>(builder: (context, cdv, _) {
+      var data = cdv.homeDetailData?.message;
+      return Card(
+        elevation: 5,
+        child: SizedBox(
+          height: 120,
+          child: cdv.homeDetailData == null
+              ? const CupertinoActivityIndicator()
+              : Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    InkWell(
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LeadsScreen())),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            data?.openLeads.toString() ?? "",
+                            style: const TextStyle(
+                                color: AppColors.primaryLightColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 22),
+                          ),
+                          const Text(
+                            "New Leads",
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            const VerticalDivider(endIndent: 50, indent: 50),
-            const InkWell(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "8",
-                    style: TextStyle(
-                        color: AppColors.primaryLightColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22),
-                  ),
-                  Text(
-                    "Sales",
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
+                    const VerticalDivider(endIndent: 50, indent: 50),
+                    InkWell(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            data?.sales.toString() ?? "",
+                            style: const TextStyle(
+                                color: AppColors.primaryLightColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 22),
+                          ),
+                          const Text(
+                            "Sales",
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            const VerticalDivider(endIndent: 50, indent: 50),
-            InkWell(
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ReferalScreen())),
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "8",
-                    style: TextStyle(
-                        color: AppColors.primaryLightColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22),
-                  ),
-                  Text(
-                    "Reference Points",
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
+                    const VerticalDivider(endIndent: 50, indent: 50),
+                    InkWell(
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ReferalScreen())),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            data?.referralPoints.toString() ?? "",
+                            style: const TextStyle(
+                                color: AppColors.primaryLightColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 22),
+                          ),
+                          const Text(
+                            "Reference Points",
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+                  ],
+                ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   getBody(String? login, BuildContext context) {
@@ -226,10 +234,9 @@ class HomePage extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                const CallListScreen()
-                                // const PaymentModeScreen()
-                                ));
+                            builder: (context) => const CallListScreen()
+                            // const PaymentModeScreen()
+                            ));
                   },
                 ),
               ],

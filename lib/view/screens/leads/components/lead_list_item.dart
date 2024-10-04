@@ -25,39 +25,45 @@ class LeadListItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      data?.leadName ?? "N/A",
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: AppColors.primeryColor,
-                          fontWeight: FontWeight.w400),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      "Address: ${data?.addressLine1 ?? "N/A"}  ${data?.addressLine2 ?? "N/A"}",
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.primeryColor,
-                          fontWeight: FontWeight.w400),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      "Phone:  ${data?.numberToBeContacted ?? "N/A"}",
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.primeryColor,
-                          fontWeight: FontWeight.w400),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      "Created: ${DateFormat('dd MMM yyyy').format(DateTime.parse(data?.creation ?? "N/A"))}",
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.primeryColor,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ],
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        data?.leadName ?? "N/A",
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            color: AppColors.primeryColor,
+                            fontWeight: FontWeight.w400),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        "Address: ${data?.addressLine1 ?? "N/A"}  ${data?.addressLine2 ?? "N/A"}",
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: AppColors.primeryColor,
+                            fontWeight: FontWeight.w400),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        "Phone:  ${data?.numberToBeContacted ?? "N/A"}",
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: AppColors.primeryColor,
+                            fontWeight: FontWeight.w400),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        "Created: ${DateFormat('dd MMM yyyy').format(DateTime.parse(data?.creation ?? "N/A"))}",
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: AppColors.primeryColor,
+                            fontWeight: FontWeight.w400),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Padding(

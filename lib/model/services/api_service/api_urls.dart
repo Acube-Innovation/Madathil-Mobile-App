@@ -49,6 +49,7 @@ class ApiUrls {
       '/api/resource/Task?fields=["name","customer","subject","status","contact_number","type","subject","description","exp_start_date","exp_end_date","expected_time"]';
   static const ktaskStatusList =
       '/api/method/a3sola_solar_management.api.get_select_field_options?doctype=Task&fieldname=status';
+  static const ktaskStatusUpdate = '/api/resource/Task/';
   static const ktaskDetail = '/api/resource/Task/';
   static const ktaskCreation = '/api/resource/Task';
   static const kGetOrders = '/api/resource/Sales Order';
@@ -83,7 +84,8 @@ class ApiUrls {
   static const kPointList =
       '/api/method/a3sola_solar_management.api.total_points_list';
 
-      static const kPointDetails = '/api/method/a3sola_solar_management.api.total_points_details';
+  static const kPointDetails =
+      '/api/method/a3sola_solar_management.api.total_points_details';
   static const korderStatus =
       '/api/method/a3sola_solar_management.api.get_select_field_options';
   static const korderDetails =
