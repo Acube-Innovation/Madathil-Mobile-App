@@ -181,14 +181,15 @@ class ApiRepository {
 
   Future<LeadsListOwnResponse?> getLeadsListOwn(int page,
       {String? fromdate, String? todate, String? searchTerm}) {
-    return _apiViewModel!.get<LeadsListOwnResponse>(
-        apiUrl: fromdate != null && todate != null
-            ? (searchTerm ?? "").isNotEmpty
-                ? '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$username", "date": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}&filters={"lead_name": ["like", "%$searchTerm%"]}'
-                : '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$username", "date": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}'
-            : (searchTerm ?? "").isNotEmpty
-                ? '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$username"}&limit=10&limit_start=${page * 10}&filters={"lead_name": ["like", "%$searchTerm%"]}'
-                : '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$username"}&limit=10&limit_start=${page * 10}');
+    String url = fromdate != null && todate != null
+        ? (searchTerm ?? "").isNotEmpty
+            ? '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$username", "lead_name": ["like", "%$searchTerm%"], "date": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}'
+            : '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$username", "date": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}'
+        : (searchTerm ?? "").isNotEmpty
+            ? '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$username", "lead_name": ["like", "%$searchTerm%"]}&limit=10&limit_start=${page * 10}'
+            : '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$username"}&limit=10&limit_start=${page * 10}';
+    print('url:$url');
+    return _apiViewModel!.get<LeadsListOwnResponse>(apiUrl: url);
   }
 
   Future<LeadsListOwnResponse?> getLeadsListOther(int page, String userID,
@@ -196,10 +197,10 @@ class ApiRepository {
     return _apiViewModel!.get<LeadsListOwnResponse>(
         apiUrl: fromdate != null && todate != null
             ? (searchTerm ?? "").isNotEmpty
-                ? '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$userID", "date": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}&filters={"lead_name": ["like", "%$searchTerm%"]}'
+                ? '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$userID", "lead_name": ["like", "%$searchTerm%"], "date": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}'
                 : '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$userID", "date": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}'
             : (searchTerm ?? "").isNotEmpty
-                ? '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$userID"}&limit=10&limit_start=${page * 10}&filters={"lead_name": ["like", "%$searchTerm%"]}'
+                ? '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$userID", "lead_name": ["like", "%$searchTerm%"]}&limit=10&limit_start=${page * 10}}'
                 : '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$userID"}&limit=10&limit_start=${page * 10}');
   }
 
@@ -359,7 +360,8 @@ class ApiRepository {
   }
 
   Future<CreateCallResponse?> createCall({Map<String, dynamic>? data}) async {
-    return _apiViewModel!.post<CreateCallResponse>(apiUrl: ApiUrls.kAddCall, data: data);
+    return _apiViewModel!
+        .post<CreateCallResponse>(apiUrl: ApiUrls.kAddCall, data: data);
   }
 
   Future<SalesPersonsListResponse?> getSalesPersonsListService(
@@ -464,7 +466,6 @@ class ApiRepository {
     return _apiViewModel!.get<HomeDetailResponse>(
         apiUrl: '${ApiUrls.kHomeDataUrl}?user=$username');
   }
-
 
   Future<PaymentHistoryListResponse?> getOrderTransactionList(
       {Map<String, dynamic>? param}) async {

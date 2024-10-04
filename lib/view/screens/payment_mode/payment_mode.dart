@@ -30,7 +30,6 @@ class _PaymentModeScreenState extends State<PaymentModeScreen> {
   late Razorpay _razorpay;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       _razorpay = Razorpay();

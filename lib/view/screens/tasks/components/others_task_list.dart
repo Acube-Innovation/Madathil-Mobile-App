@@ -116,24 +116,25 @@ class _OtherTasksState extends State<OtherTasks> {
                               }
                               return const CustomLoader();
                             } else {
-                              if ((lvm.tasksListOtherList ?? []).isEmpty) {
-                                return NoDataFOund(
-                                  onRefresh: () {
-                                    controller?.clear();
-                                    lvm.clearDates();
-                                    lvm.resettasksListOtherPagination();
-                                    lvm.getTasksListOther(id: widget.id);
-                                  },
-                                );
-                              } else {
-                                return Container();
-                              }
+                              // if ((lvm.tasksListOtherList ?? []).isEmpty) {
+                              //   return NoDataFOund(
+                              //     onRefresh: () {
+                              //       controller?.clear();
+                              //       lvm.clearDates();
+                              //       lvm.resettasksListOtherPagination();
+                              //       lvm.getTasksListOther(id: widget.id);
+                              //     },
+                              //   );
+                              // } else {
+                              //   return Container();
+                              // }
                             }
                           }
                         } else {
                           return TaskListItem(
                               data: lvm.tasksListOtherList?[index]);
                         }
+                        return null;
                       },
                     )
                   : lvm.isLoadingtasksListOtherPagination

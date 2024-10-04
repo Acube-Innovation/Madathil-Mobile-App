@@ -106,25 +106,28 @@ class _OtherLeadsState extends State<OtherLeads> {
             child: Consumer<LeadsViewmodel>(builder: (context, lvm, _) {
               return RefreshIndicator(
                 onRefresh: () async {
+                  controller?.clear();
                   lvm.clearDates();
                   lvm.resetleadsListOtherPagination();
                   lvm.getLeadsListOther(uderID: widget.employeeId ?? "");
                 },
                 child: (lvm.leadsListOtherList ?? []).isEmpty
-                    ? NoDataFOund(
-                        onRefresh: () {
-                          lvm.clearDates();
-                          lvm.resetleadsListOtherPagination();
-                          lvm.getLeadsListOther(
-                              uderID: widget.employeeId ?? "");
-                        },
-                      )
+                    ? lvm.isLoadingleadsListOtherPagination
+                        ? const CustomLoader()
+                        : NoDataFOund(
+                            onRefresh: () {
+                              controller?.clear();
+                              lvm.clearDates();
+                              lvm.resetleadsListOtherPagination();
+                              lvm.getLeadsListOther(
+                                  uderID: widget.employeeId ?? "");
+                            },
+                          )
                     : ListView.builder(
                         shrinkWrap: true,
-                        itemCount: (lvm.leadsListOtherList ?? []).length,
+                        itemCount: (lvm.leadsListOtherList ?? []).length + 1,
                         itemBuilder: (context, index) {
-                          if (index ==
-                              (lvm.leadsListOtherList ?? []).length - 1) {
+                          if (index == (lvm.leadsListOtherList ?? []).length) {
                             if (lvm.isLoadingleadsListOtherPagination) {
                               return const CustomLoader();
                             } else {
@@ -135,24 +138,25 @@ class _OtherLeadsState extends State<OtherLeads> {
                                 }
                                 return const CustomLoader();
                               } else {
-                                if (lvm.leadsListOtherList!.isEmpty) {
-                                  return NoDataFOund(
-                                    onRefresh: () {
-                                      lvm.clearDates();
-                                      lvm.resetleadsListOtherPagination();
-                                      lvm.getLeadsListOther(
-                                          uderID: widget.employeeId ?? "");
-                                    },
-                                  );
-                                } else {
-                                  return Container();
-                                }
+                                // if (lvm.leadsListOtherList!.isEmpty) {
+                                //   return NoDataFOund(
+                                //     onRefresh: () {
+                                //       lvm.clearDates();
+                                //       lvm.resetleadsListOtherPagination();
+                                //       lvm.getLeadsListOther(
+                                //           uderID: widget.employeeId ?? "");
+                                //     },
+                                //   );
+                                // } else {
+                                //   return Container();
+                                // }
                               }
                             }
                           } else {
                             return LeadListItem(
                                 data: lvm.leadsListOtherList?[index]);
                           }
+                          return null;
                         },
                       ),
               );

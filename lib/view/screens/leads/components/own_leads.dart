@@ -100,40 +100,42 @@ class _OwnLeadsState extends State<OwnLeads> {
                 lvm.getLeadsListOwn();
               },
               child: (lvm.leadsListOwnList ?? []).isEmpty
-                  ? NoDataFOund(
-                      onRefresh: () {
-                        controller?.clear();
-                        lvm.clearDates();
-                        lvm.resetleadsListOwnPagination();
-                        lvm.getLeadsListOwn();
-                      },
-                    )
+                  ? lvm.isLoadingleadsListOwnPagination
+                      ? const CustomLoader()
+                      : NoDataFOund(
+                          onRefresh: () {
+                            controller?.clear();
+                            lvm.clearDates();
+                            lvm.resetleadsListOwnPagination();
+                            lvm.getLeadsListOwn();
+                          },
+                        )
                   : ListView.builder(
                       shrinkWrap: true,
-                      itemCount: (lvm.leadsListOwnList ?? []).length,
+                      itemCount: (lvm.leadsListOwnList ?? []).length + 1,
                       itemBuilder: (context, index) {
-                        if (index == (lvm.leadsListOwnList ?? []).length - 1) {
+                        if (index == ((lvm.leadsListOwnList ?? []).length)) {
                           if (lvm.isLoadingleadsListOwnPagination) {
                             return const CustomLoader();
                           } else {
                             if (!lvm.reachedLastPageleadsListOwn) {
-                              if (!lvm.isLoadingleadsListOwnPagination) {
-                                lvm.getLeadsListOwn();
-                              }
+                              lvm.getLeadsListOwn();
                               return const CustomLoader();
                             } else {
-                              if (lvm.leadsListOwnList!.isEmpty) {
-                                return NoDataFOund(
-                                  onRefresh: () {
-                                    controller?.clear();
-                                    lvm.clearDates();
-                                    lvm.resetleadsListOwnPagination();
-                                    lvm.getLeadsListOwn();
-                                  },
-                                );
-                              } else {
-                                return const CustomLoader();
-                              }
+                              // if (lvm.leadsListOwnList!.isEmpty) {
+                              // return NoDataFOund(
+                              //   onRefresh: () {
+                              //     controller?.clear();
+                              //     lvm.clearDates();
+                              //     lvm.resetleadsListOwnPagination();
+                              //     lvm.getLeadsListOwn();
+                              //   },
+                              // );
+                              // } else {
+                              //   print(
+                              //       ".......................................4");
+                              //   return const CustomLoader();
+                              // }
                             }
                           }
                         } else {
@@ -152,6 +154,7 @@ class _OwnLeadsState extends State<OwnLeads> {
                               child: LeadListItem(
                                   data: lvm.leadsListOwnList?[index]));
                         }
+                        return null;
                       },
                     ),
             );

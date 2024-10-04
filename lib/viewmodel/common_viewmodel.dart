@@ -199,6 +199,8 @@ class CommonDataViewmodel extends ChangeNotifier {
         if (response?.message?.employeeId != null) {
           hiveInstance?.saveData(
               DataBoxKey.kEmpId, response?.message?.employeeId);
+          hiveInstance?.saveData(
+              DataBoxKey.kUserName, response?.message?.email);
         }
         notifyListeners();
         return true;
@@ -689,8 +691,6 @@ class CommonDataViewmodel extends ChangeNotifier {
       notifyListeners();
 
       Map<String, dynamic>? param = {};
-
-
 
       if (startFormatted != null && endFormatted != null) {
         param = {
@@ -1603,7 +1603,7 @@ class CommonDataViewmodel extends ChangeNotifier {
       notifyListeners();
       Map<String, dynamic>? param = {};
 
-     // String? email = hiveInstance!.getData(DataBoxKey.kEmpId);
+      // String? email = hiveInstance!.getData(DataBoxKey.kEmpId);
       log("email ---- $username");
 
       param = {"user": username, "name": id};

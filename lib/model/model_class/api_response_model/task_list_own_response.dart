@@ -4,9 +4,9 @@ class TasksListOwnResponse {
   TasksListOwnResponse({this.message});
 
   TasksListOwnResponse.fromJson(Map<String, dynamic> json) {
-    if (json['message'] != null) {
+    if (json['data'] != null) {
       message = <TasksListOwnList>[];
-      json['message'].forEach((v) {
+      json['data'].forEach((v) {
         message!.add(TasksListOwnList.fromJson(v));
       });
     }
@@ -15,7 +15,7 @@ class TasksListOwnResponse {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     if (message != null) {
-      data['message'] = message!.map((v) => v.toJson()).toList();
+      data['data'] = message!.map((v) => v.toJson()).toList();
     }
     return data;
   }

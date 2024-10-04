@@ -17,6 +17,7 @@ import 'package:madathil/view/screens/service/service_history_screen.dart';
 import 'package:madathil/view/screens/service_list/service_list.dart';
 import 'package:madathil/view/screens/tasks/task_screen.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
+import 'package:madathil/viewmodel/leads_viewmodel.dart';
 import 'package:madathil/viewmodel/task_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:madathil/view/screens/transactions/transaction_list.dart';
@@ -178,6 +179,8 @@ class HomePage extends StatelessWidget {
                   image: AppImages.leadsImage,
                   title: "Leads",
                   onTap: () {
+                    Provider.of<LeadsViewmodel>(context, listen: false)
+                        .clearDates();
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -262,10 +265,11 @@ class HomePage extends StatelessWidget {
                   image: AppImages.serviceListImage,
                   title: "Service List",
                   onTap: () {
-                       Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const ServiceHistoryScreen()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const ServiceHistoryScreen()));
                   },
                 ),
               ],
