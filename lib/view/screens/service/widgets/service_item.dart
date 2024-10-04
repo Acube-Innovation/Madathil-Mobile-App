@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/utils/custom_loader.dart';
+import 'package:madathil/utils/no_data_found.dart';
 import 'package:madathil/view/screens/service/service_details_screen.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -35,21 +37,21 @@ class _ServiceItemState extends State<ServiceItem> {
       if ((cdv.serviceHistoryPost ?? []).isEmpty) {
         if (cdv.isloading!) {
           return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CupertinoActivityIndicator(color: AppColors.primeryColor),
-                SizedBox(height: 10),
-                Text("Loading..!")
-              ],
-            ),
+            child: CustomLoader(),
           );
         } else {
-          return const Center(
+          return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("No ServiceHistory available."),
+                NoDataFOund(
+                  onRefresh: () async {
+                    Provider.of<CommonDataViewmodel>(context, listen: false)
+                        .resetServiceHistoryPagination();
+                    Provider.of<CommonDataViewmodel>(context, listen: false)
+                        .fetchServiceHistoryList();
+                  },
+                ),
               ],
             ),
           );
@@ -99,9 +101,15 @@ class _ServiceItemState extends State<ServiceItem> {
                       }
                     } else {
                       if (cdv.serviceHistoryPost!.isEmpty) {
-                        return const Center(
-                            child: Text(
-                          "No Service History available.",
+                        return Center(child: NoDataFOund(
+                          onRefresh: () {
+                            Provider.of<CommonDataViewmodel>(context,
+                                    listen: false)
+                                .resetServiceHistoryPagination();
+                            Provider.of<CommonDataViewmodel>(context,
+                                    listen: false)
+                                .fetchServiceHistoryList();
+                          },
                         ));
                       } else {
                         return const Column(
@@ -126,8 +134,9 @@ class _ServiceItemState extends State<ServiceItem> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                     ServiceDetailsScreen(items: item,)));
+                                builder: (context) => ServiceDetailsScreen(
+                                      items: item,
+                                    )));
                       },
                       child: Container(
                         padding: const EdgeInsets.all(15),

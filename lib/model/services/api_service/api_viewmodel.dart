@@ -38,6 +38,7 @@ import 'package:madathil/model/model_class/api_response_model/lead_source_list_r
 import 'package:madathil/model/model_class/api_response_model/leads_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/list_users_response.dart';
 import 'package:madathil/model/model_class/api_response_model/login_response.dart';
+import 'package:madathil/model/model_class/api_response_model/order_transaction_list.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_history_response.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_modes_response.dart';
@@ -300,6 +301,8 @@ class ApiViewModel {
         return GetOrderStatusResponse?.fromJson(json) as T;
       case SalesOrderDetailResponse:
         return SalesOrderDetailResponse?.fromJson(json) as T;
+      case TransactionInvoiceListResponse:
+        return TransactionInvoiceListResponse?.fromJson(json) as T;
 
       case HomeDetailResponse:
         return HomeDetailResponse?.fromJson(json) as T;

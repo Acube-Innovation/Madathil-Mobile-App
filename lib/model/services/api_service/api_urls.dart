@@ -83,7 +83,8 @@ class ApiUrls {
   static const kPointList =
       '/api/method/a3sola_solar_management.api.total_points_list';
 
-      static const kPointDetails = '/api/method/a3sola_solar_management.api.total_points_details';
+  static const kPointDetails =
+      '/api/method/a3sola_solar_management.api.total_points_details';
   static const korderStatus =
       '/api/method/a3sola_solar_management.api.get_select_field_options';
   static const korderDetails =
@@ -93,4 +94,6 @@ class ApiUrls {
 
   static const kHomeDataUrl =
       '/api/method/a3sola_solar_management.api.get_home_details';
+
+  static const kOrderTransactionList = '/api/resource/Payment Entry';
 }

@@ -18,6 +18,8 @@ import 'package:madathil/model/model_class/api_response_model/employee_list_resp
 import 'package:madathil/model/model_class/api_response_model/image_uploade_response.dart';
 import 'package:madathil/model/model_class/api_response_model/home_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/order_transaction_list.dart';
+import 'package:madathil/model/model_class/api_response_model/payment_history_response.dart';
 import 'package:madathil/model/model_class/api_response_model/point_dettails_response.dart';
 import 'package:madathil/model/model_class/api_response_model/points_list_model_response.dart';
 import 'package:madathil/model/model_class/api_response_model/profile_details_response.dart';
@@ -678,6 +680,8 @@ class CommonDataViewmodel extends ChangeNotifier {
 
       Map<String, dynamic>? param = {};
 
+
+
       if (startFormatted != null && endFormatted != null) {
         param = {
           "fields": jsonEncode([
@@ -694,7 +698,7 @@ class CommonDataViewmodel extends ChangeNotifier {
             "item_expense"
           ]),
           "filters": jsonEncode({
-            "employee_id": "HR-EMP-00187",
+            "employee_id": employeeId,
             "closing_date": [
               "between",
               [startFormatted, endFormatted]
@@ -726,7 +730,7 @@ class CommonDataViewmodel extends ChangeNotifier {
             "item_expense"
           ]),
           "filters": jsonEncode({
-            "employee_id": "HR-EMP-00187",
+            "employee_id": employeeId,
             "customer_name": [
               "like",
               closingStatmentSearchfn != null
@@ -1324,7 +1328,7 @@ class CommonDataViewmodel extends ChangeNotifier {
       Map<String, dynamic>? param = {};
 
       param = {
-        "user": "zm@gmail.com",
+        "user": username,
         "limit": 10,
         "limit_start": page! * 10,
         "filters": jsonEncode({
@@ -1433,6 +1437,7 @@ class CommonDataViewmodel extends ChangeNotifier {
           await apiRepository.getEmployeeDetails(param: param, empId: empId);
 
       if (response?.data != null) {
+        employeeData = null;
         employeeData = response?.data;
         _isloading = false;
         notifyListeners();
@@ -1463,13 +1468,14 @@ class CommonDataViewmodel extends ChangeNotifier {
       Map<String, dynamic>? param = {};
 
       param = {
-        "user": "zakkir@mi.com",
+        "user": username,
       };
 
       ProfileDetailsResponse? response =
           await apiRepository.getProfileDetails(param: param);
 
       if (response?.message?.profile != null) {
+        profileData = null;
         profileData = response?.message?.profile;
 
         _isloading = false;
@@ -1535,7 +1541,7 @@ class CommonDataViewmodel extends ChangeNotifier {
 
       if (startDate != null && endDate != null) {
         param = {
-          "user": "kirankumars@gmail.com",
+          "user": username,
           "filters": jsonEncode({
             "closing_date": [
               "between",
@@ -1545,7 +1551,7 @@ class CommonDataViewmodel extends ChangeNotifier {
         };
       } else {
         param = {
-          "user": "kirankumars@gmail.com",
+          "user": username,
         };
       }
 
@@ -1590,11 +1596,15 @@ class CommonDataViewmodel extends ChangeNotifier {
       notifyListeners();
       Map<String, dynamic>? param = {};
 
-      param = {"user": "kirankumars@gmail.com", "name": id};
+     // String? email = hiveInstance!.getData(DataBoxKey.kEmpId);
+      log("email ---- $username");
+
+      param = {"user": username, "name": id};
 
       PointDetailsResponse? response =
           await apiRepository.getPointDetails(param: param);
       if (response != null) {
+        pointDetailsMessage = null;
         pointDetailsMessage = response.message;
 
         log("point details -------------${pointDetailsMessage.toString()}");
@@ -1613,5 +1623,105 @@ class CommonDataViewmodel extends ChangeNotifier {
       notifyListeners();
       return false;
     }
+  }
+
+  /*
+  * oreder transaction list api call
+  * */
+
+  PaymentHistoryListResponse? _transactionInvoiceListResponse;
+  PaymentHistoryListResponse? get transcationInvoiceListResponse =>
+      _transactionInvoiceListResponse;
+  List<PaymentHistoryList>? orderTransactionList = [];
+
+  Future<bool> getOrderTransactionList({int? page}) async {
+    try {
+      _isloading = true;
+      notifyListeners();
+
+      Map<String, dynamic>? param = {};
+
+      param = {
+        "fields": jsonEncode([
+          "name",
+          "party_name",
+          "party",
+          "party_type",
+          "posting_date",
+          "paid_amount",
+          "reference_no",
+          "paid_to_account_type",
+          "paid_from_account_type",
+          "mode_of_payment",
+          "status"
+        ]),
+        "filters": jsonEncode([
+          ["Payment Entry Reference", "reference_name", "=", "SINV-24-00004"]
+        ]),
+        "limit_start": page! * 10,
+        "limit": 10,
+      };
+
+      PaymentHistoryListResponse? response =
+          await apiRepository.getOrderTransactionList(param: param);
+
+      if (response?.data != null) {
+        orderTransactionList = response?.data;
+
+        _isloading = false;
+        notifyListeners();
+        return true;
+      }
+      _isloading = false;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _errormsg = e.toString();
+      log("$_errormsg");
+      _isloading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  int orederTransactionCurrentPage = 0;
+  bool orederTransactionReachLength = false;
+  List<PaymentHistoryList>? orederTransactionPost = [];
+  bool _paginationorederTransaction = false;
+  bool get ispaginationorederTransaction => _paginationorederTransaction;
+
+  fetchOrderTransactionList() async {
+    if (_paginationorederTransaction || orederTransactionReachLength) {
+      return;
+    }
+
+    _paginationorederTransaction = true;
+
+    await getOrderTransactionList(page: orederTransactionCurrentPage);
+
+    final apiResponse = orderTransactionList;
+    if (apiResponse != null) {
+      final apiPosts = apiResponse;
+      if (apiPosts.length < 10) {
+        orederTransactionReachLength = true;
+      }
+
+      orederTransactionPost?.addAll(apiPosts);
+      orederTransactionCurrentPage++;
+    }
+
+    _paginationorederTransaction = false;
+    if ((orederTransactionPost ?? []).isEmpty) {
+      notifyListeners();
+    }
+  }
+
+  void resetOrderTransactionPagination() {
+    orderTransactionList?.clear();
+    orederTransactionPost?.clear();
+    orederTransactionCurrentPage = 0;
+    _paginationorederTransaction = false;
+    orederTransactionReachLength = false;
+    notifyListeners();
   }
 }

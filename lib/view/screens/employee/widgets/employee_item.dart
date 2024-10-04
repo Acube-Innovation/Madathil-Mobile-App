@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:madathil/app_images.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/utils/no_data_found.dart';
 import 'package:madathil/view/screens/employee/employee_details.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -42,12 +43,19 @@ class _EmployeeItemState extends State<EmployeeItem> {
             ),
           );
         } else {
-          return const Center(
+          return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // CupertinoActivityIndicator(color: AppColors.primeryColor),
-                Text("No product available."),
+                NoDataFOund(
+                  onRefresh: () async {
+                    Provider.of<CommonDataViewmodel>(context, listen: false)
+                        .resetEmployeePagination();
+                    Provider.of<CommonDataViewmodel>(context, listen: false)
+                        .fetchEmployeeList();
+                  },
+                )
               ],
             ),
           );
@@ -94,9 +102,15 @@ class _EmployeeItemState extends State<EmployeeItem> {
                       }
                     } else {
                       if (cdv.employeePost!.isEmpty) {
-                        return const Center(
-                            child: Text(
-                          "No Service History available.",
+                        return Center(child: NoDataFOund(
+                          onRefresh: () async {
+                            Provider.of<CommonDataViewmodel>(context,
+                                    listen: false)
+                                .resetEmployeePagination();
+                            Provider.of<CommonDataViewmodel>(context,
+                                    listen: false)
+                                .fetchEmployeeList();
+                          },
                         ));
                       } else {
                         return const Column(
