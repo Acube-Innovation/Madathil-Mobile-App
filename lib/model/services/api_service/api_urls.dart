@@ -6,10 +6,10 @@ class ApiUrls {
   static const kProdBaseURL = 'https://madathiltest.frappe.cloud';
   static const klogin = '/api/method/login';
   static const kCheckinCheckoutList =
-      '/api/resource/Employee Checkin?fields=["name", "time", "log_type"]&filters={"employee": "HR-EMP-00278", "date": "2023-09-28"}&order_by=modified desc';
+      '/api/resource/Employee Checkin?fields=["name", "time", "log_type"]';
   static const kCheckinCheckout = '/api/resource/Employee Checkin';
   static const kAttendanceHistory =
-      '/api/resource/Attendance?fields=["name", "attendance_date", "employee_in_time", "employee_out_time", "status", "city", "state", "area"]&filters={"employee": "HR-EMP-00145", "attendance_date": ["between", ["2024-04-10", "2024-05-10"]]}';
+      '/api/resource/Attendance?fields=["name", "attendance_date", "employee_in_time", "employee_out_time", "status", "city", "state", "area"]';
   static const kAddClosingStatment = '/api/resource/Closing Statement';
   static const kCustomerList = '/api/resource/Customer';
   static const kItemList = '/api/resource/Item';
@@ -35,7 +35,6 @@ class ApiUrls {
   static const kLeadSourceList = '/api/resource/Lead Source';
   static const kLeadCategoryList = '/api/resource/Lead Category';
   static const kLeadCreation = '/api/resource/Lead';
-  static const kcreateAddress = '/api/resource/Address';
   static const kServiceHistory = '/api/resource/Maintenance Visit/';
   static const kServiceStatus =
       '/api/method/a3sola_solar_management.api.get_select_field_options';
@@ -62,6 +61,8 @@ class ApiUrls {
 //call management section
   static const kCallList = '/api/resource/Customer Call Records';
   static const kAddCall = '/api/resource/Customer Call Records';
+  static const kCallStatusList =
+      '/api/method/a3sola_solar_management.api.get_select_field_options?doctype=Voxbay Call Track&fieldname=status';
   static const kListUsers =
       '/api/resource/User?fields=["name", "full_name"]&filters={"full_name": ["like", "aj%"]}&order_by=modified desc';
   static const kListTaskType =
@@ -83,4 +84,13 @@ class ApiUrls {
       '/api/method/a3sola_solar_management.api.total_points_list';
 
       static const kPointDetails = '/api/method/a3sola_solar_management.api.total_points_details';
+  static const korderStatus =
+      '/api/method/a3sola_solar_management.api.get_select_field_options';
+  static const korderDetails =
+      '/api/method/a3sola_solar_management.api.get_order_and_invoice_details';
+  static const kgetInvoice =
+      '/api/method/frappe.utils.print_format.download_pdf';
+
+  static const kHomeDataUrl =
+      '/api/method/a3sola_solar_management.api.get_home_details';
 }

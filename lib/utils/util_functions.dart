@@ -74,9 +74,15 @@ class UtilFunctions {
     return value == null || value.isEmpty ? 'Business is required' : null;
   }
 
-  static String? validateCalltitle(String? value) {
-    return value == null || value.isEmpty ? 'Call title is required' : null;
+  static String? validateCustomerNumber(String? value) {
+    return value == null || value.isEmpty ? 'Customer Number is required' : null;
   }
+
+
+  static String? validateConversationTime(String? value) {
+    return value == null || value.isEmpty ? 'Date and Time is required' : null;
+  }
+
 
   static String? validatePoints(String? value) {
     return value == null || value.isEmpty ? 'Call title is required' : null;
@@ -160,7 +166,7 @@ void toast(msg, BuildContext context, {bool? isError = false}) {
             .bodySmall!
             .copyWith(fontSize: 17, color: AppColors.white),
       ),
-      backgroundColor: isError! ? AppColors.green : AppColors.red,
+      backgroundColor: !isError! ? AppColors.green : AppColors.red,
       behavior: SnackBarBehavior.floating,
       margin: const EdgeInsets.all(32),
       elevation: 18,

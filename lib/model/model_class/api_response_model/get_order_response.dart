@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class GetOrdersResponse {
   List<OrderList>? data;
 
@@ -22,8 +20,8 @@ class OrderList {
   String? name;
   String? customerName;
   double? grandTotal;
-  DateTime? deliveryDate;
-  DateTime? transactionDate;
+  String? deliveryDate;
+  String? transactionDate;
   String? orderType;
   double? totalQty;
   double? totalTaxesAndCharges;
@@ -49,8 +47,8 @@ class OrderList {
         name: json["name"],
         customerName: json["customer_name"],
         grandTotal: json["grand_total"],
-        deliveryDate: DateTime.parse(json["delivery_date"]),
-        transactionDate: DateTime.parse(json["transaction_date"]),
+        deliveryDate: json["delivery_date"],
+        transactionDate: json["transaction_date"],
         orderType: json["order_type"],
         totalQty: json["total_qty"],
         totalTaxesAndCharges: json["total_taxes_and_charges"],
@@ -63,10 +61,8 @@ class OrderList {
         "name": name,
         "customer_name": customerName,
         "grand_total": grandTotal,
-        "delivery_date":
-            "${deliveryDate?.year.toString().padLeft(4, '0')}-${deliveryDate?.month.toString().padLeft(2, '0')}-${deliveryDate?.day.toString().padLeft(2, '0')}",
-        "transaction_date":
-            "${transactionDate?.year.toString().padLeft(4, '0')}-${transactionDate?.month.toString().padLeft(2, '0')}-${transactionDate?.day.toString().padLeft(2, '0')}",
+        "delivery_date": deliveryDate,
+        "transaction_date": deliveryDate,
         "order_type": orderType,
         "total_qty": totalQty,
         "total_taxes_and_charges": totalTaxesAndCharges,

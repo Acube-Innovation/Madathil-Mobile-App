@@ -227,8 +227,9 @@ class HomePage extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                // const CallListScreen()
-                                const PaymentModeScreen()));
+                                const CallListScreen()
+                                // const PaymentModeScreen()
+                                ));
                   },
                 ),
               ],

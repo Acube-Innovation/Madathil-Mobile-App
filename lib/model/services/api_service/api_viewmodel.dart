@@ -17,6 +17,7 @@ import 'package:madathil/model/model_class/api_response_model/checkin_checkout_r
 import 'package:madathil/model/model_class/api_response_model/closing_statment_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/closingstatment_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/create_address_response_model.dart';
+import 'package:madathil/model/model_class/api_response_model/create_call_response.dart';
 import 'package:madathil/model/model_class/api_response_model/create_check_out_response_model.dart';
 import 'package:madathil/model/model_class/api_response_model/create_customer_response.dart';
 import 'package:madathil/model/model_class/api_response_model/customer_list_response.dart';
@@ -27,6 +28,8 @@ import 'package:madathil/model/model_class/api_response_model/get__payment_metho
 import 'package:madathil/model/model_class/api_response_model/get_customer_address_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get_customer_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get_order_response.dart';
+import 'package:madathil/model/model_class/api_response_model/get_order_status_response.dart';
+import 'package:madathil/model/model_class/api_response_model/home_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/image_uploade_response.dart';
 import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_creation_response.dart';
@@ -43,6 +46,7 @@ import 'package:madathil/model/model_class/api_response_model/points_list_model_
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
 import 'package:madathil/model/model_class/api_response_model/profile_details_response.dart';
+import 'package:madathil/model/model_class/api_response_model/sales_order_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/sales_persons_list_response_addservice.dart';
 import 'package:madathil/model/model_class/api_response_model/service_history_detailsresponse.dart';
 import 'package:madathil/model/model_class/api_response_model/service_history_list_response.dart';
@@ -290,6 +294,15 @@ class ApiViewModel {
         return PointListResponse?.fromJson(json) as T;
       case PointDetailsResponse:
         return PointDetailsResponse?.fromJson(json) as T;
+      case CreateCallResponse:
+        return CreateCallResponse?.fromJson(json) as T;
+      case GetOrderStatusResponse:
+        return GetOrderStatusResponse?.fromJson(json) as T;
+      case SalesOrderDetailResponse:
+        return SalesOrderDetailResponse?.fromJson(json) as T;
+
+      case HomeDetailResponse:
+        return HomeDetailResponse?.fromJson(json) as T;
 
       default:
         throw FromJsonNotImplementedException();
