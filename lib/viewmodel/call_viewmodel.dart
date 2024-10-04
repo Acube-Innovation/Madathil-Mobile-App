@@ -260,9 +260,12 @@ class CallViewModel extends ChangeNotifier {
     return formattedTime.trim(); // Trim any extra spaces
   }
 
-  int calculateDuration(String date1, String date2){
-    DateTime formattedDate1 = DateFormat('dd/MM/yyyy, hh:mm a').parse(date1);
-    DateTime formattedDate2 = DateFormat('dd/MM/yyyy, hh:mm a').parse(date2);
+  var formattedDate1;
+  var formattedDate2;
+
+  int calculateDuration(String date1, String date2) {
+    formattedDate1 = DateFormat('dd/MM/yyyy, hh:mm a').parse(date1);
+    formattedDate2 = DateFormat('dd/MM/yyyy, hh:mm a').parse(date2);
     print('the formatted date1 is $formattedDate1');
     String dateTime1 = DateFormat('yyyy-MM-dd HH:mm:ss').format(formattedDate1);
     String dateTime2 = DateFormat('yyyy-MM-dd HH:mm:ss').format(formattedDate2);
@@ -271,7 +274,6 @@ class CallViewModel extends ChangeNotifier {
     Duration duration = requiredDate1.difference(requiredDate2);
     return duration.inSeconds;
   }
-
 
   DateTime? selectedStartDate;
   DateTime? selectedEndDate;
@@ -304,7 +306,6 @@ class CallViewModel extends ChangeNotifier {
     selectedStartTime = null;
     notifyListeners();
   }
-
 
   // Helper function to format the selected date and time to "dd MM yyyy, hh mm"
   String formatSelectedDateTime({bool isEndDate = false}) {
@@ -348,7 +349,7 @@ class CallViewModel extends ChangeNotifier {
       {bool isEndDate = false}) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate:selectedStartDate ?? DateTime.now(),
+      initialDate: selectedStartDate ?? DateTime.now(),
       firstDate: DateTime(DateTime.now().month - 1),
       lastDate: selectedStartDate ?? DateTime.now(),
       builder: (context, child) {
@@ -403,47 +404,139 @@ class CallViewModel extends ChangeNotifier {
     }
   }
 
-  List<String>? callStatus = [];
+  List<String>? callStatuslist = [
+    "Lead",
+    "Issue",
+    "Answered",
+    "Connected",
+    "No answer",
+    "Not connected",
+    "Cancel",
+    "Busy",
+    "Channel limit exceeded"
+  ];
+  String? callStatus;
+
+  void updateCallStatus(String? status) {
+    callStatus = status;
+    notifyListeners(); // This ensures the UI is rebuilt when callStatus changes
+  }
 
   Future<void> getCallStatusList() async {
-    try{
+    try {
       var response = await apiRepository.getCallStatusList();
-      if(response?['message'] != null){
-        callStatus = response?['message'];
+      if (response?['message'] != null) {
+        callStatuslist = response?['message'];
       }
-    } catch(e){
+    } catch (e) {
       print(e);
     }
   }
 
- /* create call api 
- */
+  final mainPointController = TextEditingController();
+  final List<TextEditingController> _noteControllers = [];
 
+  // Getter for the list of note controllers
+  List<TextEditingController> get noteControllers => _noteControllers;
+
+  // Method to add a new call point field (new TextEditingController)
+  void addNoteField() {
+    _noteControllers.add(TextEditingController());
+    notifyListeners();
+  }
+
+  // Method to remove a call point field based on index
+  void removeNoteField(int index) {
+    _noteControllers[index]
+        .dispose(); // Dispose the controller to avoid memory leaks
+    _noteControllers.removeAt(index);
+    notifyListeners();
+  }
+
+  // Method to collect all points into a list
+  List<String> collectAllPoints() {
+    List<String> allPoints = [];
+
+    // Add the value from the main 'Add points' field
+    if (mainPointController.text.isNotEmpty) {
+      allPoints.add(mainPointController.text);
+    }
+
+    // Add the values from the dynamic call points fields
+    for (var controller in _noteControllers) {
+      if (controller.text.isNotEmpty) {
+        allPoints.add(controller.text);
+      }
+    }
+
+    return allPoints;
+  }
+
+  void disposeControllers() {
+    for (var controller in _noteControllers) {
+      controller.dispose();
+    }
+    // mainPointController.dispose();
+    mainPointController.clear();
+    callStatus = null;
+    _noteControllers.clear();
+    notifyListeners();
+  }
+
+  /* create call api 
+ */
 
   CreateCall? createCallData;
 
-  Future<bool> createCall(String? customerName, String? customerNumber, int? conversationDuration) async {
+  Future<bool> createCall(
+      {String? customerName,
+      String? customerNumber,
+      int? conversationDuration,
+      String? status,
+      List<String?>? points}) async {
     try {
-      var response = await apiRepository.CreateCall(data: {
-   "customer": customerName,
-    "called_number": customerNumber,
-    "caller_number": "9632587410",
-    "called_date": selectedStartDate,
-    "call_date_time": '$selectedStartDate $selectedStartTime',
-    "call_start_time": '$selectedStartDate $selectedStartTime',
-    "call_end_time": "$selectedEndDate $selectedEndTime",
-    "conversation_duration": conversationDuration,
-    "track_calls": [
-        {
-            "date_and_time": "2024-09-27 12:12:12",
-            "status": "Lead",
-            "feedback": "test feedback",
-            "userlink": "acubeadmin@gmail.com"
-        }
-    ]
+      // Initialize trackCall as an empty list
+      List<Map<String, dynamic>> trackCall = [];
+      String? calledDate;
+      String? startTime;
+      String? endTime;
+
+      // Check if points list is not null and not empty
+      if (points != null && points.isNotEmpty) {
+        trackCall = points.map((point) {
+          return {
+            "date_and_time":
+                "2024-09-27 12:12:12", // You can replace this with dynamic data if needed
+            "status": status ?? "Lead", // Default to "Lead" if status is null
+            "feedback": point, // Use the feedback from the points list
+            "userlink":
+                "acubeadmin@gmail.com" // Adjust this based on your requirements
+          };
+        }).toList();
+      }
+      if (selectedStartDate != null) {
+        calledDate = selectedStartDate.toString();
+      }
+      if (formattedDate1 != null && formattedDate2 != null) {
+        startTime = formattedDate1.toString();
+        endTime = formattedDate2.toString();
+      }
+
+      var response = await apiRepository.createCall(data: {
+        "customer": customerName,
+        "called_number": customerNumber,
+        "caller_number": "9632587410",
+        "called_date": calledDate,
+        "call_date_time": startTime,
+        "call_start_time": startTime,
+        "call_end_time": endTime,
+        "call_status": status,
+        "conversation_duration": conversationDuration,
+        "track_calls":
+            trackCall // Always send an empty list if there are no points
       });
 
-      if (response?.data.doctype == "Customer Call Records") {
+      if (response?.data?.doctype == "Customer Call Records") {
         createCallData = response?.data;
 
         setLoader(false);

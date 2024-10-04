@@ -14,6 +14,7 @@ import 'package:madathil/model/model_class/api_response_model/checkin_checkout_r
 import 'package:madathil/model/model_class/api_response_model/closing_statment_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/closingstatment_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/create_address_response_model.dart';
+import 'package:madathil/model/model_class/api_response_model/create_call_response.dart';
 import 'package:madathil/model/model_class/api_response_model/create_check_out_response_model.dart';
 import 'package:madathil/model/model_class/api_response_model/create_customer_response.dart';
 import 'package:madathil/model/model_class/api_response_model/customer_list_response.dart';
@@ -356,8 +357,8 @@ class ApiRepository {
         .get<Map<String, List<String>>>(apiUrl: ApiUrls.kCallStatusList);
   }
 
-  Future addCall({Map<String, dynamic>? data}) async {
-    return _apiViewModel!.post(apiUrl: ApiUrls.kAddCall, data: data);
+  Future<CreateCallResponse?> createCall({Map<String, dynamic>? data}) async {
+    return _apiViewModel!.post<CreateCallResponse>(apiUrl: ApiUrls.kAddCall, data: data);
   }
 
   Future<SalesPersonsListResponse?> getSalesPersonsListService(
@@ -463,5 +464,4 @@ class ApiRepository {
         apiUrl: '${ApiUrls.kHomeDataUrl}?user=$username');
   }
 
-  Future CreateCall({Map<String, dynamic>? data}) async {}
 }

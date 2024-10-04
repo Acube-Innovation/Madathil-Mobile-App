@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/utils/custom_loader.dart';
+import 'package:madathil/utils/no_data_found.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
 import 'package:madathil/view/screens/transactions/transaction_details.dart';
 import 'package:madathil/viewmodel/payment_viewmodel.dart';
@@ -47,14 +49,14 @@ class _TransactionItemState extends State<TransactionItem> {
             ),
           );
         } else {
-          return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("No Payments to show."),
-              ],
-            ),
-          );
+          return Center(child: NoDataFOund(
+            onRefresh: () {
+              Provider.of<PaymentViewmodel>(context, listen: false)
+                  .resetPaymentPagination();
+              Provider.of<PaymentViewmodel>(context, listen: false)
+                  .fetchPaymentHistoryList();
+            },
+          ));
         }
       } else {
         return RefreshIndicator(
@@ -73,11 +75,7 @@ class _TransactionItemState extends State<TransactionItem> {
             itemBuilder: (context, index) {
               if (index == (pvm.paymentPost ?? []).length) {
                 if (pvm.ispaginationclosing) {
-                  return const SizedBox(
-                      height: 30,
-                      width: 30,
-                      child: CupertinoActivityIndicator(
-                          animating: true, radius: 15));
+                  return const CustomLoader();
                 } else {
                   if (!pvm.paymentReachLength) {
                     if (!pvm.ispaginationclosing) {
@@ -86,24 +84,21 @@ class _TransactionItemState extends State<TransactionItem> {
                       });
                       return const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(height: 5),
-                          SizedBox(
-                              height: 30,
-                              width: 30,
-                              child: CupertinoActivityIndicator(
-                                  animating: true, radius: 15))
-                        ],
+                        children: [SizedBox(height: 5), CustomLoader()],
                       );
                     }
                   } else {
                     if (pvm.paymentPost!.isEmpty) {
                       print(
                           'Payment post ---------------------------------------- ${pvm.paymentPost}');
-                      return const Center(
-                          child: Text(
-                        "No Payments to show.",
-                      ));
+                      return NoDataFOund(
+                        onRefresh: () {
+                          Provider.of<PaymentViewmodel>(context, listen: false)
+                              .resetPaymentPagination();
+                          Provider.of<PaymentViewmodel>(context, listen: false)
+                              .fetchPaymentHistoryList();
+                        },
+                      );
                     } else {
                       return const Column(
                         children: [
@@ -210,7 +205,7 @@ class _TransactionItemState extends State<TransactionItem> {
                                   const SizedBox(
                                     height: 4,
                                   ),
-                                  Text(item.partyType ?? '',
+                                  Text(item.modeOfPayment ?? '',
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodySmall!

@@ -127,7 +127,6 @@ class CreateTrackCalls {
   String? status;
   String? feedback;
   String? userlink;
-  Null? user;
   String? doctype;
   int? iUnsaved;
 
@@ -146,7 +145,6 @@ class CreateTrackCalls {
       this.status,
       this.feedback,
       this.userlink,
-      this.user,
       this.doctype,
       this.iUnsaved});
 
@@ -165,7 +163,6 @@ class CreateTrackCalls {
     status = json['status'];
     feedback = json['feedback'];
     userlink = json['userlink'];
-    user = json['user'];
     doctype = json['doctype'];
     iUnsaved = json['__unsaved'];
   }
@@ -186,7 +183,6 @@ class CreateTrackCalls {
     data['status'] = this.status;
     data['feedback'] = this.feedback;
     data['userlink'] = this.userlink;
-    data['user'] = this.user;
     data['doctype'] = this.doctype;
     data['__unsaved'] = this.iUnsaved;
     return data;
