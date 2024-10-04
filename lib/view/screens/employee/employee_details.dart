@@ -1,16 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:madathil/app_images.dart';
 import 'package:madathil/model/model_class/api_response_model/employee_list_response.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/attendance/attendance_history.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
-import 'package:madathil/view/screens/employee/lead_details.dart';
 import 'package:madathil/view/screens/employee/widgets/details_button_widegt.dart';
 import 'package:madathil/view/screens/employee/widgets/employee_details_card.dart';
-import 'package:madathil/view/screens/leads/lead_details.dart';
-import 'package:madathil/view/screens/profile/widgets/detail_card.dart';
+import 'package:madathil/view/screens/leads/leads_screen.dart';
+import 'package:madathil/view/screens/tasks/task_screen.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
+import 'package:madathil/viewmodel/task_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class EmployeeDetails extends StatefulWidget {
@@ -107,10 +106,14 @@ class _EmployeeDetailsState extends State<EmployeeDetails> {
                       ),
                       DetailsButtonWidegt(
                         data: "Attendance Details",
-                        onTap: () {
+                        onTap: () async {
+                          await cdv.clearAttendanceData();
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                            return const AttendanceHistoryScreen();
+                            return AttendanceHistoryScreen(
+                              isOthersAttendance: true,
+                              employeeID: cdv.employeeData?.name,
+                            );
                           }));
                         },
                       ),
@@ -122,7 +125,9 @@ class _EmployeeDetailsState extends State<EmployeeDetails> {
                         onTap: () {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                            return const LeadDetails();
+                            return LeadsScreen(
+                                isOtherTask: true,
+                                otherOwnerId: cdv.employeeData?.owner);
                           }));
                         },
                       ),
@@ -132,10 +137,14 @@ class _EmployeeDetailsState extends State<EmployeeDetails> {
                       DetailsButtonWidegt(
                         data: "Task Details",
                         onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return const LeadDetails();
-                          }));
+                          Provider.of<TasksViewmodel>(context, listen: false)
+                              .clearFilter();
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => TasksScreen(
+                                      isOtherTask: true,
+                                      otherOwnerId: cdv.employeeData?.owner)));
                         },
                       )
                     ],

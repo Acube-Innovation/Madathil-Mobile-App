@@ -48,8 +48,9 @@ class DrawerWidget extends StatelessWidget {
           }),
           const SizedBox(height: 20),
           drawerItem("Attendance History", AppImages.attendancehistoryImage,
-              () {
+              () async {
             var cdv = Provider.of<CommonDataViewmodel>(context, listen: false);
+            await cdv.clearAttendanceData();
             cdv.resetattendanceListPagination();
             cdv.getattendanceListOwn();
             Navigator.push(

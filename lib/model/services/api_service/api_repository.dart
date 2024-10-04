@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:intl/intl.dart';
@@ -13,6 +14,7 @@ import 'package:madathil/model/model_class/api_response_model/checkin_checkout_r
 import 'package:madathil/model/model_class/api_response_model/closing_statment_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/closingstatment_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/create_address_response_model.dart';
+import 'package:madathil/model/model_class/api_response_model/create_call_response.dart';
 import 'package:madathil/model/model_class/api_response_model/create_check_out_response_model.dart';
 import 'package:madathil/model/model_class/api_response_model/create_customer_response.dart';
 import 'package:madathil/model/model_class/api_response_model/customer_list_response.dart';
@@ -50,7 +52,9 @@ import 'package:madathil/model/model_class/api_response_model/service_status_lis
 import 'package:madathil/model/model_class/api_response_model/task_creation_response.dart';
 import 'package:madathil/model/model_class/api_response_model/task_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/task_list_others_response.dart';
+import 'package:madathil/model/model_class/api_response_model/task_list_own_response.dart';
 import 'package:madathil/model/model_class/api_response_model/task_status_response.dart';
+import 'package:madathil/model/model_class/api_response_model/task_update_response.dart';
 import 'package:madathil/model/model_class/local/environment.dart';
 import 'package:madathil/model/services/api_service/api_urls.dart';
 import 'package:madathil/model/services/api_service/api_viewmodel.dart';
@@ -82,11 +86,11 @@ class ApiRepository {
   }
 
   Future<AttendanceList?> getAttendanceList(int page,
-      {String? fromdate, String? todate}) async {
+      {String? fromdate, String? todate, String? isOthersAttendance}) async {
     return _apiViewModel!.get<AttendanceList>(
         apiUrl: (fromdate ?? "").isNotEmpty && (todate ?? "").isNotEmpty
-            ? '${ApiUrls.kAttendanceHistory}&filters={"employee": "$employeeId", "attendance_date": ["between", ["$fromdate", "$todate"]]}&order_by=attendance_date desc&limit=10&limit_start=${page * 10}'
-            : '${ApiUrls.kAttendanceHistory}&filters={"employee": "$employeeId"}&order_by=attendance_date desc&limit=10&limit_start=${page * 10}');
+            ? '${ApiUrls.kAttendanceHistory}&filters={"employee": "${(isOthersAttendance ?? "").isNotEmpty ? isOthersAttendance : employeeId}", "attendance_date": ["between", ["$fromdate", "$todate"]]}&order_by=attendance_date desc&limit=10&limit_start=${page * 10}'
+            : '${ApiUrls.kAttendanceHistory}&filters={"employee": "${(isOthersAttendance ?? "").isNotEmpty ? isOthersAttendance : employeeId}"}&order_by=attendance_date desc&limit=10&limit_start=${page * 10}');
   }
 
   Future<AddClosingStatmentResponse?> addClosingStatment(
@@ -187,6 +191,18 @@ class ApiRepository {
                 : '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$username"}&limit=10&limit_start=${page * 10}');
   }
 
+  Future<LeadsListOwnResponse?> getLeadsListOther(int page, String userID,
+      {String? fromdate, String? todate, String? searchTerm}) {
+    return _apiViewModel!.get<LeadsListOwnResponse>(
+        apiUrl: fromdate != null && todate != null
+            ? (searchTerm ?? "").isNotEmpty
+                ? '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$userID", "date": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}&filters={"lead_name": ["like", "%$searchTerm%"]}'
+                : '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$userID", "date": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}'
+            : (searchTerm ?? "").isNotEmpty
+                ? '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$userID"}&limit=10&limit_start=${page * 10}&filters={"lead_name": ["like", "%$searchTerm%"]}'
+                : '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$userID"}&limit=10&limit_start=${page * 10}');
+  }
+
   Future<LeadsSourceListResponse?> getSourceList() async {
     return _apiViewModel!
         .get<LeadsSourceListResponse>(apiUrl: ApiUrls.kLeadSourceList);
@@ -244,6 +260,13 @@ class ApiRepository {
         .get<TaskStatusListResponse>(apiUrl: ApiUrls.ktaskStatusList);
   }
 
+  Future<TaskUpdateResponse?> taskStatusUpdate(
+      String? taskId, String? filterStatus) async {
+    return _apiViewModel!.put<TaskUpdateResponse>(
+        apiUrl: '${ApiUrls.ktaskStatusUpdate}$taskId',
+        data: {"status": "$filterStatus"});
+  }
+
   Future<TasksCreationResponse?> createTask(Map<String, dynamic> data) async {
     return _apiViewModel!
         .post<TasksCreationResponse>(apiUrl: ApiUrls.ktaskCreation, data: data);
@@ -256,9 +279,13 @@ class ApiRepository {
   }
 
   Future<TasksListOthersResponse?> getTaskListOthers(int page,
-      {String? fromdate, String? todate, String? status, String? searchTerm}) {
+      {String? fromdate,
+      String? todate,
+      String? status,
+      String? searchTerm,
+      required String? id}) {
     String baseUrl =
-        '${ApiUrls.ktaskListOthers}&filters={"assigned_user": "maya@gmail.com"';
+        '${ApiUrls.ktaskListOthers}&filters={"assigned_user": "$id"';
     List<String> filters = [];
 
     if (status != null && status.isNotEmpty) {
@@ -278,6 +305,31 @@ class ApiRepository {
         '$baseUrl$finalFilters}&limit=10&limit_start=${page * 10}';
 
     return _apiViewModel!.get<TasksListOthersResponse>(apiUrl: finalUrl);
+  }
+
+  Future<TasksListOwnResponse?> getTaskListOwn(int page,
+      {String? fromdate, String? todate, String? status, String? searchTerm}) {
+    String baseUrl =
+        '${ApiUrls.ktaskListOthers}&filters={"assigned_user": "$username"';
+    List<String> filters = [];
+
+    if (status != null && status.isNotEmpty) {
+      filters.add('"status": "$status"');
+    }
+
+    if (searchTerm != null && searchTerm.isNotEmpty) {
+      filters.add('"subject": ["like", "%$searchTerm%"]');
+    }
+
+    if (fromdate != null && todate != null) {
+      filters.add('"exp_end_date": ["between", ["$fromdate", "$todate"]]');
+    }
+
+    String finalFilters = filters.isNotEmpty ? ', ${filters.join(", ")}' : '';
+    String finalUrl =
+        '$baseUrl$finalFilters}&limit=10&limit_start=${page * 10}';
+
+    return _apiViewModel!.get<TasksListOwnResponse>(apiUrl: finalUrl);
   }
 
   Future<ListUsersResponse?> getListUsers() async {
@@ -306,8 +358,8 @@ class ApiRepository {
         .get<Map<String, List<String>>>(apiUrl: ApiUrls.kCallStatusList);
   }
 
-  Future addCall({Map<String, dynamic>? data}) async {
-    return _apiViewModel!.post(apiUrl: ApiUrls.kAddCall, data: data);
+  Future<CreateCallResponse?> createCall({Map<String, dynamic>? data}) async {
+    return _apiViewModel!.post<CreateCallResponse>(apiUrl: ApiUrls.kAddCall, data: data);
   }
 
   Future<SalesPersonsListResponse?> getSalesPersonsListService(
@@ -378,30 +430,34 @@ class ApiRepository {
     return _apiViewModel!.get<SalesOrderDetailResponse>(
         apiUrl: ApiUrls.korderDetails, params: data);
   }
-  //  Future<SalesOrderDetailResponse?> getInvoice(
-  //     {Map<String, dynamic>? data}) async {
-  //   return _apiViewModel!.get<SalesOrderDetailResponse>(
-  //       apiUrl: ApiUrls.kgetInvoice, params: data);
-  // }
 
-  Future<dynamic> getInvoice(String? orderID) async {
-    final url =
-        Uri.parse('${ApiUrls.kProdBaseURL}${ApiUrls.kgetInvoice}$orderID');
+  Future<http.Response> getInvoice(String? orderID) async {
+    final url = Uri.parse(
+        '${ApiUrls.kProdBaseURL}${ApiUrls.kgetInvoice}?doctype=Sales Invoice&name=$orderID');
     Map<String, dynamic>? savedCookies =
         hiveInstance?.getData(DataBoxKey.cookie);
+
     final Map<String, String> headers = {
-      'Content-Type': 'application/json; charset=UTF-8',
-      'lang': 'en',
+      'Accept': 'application/pdf',
     };
+
     if (savedCookies != null && savedCookies.isNotEmpty) {
       String cookieHeader =
           savedCookies.entries.map((e) => '${e.key}=${e.value}').join('; ');
-      headers[HttpHeaders.cookieHeader] =
-          cookieHeader; // Add cookies to headers
+      headers[HttpHeaders.cookieHeader] = cookieHeader;
     }
 
+    // Make the GET request
     final response = await http.get(url, headers: headers);
-    return response;
+
+    // Check the status code for errors
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      log(response.body);
+      throw HttpException(
+          'Failed to fetch invoice. Status code: ${response.statusCode}');
+    }
   }
 
   Future<HomeDetailResponse?> getHomeDetails() async {
@@ -409,7 +465,6 @@ class ApiRepository {
         apiUrl: '${ApiUrls.kHomeDataUrl}?user=$username');
   }
 
-  Future CreateCall({Map<String, dynamic>? data}) async {}
 
   Future<PaymentHistoryListResponse?> getOrderTransactionList(
       {Map<String, dynamic>? param}) async {

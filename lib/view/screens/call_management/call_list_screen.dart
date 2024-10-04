@@ -85,8 +85,8 @@ class _CallListScreenState extends State<CallListScreen> {
         onPressed: () {
           // Provider.of<CommonDataViewmodel>(context, listen: false)
           //     .clearReminder();
-          // Provider.of<CommonDataViewmodel>(context, listen: false)
-          //     .disposeControllers();
+          Provider.of<CallViewModel>(context, listen: false)
+              .disposeControllers();
 
           Navigator.push(
               context,

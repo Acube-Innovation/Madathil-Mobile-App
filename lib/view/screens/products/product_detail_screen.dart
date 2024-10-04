@@ -357,9 +357,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                   MaterialPageRoute(
                                                       builder: (context) =>
                                                           // const CheckOutScreen(),
-                                                          const ChangeCustomer()));
+                                                          const ChangeCustomer(
+                                                            isFromCart: false,
+                                                          )));
                                             } else {
-                                              toast("please add quantity",
+                                              toast(
+                                                  isError: true,
+                                                  "please add quantity",
                                                   context);
                                             }
                                           },
@@ -367,12 +371,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                         const Spacer(),
                                         GestureDetector(
                                           onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const CartScreen(),
-                                                ));
+                                            if (productVm.quantity != 0) {
+                                              productVm.addToCart(
+                                                  product: pvm.productData,
+                                                  quantity: pvm.quantity);
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const CartScreen(),
+                                                  ));
+                                            } else {
+                                              toast(
+                                                  isError: true,
+                                                  "please add quantity",
+                                                  context);
+                                            }
                                           },
                                           child: Container(
                                               padding:

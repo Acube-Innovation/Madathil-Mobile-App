@@ -138,7 +138,8 @@ class AttendancePage extends StatelessWidget {
                 color: AppColors.white,
                 height: 43,
                 width: double.maxFinite,
-                onPressed: () {
+                onPressed: () async {
+                  await cdv.clearAttendanceData();
                   Navigator.push(
                       context,
                       MaterialPageRoute(

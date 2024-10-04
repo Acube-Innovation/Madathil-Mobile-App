@@ -16,7 +16,7 @@ class InvoiceCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Invoice Preview",
+          "Invoice Info",
           style: Theme.of(context)
               .textTheme
               .bodyLarge!

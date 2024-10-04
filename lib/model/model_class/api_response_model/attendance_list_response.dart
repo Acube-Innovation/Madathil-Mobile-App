@@ -25,7 +25,7 @@ class AttendanceListData {
   String? name;
   String? attendanceDate;
   String? employeeInTime;
-  Null employeeOutTime;
+  String? employeeOutTime;
   String? status;
   String? city;
   String? state;

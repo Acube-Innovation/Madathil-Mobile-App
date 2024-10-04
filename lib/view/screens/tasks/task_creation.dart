@@ -18,7 +18,9 @@ class TaskCreationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     TextEditingController titleCTLR = TextEditingController();
     TextEditingController descCTLR = TextEditingController();
+    TextEditingController dateCTLR = TextEditingController();
     TextEditingController typeCTLR = TextEditingController();
+    TextEditingController assigneeCTLR = TextEditingController();
     final taskVm = Provider.of<TasksViewmodel>(context, listen: false);
 
     return Scaffold(
@@ -26,7 +28,7 @@ class TaskCreationScreen extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Form(
-            key: taskVm.formKey,
+            key: taskVm.formKey, // Form key added to control validation
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
               child: Column(
@@ -36,6 +38,7 @@ class TaskCreationScreen extends StatelessWidget {
                     children: [
                       Consumer<TasksViewmodel>(builder: (context, tvm, _) {
                         return Checkbox(
+                          activeColor: AppColors.primeryColor,
                           value: tvm.isMyself ?? false,
                           onChanged: (val) {
                             tvm.addIsMyself(val);
@@ -64,7 +67,12 @@ class TaskCreationScreen extends StatelessWidget {
                     onchaged: (val) {},
                     controller: titleCTLR,
                     hint: 'Enter the task title',
-                    validator: UtilFunctions.validateName,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Task title cannot be empty";
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 10),
                   Text(
@@ -76,11 +84,19 @@ class TaskCreationScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 5),
                   CustomTextField(
-                      onchaged: (val) {},
-                      maxLines: 8,
-                      controller: descCTLR,
-                      hint: 'Enter the description',
-                      validator: UtilFunctions.validateEmail),
+                    onchaged: (val) {},
+                    maxLines: 8,
+                    controller: descCTLR,
+                    hint: 'Enter the description',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Task description cannot be empty";
+                      } else if (value.length < 10) {
+                        return "Description should be at least 10 characters";
+                      }
+                      return null;
+                    },
+                  ),
                   const SizedBox(height: 10),
                   Text(
                     "Task type",
@@ -94,7 +110,15 @@ class TaskCreationScreen extends StatelessWidget {
                     return CustomDropdown(
                       hint: 'Select type',
                       items: tvm.listTaskTypeDetails ?? [],
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        typeCTLR.text = value ?? "";
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please select a task type";
+                        }
+                        return null;
+                      },
                     );
                   }),
                   const SizedBox(height: 10),
@@ -106,15 +130,26 @@ class TaskCreationScreen extends StatelessWidget {
                         .copyWith(height: 1.7, color: AppColors.grey),
                   ),
                   const SizedBox(height: 5),
-                  //TODO:
-                  CustomTextField(
+                  InkWell(
+                    onTap: () => UtilFunctions.selectDate(context, (val) {
+                      dateCTLR.text = DateFormat('dd MMM yyyy')
+                          .format(DateTime.parse(val.toString()));
+                    }),
+                    child: CustomTextField(
                       onchaged: (val) {},
-                      controller: titleCTLR,
+                      controller: dateCTLR,
                       suffixIcon: const Icon(Icons.calendar_month,
                           color: AppColors.primeryColor),
                       enabled: false,
                       hint: 'Select date',
-                      validator: UtilFunctions.validateName),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please select a date";
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
                   const SizedBox(height: 10),
                   Consumer<TasksViewmodel>(builder: (context, tvm, _) {
                     if (!(tvm.isMyself ?? false)) {
@@ -140,6 +175,12 @@ class TaskCreationScreen extends StatelessWidget {
                               onChanged: (value) {
                                 tvm.addSelectedAssignee(value);
                               },
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Please select an assignee";
+                                }
+                                return null;
+                              },
                             ),
                           }
                         ],
@@ -147,26 +188,24 @@ class TaskCreationScreen extends StatelessWidget {
                     }
                     return const SizedBox();
                   }),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 10),
                   Consumer<TasksViewmodel>(builder: (context, tvm, _) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20),
                       child: CustomButton(
-                          text: "Add Task",
-                          width: double.maxFinite,
-                          onPressed: () {
-                            Provider.of<TasksViewmodel>(context, listen: false)
-                                .createTask({
+                        text: "Add Task",
+                        width: double.maxFinite,
+                        onPressed: () {
+                          if (taskVm.formKey.currentState!.validate()) {
+                            // Proceed with task creation if form is valid
+                            taskVm.createTask({
                               "subject": titleCTLR.text,
                               "description": descCTLR.text,
-                              "type": "Test",
+                              "type": typeCTLR.text,
                               "exp_start_date": DateFormat('dd MMM yyyy')
                                   .format(DateTime.now()),
-                              "exp_end_date": "2024-10-10",
-                              "assigned_user":
-                                  "acubeadmin@gmail.com", //our mail
+                              "exp_end_date": dateCTLR.text,
+                              "assigned_user": tvm.selectedAssignee,
                               "task_users": [
                                 {
                                   "user_name": tvm.listUsersResponse?.data
@@ -175,8 +214,12 @@ class TaskCreationScreen extends StatelessWidget {
                                       .name
                                 }
                               ]
+                            }).then((value) {
+                              Navigator.pop(context);
                             });
-                          }),
+                          }
+                        },
+                      ),
                     );
                   }),
                 ],

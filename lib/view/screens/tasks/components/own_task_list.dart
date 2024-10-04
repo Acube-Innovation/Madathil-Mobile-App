@@ -18,8 +18,8 @@ class _OwnTasksState extends State<OwnTasks> {
   void didChangeDependencies() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<TasksViewmodel>(context, listen: false)
-          .resettasksListOtherPagination();
-      Provider.of<TasksViewmodel>(context, listen: false).getTasksListOther();
+          .resettasksListOwnPagination();
+      Provider.of<TasksViewmodel>(context, listen: false).getTasksListOwn();
     });
     super.didChangeDependencies();
   }
@@ -37,9 +37,9 @@ class _OwnTasksState extends State<OwnTasks> {
             controller: controller,
             onSubmitted: (value) {
               Provider.of<TasksViewmodel>(context, listen: false)
-                  .resettasksListOtherPagination();
+                  .resettasksListOwnPagination();
               Provider.of<TasksViewmodel>(context, listen: false)
-                  .getTasksListOther(searchTerm: value);
+                  .getTasksListOwn(searchTerm: value);
             },
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.only(left: 30),
@@ -48,14 +48,14 @@ class _OwnTasksState extends State<OwnTasks> {
                   // if ((controller?.text ?? "").isNotEmpty) {
                   //   controller?.clear();
                   //   Provider.of<TasksViewmodel>(context, listen: false)
-                  //     .resettasksListOtherPagination();
+                  //     .resettasksListOwnPagination();
                   // Provider.of<TasksViewmodel>(context, listen: false)
-                  //     .getTasksListOther();
+                  //     .getTasksListOwn();
                   // } else {
                   Provider.of<TasksViewmodel>(context, listen: false)
-                      .resettasksListOtherPagination();
+                      .resettasksListOwnPagination();
                   Provider.of<TasksViewmodel>(context, listen: false)
-                      .getTasksListOther(searchTerm: controller?.text);
+                      .getTasksListOwn(searchTerm: controller?.text);
                   // }
                 },
                 child: Container(
@@ -110,32 +110,31 @@ class _OwnTasksState extends State<OwnTasks> {
               onRefresh: () async {
                 controller?.clear();
                 lvm.clearDates();
-                lvm.resettasksListOtherPagination();
-                lvm.getTasksListOther();
+                lvm.resettasksListOwnPagination();
+                lvm.getTasksListOwn();
               },
-              child: (lvm.tasksListOtherList ?? []).isNotEmpty
+              child: (lvm.tasksListOwnList ?? []).isNotEmpty
                   ? ListView.builder(
                       shrinkWrap: true,
-                      itemCount: (lvm.tasksListOtherList ?? []).length,
+                      itemCount: (lvm.tasksListOwnList ?? []).length + 1,
                       itemBuilder: (context, index) {
-                        if (index ==
-                            (lvm.tasksListOtherList ?? []).length - 1) {
-                          if (lvm.isLoadingtasksListOtherPagination) {
+                        if (index == (lvm.tasksListOwnList ?? []).length) {
+                          if (lvm.isLoadingtasksListOwnPagination) {
                             return const CustomLoader();
                           } else {
-                            if (!lvm.reachedLastPagetasksListOther) {
-                              if (!lvm.isLoadingtasksListOtherPagination) {
-                                lvm.getTasksListOther();
+                            if (!lvm.reachedLastPagetasksListOwn) {
+                              if (!lvm.isLoadingtasksListOwnPagination) {
+                                lvm.getTasksListOwn();
                               }
                               return const CustomLoader();
                             } else {
-                              if (lvm.tasksListOtherList!.isEmpty) {
+                              if (lvm.tasksListOwnList!.isEmpty) {
                                 return NoDataFOund(
                                   onRefresh: () {
                                     controller?.clear();
                                     lvm.clearDates();
-                                    lvm.resettasksListOtherPagination();
-                                    lvm.getTasksListOther();
+                                    lvm.resettasksListOwnPagination();
+                                    lvm.getTasksListOwn();
                                   },
                                 );
                               } else {
@@ -145,18 +144,18 @@ class _OwnTasksState extends State<OwnTasks> {
                           }
                         } else {
                           return TaskListItem(
-                              data: lvm.tasksListOtherList?[index]);
+                              data: lvm.tasksListOwnList?[index]);
                         }
                       },
                     )
-                  : lvm.isLoadingtasksListOtherPagination
+                  : lvm.isLoadingtasksListOwnPagination
                       ? const CustomLoader()
                       : NoDataFOund(
                           onRefresh: () {
                             controller?.clear();
                             lvm.clearFilter();
-                            lvm.resettasksListOtherPagination();
-                            lvm.getTasksListOther();
+                            lvm.resettasksListOwnPagination();
+                            lvm.getTasksListOwn();
                           },
                         ),
             );

@@ -1,5 +1,7 @@
 import 'dart:developer';
+import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:madathil/app_images.dart';
@@ -10,10 +12,16 @@ import 'package:madathil/utils/color/util_functions.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
+import 'package:madathil/view/screens/common_widgets/custom_text_field.dart';
 import 'package:madathil/view/screens/orders/widgets/invoice_widgets.dart';
+import 'package:madathil/view/screens/payment_mode/payment_mode.dart';
 import 'package:madathil/viewmodel/order_viewmodel.dart';
+import 'package:madathil/viewmodel/product_viewmodel.dart';
+import 'package:path_provider/path_provider.dart';
+
 import 'package:provider/provider.dart';
 import 'package:open_file/open_file.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   final OrderList? item;
@@ -37,6 +45,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final orderVM = Provider.of<OrderViewmodel>(context, listen: false);
+    final productVm = Provider.of<ProductViewmodel>(context, listen: false);
     return Scaffold(
       appBar: const CustomAppBar(title: "Order Details"),
       body: SingleChildScrollView(
@@ -209,19 +218,22 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
-                          child: SizedBox(
-                            width: 150,
-                            child: Text(
-                              "${address?.addressLine1}, ${address?.addressLine2}, ${address?.city},${address?.state},${address?.country},${address?.pincode}",
-                              // "VHC house, ABC Street  Kerala, India",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .copyWith(
-                                      color: AppColors.black, height: 1.7),
-                              maxLines: 4,
-                            ),
-                          ),
+                          child: ovm.orderDetail?.customerAddress != null
+                              ? SizedBox(
+                                  width: 150,
+                                  child: Text(
+                                    "${address?.addressLine1}, ${address?.addressLine2}, ${address?.city},${address?.state},${address?.country},${address?.pincode}",
+                                    // "VHC house, ABC Street  Kerala, India",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall!
+                                        .copyWith(
+                                            color: AppColors.black,
+                                            height: 1.7),
+                                    maxLines: 4,
+                                  ),
+                                )
+                              : const Text("N/A"),
                         ),
                         const Spacer(),
                         Container(
@@ -364,44 +376,145 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     ),
 
                     ovm.orderDetail?.invoice != null
-                        ? Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 40),
-                            child: CustomButton(
-                              color: AppColors.reefGold,
-                              onPressed: () {
-                                UtilFunctions.loaderPopup(context);
-                                orderVM
-                                    .getInvoice(ovm.orderDetail?.invoice?.name)
-                                    .then((value) {
-                                  Navigator.pop(context);
-                                  if (value) {
-                                    log("${orderVM.file?.path.toLowerCase()}");
-                                    OpenFile.open(orderVM.file?.path);
-                                  } else {
-                                    toast(orderVM.errorMessage, context);
-                                  }
-                                });
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Download Invoice",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(color: AppColors.white),
+                        ? Row(
+                            children: [
+                              Expanded(
+                                child: CustomButton(
+                                  color: AppColors.reefGold,
+                                  onPressed: () {
+                                    UtilFunctions.loaderPopup(context);
+                                    orderVM
+                                        .getInvoice(
+                                            ovm.orderDetail?.invoice?.name)
+                                        .then((value) {
+                                      Navigator.pop(context);
+                                      if (value) {
+                                        log("${orderVM.file?.path.toLowerCase()}");
+                                        // downloadInvoice(context, orderVM.file);
+                                        // _downloadAndOpenPDF(context,
+                                        //     "${ApiUrls.kProdBaseURL}${orderVM.file?.path}");
+                                        OpenFile.open(orderVM.file?.path);
+                                      } else {
+                                        toast(orderVM.errorMessage, context);
+                                      }
+                                    });
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        " Download Invoice",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(color: AppColors.white),
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  const Icon(
-                                    Icons.download,
-                                    color: AppColors.white,
-                                  ),
-                                ],
+                                ),
                               ),
-                            ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Expanded(
+                                child: CustomButton(
+                                  color: AppColors.primeryColor,
+                                  onPressed: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext ctx) => Dialog(
+                                            shape: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(15)),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(15.0),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.stretch,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  const SizedBox(height: 10),
+                                                  Text('payment',
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyLarge!
+                                                          .copyWith(
+                                                              height: 1.7,
+                                                              color: AppColors
+                                                                  .primeryColor)),
+                                                  const SizedBox(height: 20),
+                                                  Column(
+                                                    children: [
+                                                      const SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      CustomTextField(
+                                                        keyboardType:
+                                                            TextInputType
+                                                                .number,
+                                                        hint: "Enter amount",
+                                                        controller: productVm
+                                                            .amountController,
+                                                        validator: UtilFunctions
+                                                            .requiredField,
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 30,
+                                                      ),
+                                                      CustomButton(
+                                                        text: "Submit",
+                                                        onPressed: () {
+                                                          if (productVm
+                                                              .amountController
+                                                              .text
+                                                              .isNotEmpty) {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          const PaymentModeScreen(
+                                                                    isfromCheckOut:
+                                                                        false,
+                                                                  ),
+                                                                ));
+                                                          } else {
+                                                            Fluttertoast.showToast(
+                                                                gravity:
+                                                                    ToastGravity
+                                                                        .CENTER_RIGHT,
+                                                                backgroundColor:
+                                                                    AppColors
+                                                                        .red,
+                                                                textColor:
+                                                                    AppColors
+                                                                        .white,
+                                                                msg:
+                                                                    "Please enter Amount",
+                                                                toastLength: Toast
+                                                                    .LENGTH_LONG);
+                                                            // toast(
+                                                            //     "Please Enter amount",
+                                                            //     context);
+                                                          }
+                                                        },
+                                                      )
+                                                    ],
+                                                  ),
+                                                  const SizedBox(height: 10),
+                                                ],
+                                              ),
+                                            )));
+                                  },
+                                  text: "Pay Dues",
+                                ),
+                              ),
+                            ],
                           )
                         : const SizedBox()
                   ],
@@ -410,6 +523,57 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       )),
     );
   }
+
+  // Future<void> downloadInvoice(BuildContext context, File? file) async {
+  //   if (file != null && await file.exists()) {
+  //     try {
+  //       // Use the printing package to show download/share options
+  //       await Printing.sharePdf(
+  //         bytes: await file.readAsBytes(),
+  //         filename: file.path.split('/').last,
+  //       );
+  //     } catch (e) {
+  //       log(e.toString());
+  //       // Handle any errors during the download
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text('Error downloading the PDF: $e')),
+  //       );
+  //     }
+  //   } else {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text('PDF file not available')),
+  //     );
+  //   }
+  // }
+
+  // Future<void> _downloadAndOpenPDF(BuildContext context, String? url) async {
+  //   try {
+  //     final file = await downloadPDF(url ?? "", "sample.pdf");
+  //     Navigator.pop(context);
+  //     // Get.back(closeOverlays: true);
+  //     // Get.to(PrivacyScreen(file: file.path));
+  //   } catch (e) {
+  //     Navigator.pop(context);
+  //     print("Error opening PDF: $e");
+  //   }
+  // }
+
+  // Future<File> downloadPDF(String url, String fileName) async {
+  //   try {
+  //     // Get the app's directory to save the downloaded file
+  //     final directory = await getApplicationDocumentsDirectory();
+  //     final filePath = '${directory.path}/$fileName';
+  //     final file = File(filePath);
+
+  //     // Download the PDF using Dio
+  //     final dio = Dio();
+  //     await dio.download(url, file.path);
+
+  //     return file;
+  //   } catch (e) {
+  //     throw Exception("Error downloading PDF: $e");
+  //   }
+  // }
 
   Widget _getStatusIcon(String? name) {
     switch (name) {

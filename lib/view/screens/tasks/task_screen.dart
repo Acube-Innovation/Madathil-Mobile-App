@@ -15,83 +15,59 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 class TasksScreen extends StatelessWidget {
-  const TasksScreen({super.key});
+  final bool? isOtherTask;
+  final String? otherOwnerId;
+  const TasksScreen({super.key, this.isOtherTask = false, this.otherOwnerId});
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(15))),
-            backgroundColor: AppColors.primeryColor,
-            child: const Icon(Icons.add),
-            onPressed: () {
-              Provider.of<TasksViewmodel>(context, listen: false)
-                  .getListUsers();
-              Provider.of<TasksViewmodel>(context, listen: false)
-                  .getListTaskType();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const TaskCreationScreen()));
-            }),
-        appBar: CustomAppBar(
-          title: "Tasks",
-          actions: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: GestureDetector(
-                onTap: () {
-                  Provider.of<TasksViewmodel>(context, listen: false)
-                      .getListTaskStatus();
-                  showfilterPopup(context);
-                },
-                child: const Icon(
-                  Icons.tune,
-                  color: AppColors.secondaryColor,
-                ),
+    return Scaffold(
+      floatingActionButton: !isOtherTask!
+          ? FloatingActionButton(
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(15))),
+              backgroundColor: AppColors.primeryColor,
+              child: const Icon(Icons.add),
+              onPressed: () {
+                Provider.of<TasksViewmodel>(context, listen: false)
+                    .getListUsers();
+                Provider.of<TasksViewmodel>(context, listen: false)
+                    .getListTaskType();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const TaskCreationScreen()));
+              })
+          : null,
+      appBar: CustomAppBar(
+        title: "Tasks",
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: GestureDetector(
+              onTap: () {
+                Provider.of<TasksViewmodel>(context, listen: false)
+                    .getListTaskStatus();
+                showfilterPopup(context,
+                    isOtherTask: isOtherTask, otherOwner: otherOwnerId);
+              },
+              child: const Icon(
+                Icons.tune,
+                color: AppColors.secondaryColor,
               ),
-            )
-          ],
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                height: 40,
-                child: TabBar(
-                    dividerColor: Colors.transparent,
-                    labelStyle: Theme.of(context)
-                        .textTheme
-                        .bodyMedium!
-                        .copyWith(color: AppColors.primeryColor),
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    labelColor: AppColors.primeryColor,
-                    unselectedLabelColor: AppColors.primeryColor,
-                    tabs: const [
-                      Tab(text: 'Own'),
-                      Tab(text: 'Others'),
-                    ],
-                    indicatorColor: AppColors.primeryColor),
-              ),
-              const SizedBox(height: 20),
-              const Expanded(
-                child: TabBarView(
-                  children: [OwnTasks(), OtherTasks()],
-                ),
-              ),
-            ],
-          ),
-        ),
+            ),
+          )
+        ],
       ),
+      body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          child:
+              !isOtherTask! ? const OwnTasks() : OtherTasks(id: otherOwnerId)),
     );
   }
 
-  void showfilterPopup(BuildContext context) {
+  void showfilterPopup(BuildContext context,
+      {bool? isOtherTask, String? otherOwner}) {
     showModalBottomSheet(
       isDismissible: false,
       isScrollControlled: true,
@@ -199,9 +175,15 @@ class TasksScreen extends StatelessWidget {
                                   Provider.of<TasksViewmodel>(context,
                                           listen: false)
                                       .resettasksListOtherPagination();
-                                  Provider.of<TasksViewmodel>(context,
-                                          listen: false)
-                                      .getTasksListOther();
+                                  if (isOtherTask!) {
+                                    Provider.of<TasksViewmodel>(context,
+                                            listen: false)
+                                        .getTasksListOther(id: otherOwnerId);
+                                  } else {
+                                    Provider.of<TasksViewmodel>(context,
+                                            listen: false)
+                                        .getTasksListOwn();
+                                  }
                                   Navigator.pop(context);
                                 },
                                 text: "Apply")

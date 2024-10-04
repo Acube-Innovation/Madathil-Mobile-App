@@ -6,7 +6,9 @@ import 'package:madathil/model/model_class/api_response_model/list_users_respons
 import 'package:madathil/model/model_class/api_response_model/task_creation_response.dart';
 import 'package:madathil/model/model_class/api_response_model/task_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/task_list_others_response.dart';
+import 'package:madathil/model/model_class/api_response_model/task_list_own_response.dart';
 import 'package:madathil/model/model_class/api_response_model/task_status_response.dart';
+import 'package:madathil/model/model_class/api_response_model/task_update_response.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
 
 class TasksViewmodel extends ChangeNotifier {
@@ -231,6 +233,34 @@ class TasksViewmodel extends ChangeNotifier {
   }
 
   /*
+  * get  task status update details api call
+  * */
+
+  TaskUpdateResponse? _taskStatusUpdateDetails;
+  TaskUpdateResponse? get taskStatusUpdateDetails => _taskStatusUpdateDetails;
+
+  Future<bool> putTaskStatus(String taskID) async {
+    try {
+      TaskUpdateResponse? taskStatusUpdateResponse =
+          await apiRepository.taskStatusUpdate(taskID, filterStatus);
+      if (taskStatusUpdateResponse != null &&
+          (taskStatusUpdateResponse.data != null)) {
+        _taskStatusUpdateDetails = taskStatusUpdateResponse;
+        notifyListeners();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      _errormsg = e.toString();
+      if (kDebugMode) {
+        print("error: ${e.toString()}");
+      }
+      notifyListeners();
+      return false;
+    }
+  }
+
+  /*
   * tasks creation api call
   * */
 
@@ -292,10 +322,14 @@ class TasksViewmodel extends ChangeNotifier {
       _tasksListOtherResponse;
 
   Future<bool> getTasksListOthersApi(int page,
-      {String? fromdate, String? todate, String? searchTerm}) async {
+      {String? fromdate,
+      String? todate,
+      String? searchTerm,
+      required String? id}) async {
     try {
       TasksListOthersResponse? tasksListOtherResponse =
           await apiRepository.getTaskListOthers(page,
+              id: id,
               searchTerm: searchTerm,
               fromdate: fromdate,
               todate: todate,
@@ -330,14 +364,15 @@ class TasksViewmodel extends ChangeNotifier {
   bool _reachedLastPagetasksListOther = false;
   bool get reachedLastPagetasksListOther => _reachedLastPagetasksListOther;
 
-  Future<void> getTasksListOther({String? searchTerm}) async {
+  Future<void> getTasksListOther(
+      {String? searchTerm, required String? id}) async {
     if (_isLoadingtasksListOtherPagination || _reachedLastPagetasksListOther) {
       return;
     }
     _isLoadingtasksListOtherPagination = true;
     notifyListeners();
     await getTasksListOthersApi(_tasksListOtherCurrentPage,
-        fromdate: fromdate, todate: todate, searchTerm: searchTerm);
+        fromdate: fromdate, todate: todate, searchTerm: searchTerm, id: id);
     final apiResponse = tasksListOtherResponse;
     if (apiResponse != null) {
       final apiPosts = apiResponse.data ?? [];
@@ -361,6 +396,89 @@ class TasksViewmodel extends ChangeNotifier {
     _tasksListOtherCurrentPage = 0;
     _isLoadingtasksListOtherPagination = false;
     _reachedLastPagetasksListOther = false;
+    notifyListeners();
+  }
+
+  //
+
+  //own tasks
+
+  /*
+  * get own tasks list api call
+  * */
+
+  TasksListOwnResponse? _tasksListOwnResponse;
+  TasksListOwnResponse? get tasksListOwnResponse => _tasksListOwnResponse;
+
+  Future<bool> getTasksListOwnsApi(int page,
+      {String? fromdate, String? todate, String? searchTerm}) async {
+    try {
+      TasksListOwnResponse? tasksListOwnResponse =
+          await apiRepository.getTaskListOwn(page,
+              searchTerm: searchTerm,
+              fromdate: fromdate,
+              todate: todate,
+              status: filterStatus);
+      if ((tasksListOwnResponse?.message ?? []).isNotEmpty) {
+        _tasksListOwnResponse = tasksListOwnResponse;
+        notifyListeners();
+        return true;
+      }
+      _tasksListOwnList = null;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _errormsg = e.toString();
+      if (kDebugMode) {
+        print("error: ${e.toString()}");
+      }
+      notifyListeners();
+
+      return false;
+    }
+  }
+
+  // upcoming bookings pagination
+
+  List<TasksListOwnList>? _tasksListOwnList = [];
+  List<TasksListOwnList>? get tasksListOwnList => _tasksListOwnList;
+  bool _isLoadingtasksListOwnPagination = false;
+  bool get isLoadingtasksListOwnPagination => _isLoadingtasksListOwnPagination;
+  int _tasksListOwnCurrentPage = 0;
+  bool _reachedLastPagetasksListOwn = false;
+  bool get reachedLastPagetasksListOwn => _reachedLastPagetasksListOwn;
+
+  Future<void> getTasksListOwn({String? searchTerm}) async {
+    if (_isLoadingtasksListOwnPagination || _reachedLastPagetasksListOwn) {
+      return;
+    }
+    _isLoadingtasksListOwnPagination = true;
+    notifyListeners();
+    await getTasksListOwnsApi(_tasksListOwnCurrentPage,
+        fromdate: fromdate, todate: todate, searchTerm: searchTerm);
+    final apiResponse = tasksListOwnResponse;
+    if (apiResponse != null) {
+      final apiPosts = apiResponse.message ?? [];
+      if (apiPosts.length < 10) {
+        _reachedLastPagetasksListOwn = true;
+      }
+      if (apiPosts.isNotEmpty) {
+        _tasksListOwnList?.addAll(apiPosts);
+      }
+      _tasksListOwnCurrentPage++;
+      notifyListeners();
+    }
+    _isLoadingtasksListOwnPagination = false;
+    if ((tasksListOwnList ?? []).isNotEmpty) {
+      notifyListeners();
+    }
+  }
+
+  void resettasksListOwnPagination() {
+    _tasksListOwnList = [];
+    _tasksListOwnCurrentPage = 0;
+    _isLoadingtasksListOwnPagination = false;
+    _reachedLastPagetasksListOwn = false;
     notifyListeners();
   }
 }

@@ -11,7 +11,10 @@ import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class AttendanceHistoryScreen extends StatefulWidget {
-  const AttendanceHistoryScreen({super.key});
+  final bool? isOthersAttendance;
+  final String? employeeID;
+  const AttendanceHistoryScreen(
+      {super.key, this.isOthersAttendance = false, this.employeeID});
 
   @override
   State<AttendanceHistoryScreen> createState() =>
@@ -26,7 +29,9 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
       Provider.of<CommonDataViewmodel>(context, listen: false)
           .resetattendanceListPagination();
       Provider.of<CommonDataViewmodel>(context, listen: false)
-          .getattendanceListOwn();
+          .getattendanceListOwn(
+              isOthersAttendance:
+                  widget.isOthersAttendance! ? widget.employeeID : null);
     });
   }
 
@@ -50,7 +55,10 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
                       (DateFormat('dd MMM yyyy').format(startDate)),
                       (DateFormat('dd MMM yyyy').format(endDate)));
                   cdv.resetattendanceListPagination();
-                  cdv.getattendanceListOwn();
+                  cdv.getattendanceListOwn(
+                      isOthersAttendance: widget.isOthersAttendance!
+                          ? widget.employeeID
+                          : null);
                 },
                     onCancelClick: () {},
                     backgroundColor: AppColors.white,
@@ -67,14 +75,19 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
           onRefresh: () async {
             cdv.clearDates();
             cdv.resetattendanceListPagination();
-            cdv.getattendanceListOwn();
+            cdv.getattendanceListOwn(
+                isOthersAttendance:
+                    widget.isOthersAttendance! ? widget.employeeID : null);
           },
           child: (cdv.attendanceListData ?? []).isEmpty
               ? NoDataFOund(
                   onRefresh: () {
                     cdv.clearDates();
                     cdv.resetattendanceListPagination();
-                    cdv.getattendanceListOwn();
+                    cdv.getattendanceListOwn(
+                        isOthersAttendance: widget.isOthersAttendance!
+                            ? widget.employeeID
+                            : null);
                   },
                 )
               : ListView.builder(
@@ -82,13 +95,16 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
                   itemCount: (cdv.attendanceListData ?? []).length,
                   itemBuilder: (context, index) {
                     var data = cdv.attendanceListData?[index];
-                    if (index == (cdv.attendanceListData ?? []).length - 1) {
+                    if (index == (cdv.attendanceListData ?? []).length + 1) {
                       if (cdv.isLoadingattendanceListPagination) {
                         return const CustomLoader();
                       } else {
                         if (!cdv.reachedLastPageattendanceList) {
                           if (!cdv.isLoadingattendanceListPagination) {
-                            cdv.getattendanceListOwn();
+                            cdv.getattendanceListOwn(
+                                isOthersAttendance: widget.isOthersAttendance!
+                                    ? widget.employeeID
+                                    : null);
                           }
                           return const CustomLoader();
                         } else {
@@ -97,7 +113,11 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
                               onRefresh: () {
                                 cdv.clearDates();
                                 cdv.resetattendanceListPagination();
-                                cdv.getattendanceListOwn();
+                                cdv.getattendanceListOwn(
+                                    isOthersAttendance:
+                                        widget.isOthersAttendance!
+                                            ? widget.employeeID
+                                            : null);
                               },
                             );
                           } else {

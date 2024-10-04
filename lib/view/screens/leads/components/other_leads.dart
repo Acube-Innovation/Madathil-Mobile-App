@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 class OtherLeads extends StatefulWidget {
   final String? employeeId;
-  const OtherLeads({super.key, this.employeeId});
+  const OtherLeads({super.key, required this.employeeId});
 
   @override
   State<OtherLeads> createState() => _OtherLeadsState();
@@ -20,11 +20,14 @@ class _OtherLeadsState extends State<OtherLeads> {
   void didChangeDependencies() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<LeadsViewmodel>(context, listen: false)
-          .resetleadsListOwnPagination();
-      Provider.of<LeadsViewmodel>(context, listen: false).getLeadsListOwn();
+          .resetleadsListOtherPagination();
+      Provider.of<LeadsViewmodel>(context, listen: false)
+          .getLeadsListOther(uderID: widget.employeeId ?? "");
     });
     super.didChangeDependencies();
   }
+
+  TextEditingController? controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -39,12 +42,31 @@ class _OtherLeadsState extends State<OtherLeads> {
           SizedBox(
             height: 46,
             child: TextField(
+              controller: controller,
+              onSubmitted: (value) {
+                Provider.of<LeadsViewmodel>(context, listen: false)
+                    .resetleadsListOtherPagination();
+                Provider.of<LeadsViewmodel>(context, listen: false)
+                    .getLeadsListOther(
+                        searchTerm: value, uderID: widget.employeeId ?? "");
+              },
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.only(left: 30),
-                suffixIcon: Container(
-                    decoration: const BoxDecoration(
-                        shape: BoxShape.circle, color: AppColors.primeryColor),
-                    child: const Icon(Icons.search, color: Colors.white)),
+                suffixIcon: InkWell(
+                  onTap: () {
+                    Provider.of<LeadsViewmodel>(context, listen: false)
+                        .resetleadsListOtherPagination();
+                    Provider.of<LeadsViewmodel>(context, listen: false)
+                        .getLeadsListOther(
+                            searchTerm: controller?.text ?? "",
+                            uderID: widget.employeeId ?? "");
+                  },
+                  child: Container(
+                      decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.primeryColor),
+                      child: const Icon(Icons.search, color: Colors.white)),
+                ),
                 enabled: true,
                 disabledBorder: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -85,41 +107,54 @@ class _OtherLeadsState extends State<OtherLeads> {
               return RefreshIndicator(
                 onRefresh: () async {
                   lvm.clearDates();
-                  lvm.resetleadsListOwnPagination();
-                  lvm.getLeadsListOwn();
+                  lvm.resetleadsListOtherPagination();
+                  lvm.getLeadsListOther(uderID: widget.employeeId ?? "");
                 },
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: (lvm.leadsListOwnList ?? []).length,
-                  itemBuilder: (context, index) {
-                    if (index == (lvm.leadsListOwnList ?? []).length - 1) {
-                      if (lvm.isLoadingleadsListOwnPagination) {
-                        return const CustomLoader();
-                      } else {
-                        if (!lvm.reachedLastPageleadsListOwn) {
-                          if (!lvm.isLoadingleadsListOwnPagination) {
-                            lvm.getLeadsListOwn();
-                          }
-                          return const CustomLoader();
-                        } else {
-                          if (lvm.leadsListOwnList!.isEmpty) {
-                            return NoDataFOund(
-                              onRefresh: () {
-                                lvm.clearDates();
-                                lvm.resetleadsListOwnPagination();
-                                lvm.getLeadsListOwn();
-                              },
-                            );
+                child: (lvm.leadsListOtherList ?? []).isEmpty
+                    ? NoDataFOund(
+                        onRefresh: () {
+                          lvm.clearDates();
+                          lvm.resetleadsListOtherPagination();
+                          lvm.getLeadsListOther(
+                              uderID: widget.employeeId ?? "");
+                        },
+                      )
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: (lvm.leadsListOtherList ?? []).length,
+                        itemBuilder: (context, index) {
+                          if (index ==
+                              (lvm.leadsListOtherList ?? []).length - 1) {
+                            if (lvm.isLoadingleadsListOtherPagination) {
+                              return const CustomLoader();
+                            } else {
+                              if (!lvm.reachedLastPageleadsListOther) {
+                                if (!lvm.isLoadingleadsListOtherPagination) {
+                                  lvm.getLeadsListOther(
+                                      uderID: widget.employeeId ?? "");
+                                }
+                                return const CustomLoader();
+                              } else {
+                                if (lvm.leadsListOtherList!.isEmpty) {
+                                  return NoDataFOund(
+                                    onRefresh: () {
+                                      lvm.clearDates();
+                                      lvm.resetleadsListOtherPagination();
+                                      lvm.getLeadsListOther(
+                                          uderID: widget.employeeId ?? "");
+                                    },
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              }
+                            }
                           } else {
-                            return Container();
+                            return LeadListItem(
+                                data: lvm.leadsListOtherList?[index]);
                           }
-                        }
-                      }
-                    } else {
-                      return LeadListItem(data: lvm.leadsListOwnList?[index]);
-                    }
-                  },
-                ),
+                        },
+                      ),
               );
             }),
           )

@@ -431,36 +431,6 @@ class CommonDataViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  /*
-  * attendance List api call
-  * */
-
-  AttendanceList? _attendanceList;
-  AttendanceList? get attendanceList => _attendanceList;
-
-  Future<bool> getAttendanceList(int page,
-      {String? fromdate, String? todate}) async {
-    try {
-      _isloading = true;
-      AttendanceList? response = await apiRepository.getAttendanceList(page,
-          fromdate: fromdate, todate: todate);
-      if ((response?.data ?? []).isNotEmpty) {
-        _attendanceList = response;
-        _isloading = false;
-        notifyListeners();
-        return true;
-      } else {
-        _isloading = false;
-        notifyListeners();
-        return false;
-      }
-    } catch (e) {
-      _isloading = false;
-      _errormsg = e.toString();
-      return false;
-    }
-  }
-
   String? _fromdate;
   String? get fromdate => _fromdate;
 
@@ -479,6 +449,45 @@ class CommonDataViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
+  /*
+  * attendance List api call
+  * */
+
+  clearAttendanceData() {
+    _attendanceList = null;
+    _attendanceListData = [];
+    notifyListeners();
+  }
+
+  AttendanceList? _attendanceList;
+  AttendanceList? get attendanceList => _attendanceList;
+
+  Future<bool> getAttendanceList(int page,
+      {String? fromdate, String? todate, String? isOthersAttendance}) async {
+    try {
+      _isloading = true;
+      AttendanceList? response = await apiRepository.getAttendanceList(page,
+          fromdate: fromdate,
+          todate: todate,
+          isOthersAttendance: isOthersAttendance);
+      if ((response?.data ?? []).isNotEmpty) {
+        _attendanceList = response;
+        _isloading = false;
+        notifyListeners();
+        return true;
+      } else {
+        _isloading = false;
+        notifyListeners();
+        return false;
+      }
+    } catch (e) {
+      _isloading = false;
+      _errormsg = e.toString();
+      print("error: $e");
+      return false;
+    }
+  }
+
   //attendance list pagination
 
   List<AttendanceListData>? _attendanceListData = [];
@@ -490,13 +499,16 @@ class CommonDataViewmodel extends ChangeNotifier {
   bool _reachedLastPageattendanceList = false;
   bool get reachedLastPageattendanceList => _reachedLastPageattendanceList;
 
-  Future<void> getattendanceListOwn() async {
+  Future<void> getattendanceListOwn({String? isOthersAttendance}) async {
     if (_isLoadingattendanceListPagination || _reachedLastPageattendanceList) {
       return;
     }
     _isLoadingattendanceListPagination = true;
+    notifyListeners();
     await getAttendanceList(_attendanceListCurrentPage,
-        fromdate: fromdate, todate: todate);
+        fromdate: fromdate,
+        todate: todate,
+        isOthersAttendance: isOthersAttendance);
     final apiResponse = attendanceList;
     if (apiResponse != null) {
       final apiPosts = apiResponse.data ?? [];
@@ -509,9 +521,7 @@ class CommonDataViewmodel extends ChangeNotifier {
       _attendanceListCurrentPage++;
     }
     _isLoadingattendanceListPagination = false;
-    if ((_attendanceListData ?? []).isNotEmpty) {
-      notifyListeners();
-    }
+    notifyListeners();
   }
 
   void resetattendanceListPagination() {
@@ -1322,11 +1332,8 @@ class CommonDataViewmodel extends ChangeNotifier {
   Future<bool> getEmployeeList({int? page}) async {
     try {
       _isloading = true;
-
       notifyListeners();
-
       Map<String, dynamic>? param = {};
-
       param = {
         "user": username,
         "limit": 10,

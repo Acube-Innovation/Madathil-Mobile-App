@@ -1,14 +1,18 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/utils/color/util_functions.dart';
 import 'package:madathil/utils/custom_loader.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
+import 'package:madathil/view/screens/common_widgets/custom_dropdown.dart';
 import 'package:madathil/viewmodel/task_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class TaskDetailScreen extends StatelessWidget {
-  const TaskDetailScreen({super.key});
+  final bool? isOthers;
+  const TaskDetailScreen({super.key, this.isOthers});
 
   @override
   Widget build(BuildContext context) {
@@ -187,7 +191,72 @@ class TaskDetailScreen extends StatelessWidget {
                 text: "UDPDATE TASK",
                 height: 60,
                 onPressed: () {
-                  Navigator.pop(context);
+                  Provider.of<TasksViewmodel>(context, listen: false)
+                      .getListTaskStatus();
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Consumer<TasksViewmodel>(
+                            builder: (context, tvm, _) {
+                          return Padding(
+                            padding: const EdgeInsets.all(30.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'Select Status',
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                ),
+                                const SizedBox(height: 20),
+                                (tvm.listTaskStatusDetails ?? []).isNotEmpty
+                                    ? CustomDropdown(
+                                        hint: 'Select status',
+                                        items: tvm.listTaskStatusDetails ?? [],
+                                        onChanged: (String? value) {
+                                          tvm.addfilterStatus(value);
+                                        })
+                                    : const CupertinoActivityIndicator(),
+                                const SizedBox(height: 20),
+                                CustomButton(
+                                  text: "UDPDATE TASK",
+                                  height: 60,
+                                  onPressed: () {
+                                    UtilFunctions.loaderPopup(context);
+                                    tvm.putTaskStatus(data?.name ?? "").then(
+                                      (value) {
+                                        Navigator.pop(context);
+                                        if (value) {
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          toast("Status Updated succesfully",
+                                              context);
+                                          if (isOthers!) {
+                                            tvm.clearFilter();
+                                            tvm.resettasksListOtherPagination();
+                                            tvm.getTasksListOther(
+                                                id: data?.owner);
+                                          } else {
+                                            tvm.clearFilter();
+                                            tvm.resettasksListOwnPagination();
+                                            tvm.getTasksListOwn();
+                                          }
+                                        } else {
+                                          Navigator.pop(context);
+                                          toast(
+                                              tvm.errormsg ??
+                                                  "Something went wrong, Please try again.",
+                                              context,
+                                              isError: true);
+                                        }
+                                      },
+                                    );
+                                  },
+                                )
+                              ],
+                            ),
+                          );
+                        });
+                      });
                 },
               )
             ],

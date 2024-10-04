@@ -44,10 +44,18 @@ class _OwnLeadsState extends State<OwnLeads> {
             },
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.only(left: 30),
-              suffixIcon: Container(
-                  decoration: const BoxDecoration(
-                      shape: BoxShape.circle, color: AppColors.primeryColor),
-                  child: const Icon(Icons.search, color: Colors.white)),
+              suffixIcon: InkWell(
+                onTap: () {
+                  Provider.of<LeadsViewmodel>(context, listen: false)
+                      .resetleadsListOwnPagination();
+                  Provider.of<LeadsViewmodel>(context, listen: false)
+                      .getLeadsListOwn(searchTerm: controller?.text);
+                },
+                child: Container(
+                    decoration: const BoxDecoration(
+                        shape: BoxShape.circle, color: AppColors.primeryColor),
+                    child: const Icon(Icons.search, color: Colors.white)),
+              ),
               enabled: true,
               disabledBorder: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(5.0)),

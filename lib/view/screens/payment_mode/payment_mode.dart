@@ -12,13 +12,15 @@ import 'package:madathil/view/screens/homepage/homepage.dart';
 import 'package:madathil/view/screens/payment_mode/payment_succes.dart';
 import 'package:madathil/view/screens/payment_mode/widget/option_card.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
+import 'package:madathil/viewmodel/order_viewmodel.dart';
 import 'package:madathil/viewmodel/product_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class PaymentModeScreen extends StatefulWidget {
-  const PaymentModeScreen({super.key});
+  final bool? isfromCheckOut;
+  const PaymentModeScreen({super.key, this.isfromCheckOut});
 
   @override
   State<PaymentModeScreen> createState() => _PaymentModeScreenState();
@@ -43,26 +45,47 @@ class _PaymentModeScreenState extends State<PaymentModeScreen> {
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     log("${response.paymentId}");
     final productVm = Provider.of<ProductViewmodel>(context, listen: false);
+    final orderVm = Provider.of<OrderViewmodel>(context, listen: false);
     UtilFunctions.loaderPopup(context);
+    if (widget.isfromCheckOut == true) {
+      productVm
+          .createPayment(
+              orderId: productVm.checkOutData?.name,
+              payment: productVm.selectedpayment,
+              txnId: response.paymentId,
+              amount: int.tryParse(productVm.amountController.text))
+          .then((value) {
+        Navigator.of(context).pop();
+        if (value) {
+          productVm.clearamount();
+          toast(isError: true, "SUCCESS: ${response.paymentId}", context);
 
-    productVm
-        .createPayment(
-            orderId: productVm.checkOutData?.name,
-            payment: productVm.selectedpayment,
-            txnId: response.paymentId,
-            amount: int.tryParse(productVm.amountController.text))
-        .then((value) {
-      Navigator.of(context).pop();
-      if (value) {
-        productVm.clearamount();
-        toast(isError: true, "SUCCESS: ${response.paymentId}", context);
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const HomePage()));
+        } else {
+          toast(productVm.errormsg, context);
+        }
+      });
+    } else {
+      productVm
+          .createPayment(
+              orderId: orderVm.orderDetail?.name,
+              payment: productVm.selectedpayment,
+              txnId: response.paymentId,
+              amount: int.tryParse(productVm.amountController.text))
+          .then((value) {
+        Navigator.of(context).pop();
+        if (value) {
+          productVm.clearamount();
+          toast(isError: true, "SUCCESS: ${response.paymentId}", context);
 
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const HomePage()));
-      } else {
-        toast(productVm.errormsg, context);
-      }
-    });
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const HomePage()));
+        } else {
+          toast(productVm.errormsg, context);
+        }
+      });
+    }
 
     // Fluttertoast.showToast(
     //     msg: "SUCCESS: ${response.paymentId}", toastLength: Toast.LENGTH_SHORT);

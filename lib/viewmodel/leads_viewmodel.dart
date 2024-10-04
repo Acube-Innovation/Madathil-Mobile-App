@@ -212,8 +212,6 @@ class LeadsViewmodel extends ChangeNotifier {
     }
   }
 
-  // upcoming bookings pagination
-
   List<LeadsListOwnList>? _leadsListOwnList = [];
   List<LeadsListOwnList>? get leadsListOwnList => _leadsListOwnList;
   bool _isLoadingleadsListOwnPagination = false;
@@ -227,6 +225,7 @@ class LeadsViewmodel extends ChangeNotifier {
       return;
     }
     _isLoadingleadsListOwnPagination = true;
+    notifyListeners();
     await getLeadsListOwnApi(_leadsListOwnCurrentPage,
         fromdate: fromdate, todate: todate, searchTerm: searchTerm);
     final apiResponse = leadsListOwnResponse;
@@ -251,6 +250,85 @@ class LeadsViewmodel extends ChangeNotifier {
     _leadsListOwnCurrentPage = 0;
     _isLoadingleadsListOwnPagination = false;
     _reachedLastPageleadsListOwn = false;
+    notifyListeners();
+  }
+
+  //
+
+  //other leads
+
+  /*
+  * get other leads list api call
+  * */
+
+  LeadsListOwnResponse? _leadsListOtherResponse;
+  LeadsListOwnResponse? get leadsListOtherResponse => _leadsListOtherResponse;
+
+  Future<bool> getLeadsListOtherApi(int page, String uderID,
+      {String? fromdate, String? todate, String? searchTerm}) async {
+    try {
+      LeadsListOwnResponse? leadsListOtherResponse =
+          await apiRepository.getLeadsListOther(page, uderID,
+              fromdate: fromdate, todate: todate, searchTerm: searchTerm);
+      if ((leadsListOtherResponse?.data ?? []).isNotEmpty) {
+        notifyListeners();
+        _leadsListOtherResponse = leadsListOtherResponse;
+        return true;
+      }
+      _leadsListOtherList = null;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _errormsg = e.toString();
+      if (kDebugMode) {
+        print("error: ${e.toString()}");
+      }
+      notifyListeners();
+
+      return false;
+    }
+  }
+
+  List<LeadsListOwnList>? _leadsListOtherList = [];
+  List<LeadsListOwnList>? get leadsListOtherList => _leadsListOtherList;
+  bool _isLoadingleadsListOtherPagination = false;
+  bool get isLoadingleadsListOtherPagination =>
+      _isLoadingleadsListOtherPagination;
+  int _leadsListOtherCurrentPage = 0;
+  bool _reachedLastPageleadsListOther = false;
+  bool get reachedLastPageleadsListOther => _reachedLastPageleadsListOther;
+
+  Future<void> getLeadsListOther(
+      {String? searchTerm, required String uderID}) async {
+    if (_isLoadingleadsListOtherPagination || _reachedLastPageleadsListOther) {
+      return;
+    }
+    _isLoadingleadsListOtherPagination = true;
+    notifyListeners();
+    await getLeadsListOtherApi(_leadsListOtherCurrentPage, uderID,
+        fromdate: fromdate, todate: todate, searchTerm: searchTerm);
+    final apiResponse = leadsListOtherResponse;
+    if (apiResponse != null) {
+      final apiPosts = apiResponse.data ?? [];
+      if (apiPosts.length < 10) {
+        _reachedLastPageleadsListOther = true;
+      }
+      if (apiPosts.isNotEmpty) {
+        _leadsListOtherList?.addAll(apiPosts);
+      }
+      _leadsListOtherCurrentPage++;
+    }
+    _isLoadingleadsListOtherPagination = false;
+    if ((leadsListOtherList ?? []).isNotEmpty) {
+      notifyListeners();
+    }
+  }
+
+  void resetleadsListOtherPagination() {
+    _leadsListOtherList = [];
+    _leadsListOtherCurrentPage = 0;
+    _isLoadingleadsListOtherPagination = false;
+    _reachedLastPageleadsListOther = false;
     notifyListeners();
   }
 }

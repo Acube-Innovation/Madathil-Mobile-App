@@ -55,7 +55,9 @@ import 'package:madathil/model/model_class/api_response_model/service_status_lis
 import 'package:madathil/model/model_class/api_response_model/task_creation_response.dart';
 import 'package:madathil/model/model_class/api_response_model/task_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/task_list_others_response.dart';
+import 'package:madathil/model/model_class/api_response_model/task_list_own_response.dart';
 import 'package:madathil/model/model_class/api_response_model/task_status_response.dart';
+import 'package:madathil/model/model_class/api_response_model/task_update_response.dart';
 import 'package:madathil/model/model_class/local/environment.dart';
 import 'package:madathil/model/services/api_service/api_urls.dart';
 import 'package:madathil/model/services/local_db/hive_constants.dart';
@@ -161,6 +163,27 @@ class ApiViewModel {
 
       Response response = await dio.get(apiUrl, queryParameters: params);
 
+      if (response.statusCode == 200) {
+        return fromJson<T>(response.data);
+      } else {
+        throw Failure.fromCode(response.statusCode ?? ResponseCode.DEFAULT);
+      }
+    } on DioException catch (error) {
+      throw Failure.fromCode(
+          error.response?.statusCode ?? ResponseCode.DEFAULT);
+    }
+  }
+
+  Future<T?> put<T>(
+      {required String apiUrl, Map<String, dynamic>? data}) async {
+    try {
+      Map<String, dynamic>? savedCookies =
+          hiveInstance?.getData(DataBoxKey.cookie);
+      if (savedCookies != null && savedCookies.isNotEmpty) {
+        dio.options.headers[HttpHeaders.cookieHeader] =
+            savedCookies.entries.map((e) => '${e.key}=${e.value}').join('; ');
+      }
+      Response response = await dio.put(apiUrl, data: data);
       if (response.statusCode == 200) {
         return fromJson<T>(response.data);
       } else {
@@ -306,6 +329,10 @@ class ApiViewModel {
 
       case HomeDetailResponse:
         return HomeDetailResponse?.fromJson(json) as T;
+      case TasksListOwnResponse:
+        return TasksListOwnResponse?.fromJson(json) as T;
+      case TaskUpdateResponse:
+        return TaskUpdateResponse?.fromJson(json) as T;
 
       default:
         throw FromJsonNotImplementedException();
