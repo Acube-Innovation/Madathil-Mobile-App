@@ -484,7 +484,7 @@ class _OrderHistoryState extends State<OrderHistory> {
                               child: AbsorbPointer(
                                 child: CustomTextField(
                                   controller: cdv.dobController,
-                                  hint: 'Enter DOB',
+                                  hint: 'Select dates',
                                   suffixIcon: const Icon(Icons.calendar_month),
                                 ),
                               ),

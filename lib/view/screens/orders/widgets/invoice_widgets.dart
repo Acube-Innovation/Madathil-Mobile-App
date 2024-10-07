@@ -160,25 +160,27 @@ class InvoiceCard extends StatelessWidget {
                           txnid: invoice?.name,
                         )));
           },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                "Transaction",
-                style: Theme.of(context)
-                    .textTheme
-                    .bodySmall!
-                    .copyWith(color: AppColors.blue, height: 1.7),
-              ),
-              const SizedBox(
-                width: 2,
-              ),
-              const CustomPngImage(
-                imageName: AppImages.trans,
-                height: 20,
-                width: 20,
-              ),
-            ],
+          child: SizedBox(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  "Transaction",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall!
+                      .copyWith(color: AppColors.blue, height: 1.7),
+                ),
+                const SizedBox(
+                  width: 2,
+                ),
+                const CustomPngImage(
+                  imageName: AppImages.trans,
+                  height: 20,
+                  width: 20,
+                ),
+              ],
+            ),
           ),
         )
       ],

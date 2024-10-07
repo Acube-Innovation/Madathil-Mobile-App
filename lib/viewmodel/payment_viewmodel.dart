@@ -78,7 +78,7 @@ class PaymentViewmodel extends ChangeNotifier {
       isLoading = true;
       notifyListeners();
       Map<String, dynamic> filters = {
-        "party": ["like", paymentSearchfn != null ? "$paymentSearchfn%" : "%"],
+        "party": ["like", paymentSearchfn != null ? "%$paymentSearchfn%" : "%"],
       };
 
       // Only add "posting_date" filter if start and end dates are provided
@@ -173,7 +173,7 @@ class PaymentViewmodel extends ChangeNotifier {
     } catch (e) {
       _errormsg = e.toString();
       print(
-          'error message ---------------------------------------------- ${_errormsg}');
+          'error message ---------------------------------------------- $_errormsg');
       isLoading = false;
       notifyListeners();
       return false;
@@ -196,8 +196,8 @@ class PaymentViewmodel extends ChangeNotifier {
 
     await getPaymentHistoryList(page: paymentCurrentPage);
     final apiResponse = paymentList;
-    print('payment list ------------------------------ ${paymentList}');
-    print('api response ------------------------------ ${apiResponse}');
+    print('payment list ------------------------------ $paymentList');
+    print('api response ------------------------------ $apiResponse');
 
     if (apiResponse != null) {
       final apiPosts = apiResponse;
@@ -206,9 +206,9 @@ class PaymentViewmodel extends ChangeNotifier {
       }
       paymentPost?.addAll(apiPosts);
       paymentCurrentPage++;
-      print('payment post ------------------------------ ${paymentPost}');
+      print('payment post ------------------------------ $paymentPost');
       print(
-          'payment current page ------------------------------ ${paymentCurrentPage}');
+          'payment current page ------------------------------ $paymentCurrentPage');
     }
     _paginationclosing = false;
     if ((paymentPost ?? []).isNotEmpty) {
@@ -310,7 +310,7 @@ class PaymentViewmodel extends ChangeNotifier {
       return false;
     } catch (e) {
       _errormsg = e.toString();
-      log('error message ---------------------------------------------- ${_errormsg}');
+      log('error message ---------------------------------------------- $_errormsg');
       isLoading = false;
       notifyListeners();
       return false;
@@ -344,5 +344,4 @@ class PaymentViewmodel extends ChangeNotifier {
       return [];
     }
   }
-
 }

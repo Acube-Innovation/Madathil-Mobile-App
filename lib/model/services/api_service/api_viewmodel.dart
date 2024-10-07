@@ -20,11 +20,14 @@ import 'package:madathil/model/model_class/api_response_model/create_address_res
 import 'package:madathil/model/model_class/api_response_model/create_call_response.dart';
 import 'package:madathil/model/model_class/api_response_model/create_check_out_response_model.dart';
 import 'package:madathil/model/model_class/api_response_model/create_customer_response.dart';
+import 'package:madathil/model/model_class/api_response_model/create_payment_response.dart';
 import 'package:madathil/model/model_class/api_response_model/customer_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/employee_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/employee_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/forgot_password_response.dart';
 import 'package:madathil/model/model_class/api_response_model/general_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get__payment_method.dart';
+import 'package:madathil/model/model_class/api_response_model/get_brand_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get_customer_address_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get_customer_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get_order_response.dart';
@@ -333,6 +336,12 @@ class ApiViewModel {
         return TasksListOwnResponse?.fromJson(json) as T;
       case TaskUpdateResponse:
         return TaskUpdateResponse?.fromJson(json) as T;
+      case GetBrandResponse:
+        return GetBrandResponse?.fromJson(json) as T;
+      case CreatePaymentResponse:
+        return CreatePaymentResponse?.fromJson(json) as T;
+      case ForgotPasswordResponse:
+        return ForgotPasswordResponse?.fromJson(json) as T;
 
       default:
         throw FromJsonNotImplementedException();

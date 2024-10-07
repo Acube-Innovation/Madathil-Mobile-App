@@ -3,6 +3,7 @@ import 'package:madathil/app_images.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
 import 'package:madathil/model/services/api_service/api_urls.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/utils/custom_loader.dart';
 import 'package:madathil/utils/util_functions.dart';
 import 'package:madathil/view/screens/cart/cart_screen.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
@@ -53,11 +54,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       ),
       body: Consumer<ProductViewmodel>(builder: (context, pvm, _) {
         return pvm.isLoading
-            ? const Center(
-                child: CircularProgressIndicator(
-                  color: AppColors.secondaryColor,
-                ),
-              )
+            ? const CustomLoader()
             : Stack(
                 children: [
                   // Top part (Image with shadow)

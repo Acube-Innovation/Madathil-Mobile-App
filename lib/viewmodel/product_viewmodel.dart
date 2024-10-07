@@ -6,7 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:madathil/model/model_class/api_response_model/create_check_out_response_model.dart';
+import 'package:madathil/model/model_class/api_response_model/create_payment_response.dart';
+import 'package:madathil/model/model_class/api_response_model/general_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get__payment_method.dart';
+import 'package:madathil/model/model_class/api_response_model/get_brand_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get_order_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
@@ -87,75 +90,34 @@ class ProductViewmodel extends ChangeNotifier {
   Future<bool> getProductList({int? page, bool? isSolar}) async {
     try {
       setLoader(true);
-      Map<String, dynamic>? param = {};
+      // Map<String, dynamic>? param = {};
+      Map<String, dynamic> filters = {};
       if (isSolar == true) {
-        if (startFormatted != null && endFormatted != null) {
-          param = {
-            "filters": jsonEncode({
-              "business": "Solar",
-              "creation": [
-                "between",
-                [startFormatted, endFormatted],
-              ],
-              "item_name": [
-                "like",
-                productSearchfn != null ? "%$productSearchfn%" : "%"
-              ]
-            }),
-            "limit_start": page! * 10,
-            "limit": 10,
-            "order_by": "modified desc"
-          };
-        } else {
-          param = {
-            "filters": jsonEncode({
-              "business": "Solar",
-              "item_name": [
-                "like",
-                productSearchfn != null ? "%$productSearchfn%" : "%"
-              ]
-            }),
-            "limit_start": page! * 10,
-            "limit": 10,
-            "order_by": "modified desc"
-          };
-        }
+        filters["business"] = "Solar";
       } else {
-        if (startFormatted != null && endFormatted != null) {
-          param = {
-            "filters": jsonEncode({
-              "business": "Trading",
-              "creation": [
-                "between",
-                [startFormatted, endFormatted]
-              ],
-              "item_name": [
-                "like",
-                productSearchfn != null ? "%$productSearchfn%" : "%"
-              ]
-            }),
-            "limit_start": page! * 10,
-            "limit": 10,
-            "order_by": "modified desc"
-          };
-        } else {
-          param = {
-            "filters": jsonEncode({
-              "business": "Trading",
-              "item_name": [
-                "like",
-                productSearchfn != null ? "%$productSearchfn%" : "%"
-              ]
-            }),
-            "limit_start": page! * 10,
-            "limit": 10,
-            "order_by": "modified desc"
-          };
-        }
+        filters["business"] = "Trading";
       }
 
+      if (startFormatted != null && endFormatted != null) {
+        filters["creation"] = [
+          "between",
+          [startFormatted, endFormatted]
+        ];
+      }
+      if (productSearchfn != null) {
+        filters["item_name"] = ["like", "%$productSearchfn%"];
+      }
+      if (selectedBrand != null) {
+        filters["brand"] = selectedBrand;
+      }
       ProductListResponse? response =
-          await apiRepository.getProductList(param: param);
+          // await apiRepository.getProductList(param: param);
+          await apiRepository.getProductList(param: {
+        "filters": jsonEncode(filters),
+        "limit_start": page! * 10,
+        "limit": 10,
+        "order_by": "modified desc"
+      });
       if ((response?.message ?? []).isNotEmpty) {
         // _productListResponse = response;
         productList?.clear();
@@ -220,6 +182,11 @@ class ProductViewmodel extends ChangeNotifier {
     startFormatted = null;
     endFormatted = null;
     dobController.clear();
+    notifyListeners();
+  }
+
+  clearFiters() {
+    selectedBrand = null;
     notifyListeners();
   }
   /*
@@ -333,6 +300,7 @@ class ProductViewmodel extends ChangeNotifier {
     }
   }
 
+  PaymentMessage? paymentMessage;
   Future<bool> createPayment(
       {String? orderId, String? payment, String? txnId, int? amount}) async {
     try {
@@ -345,7 +313,9 @@ class ProductViewmodel extends ChangeNotifier {
         "amount": amount
       });
       if (UtilFunctions.checkAPIStatus(response!.message?.success)) {
-        log(response.message?.message ?? "");
+        paymentMessage = null;
+        paymentMessage = response.message;
+        log(response.message?.paymentEntry ?? "");
 
         setLoader(false);
 
@@ -431,6 +401,49 @@ class ProductViewmodel extends ChangeNotifier {
 
   clearCart() {
     cartItmes.clear();
+    notifyListeners();
+  }
+
+  // List<Brand>? brandlist = [];
+  List<String> brand = [];
+
+  Future<bool> getBrand() async {
+    try {
+      setLoader(true);
+
+      GetBrandResponse? response = await apiRepository.getBrand(param: {
+        "fields": jsonEncode(["name", "brand"]),
+
+        "order_by": "modified desc",
+        // "filters":
+      });
+      if ((response?.data ?? []).isNotEmpty) {
+        // _productListResponse = response;
+
+        var brandlist = response?.data;
+        if (brandlist != null) {
+          brand = brandlist.map((brand) => brand.brand ?? '').toList();
+        }
+
+        log("brand list------------> ${brandlist?.length ?? []}");
+        setLoader(false);
+
+        return true;
+      } else {
+        setLoader(false);
+        return false;
+      }
+    } catch (e) {
+      setLoader(false);
+      _errormsg = e.toString();
+      log(e.toString());
+      return false;
+    }
+  }
+
+  String? selectedBrand;
+  setSelBrand(String? val) {
+    selectedBrand = val;
     notifyListeners();
   }
 }

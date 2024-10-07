@@ -26,6 +26,9 @@ class PrdoductList extends StatefulWidget {
 class _PrdoductListState extends State<PrdoductList> {
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Provider.of<ProductViewmodel>(context, listen: false).getBrand();
+    });
     super.initState();
   }
 
@@ -301,6 +304,18 @@ class _PrdoductListState extends State<PrdoductList> {
                                         productVm.clearDateRange();
                                         productVm.resetProductPagination();
                                       }
+                                    } else if (productVm.selectedBrand !=
+                                        null) {
+                                      productVm.clearFiters();
+                                      if (productVm.tabindex == 0) {
+                                        productVm.resetProductPagination();
+                                        productVm.fetchProductList(
+                                            isSolarProduct: true);
+                                      } else {
+                                        productVm.resetProductPagination();
+                                        productVm.fetchProductList(
+                                            isSolarProduct: false);
+                                      }
                                     }
                                     Navigator.pop(context);
                                   },
@@ -359,7 +374,7 @@ class _PrdoductListState extends State<PrdoductList> {
                                 child: AbsorbPointer(
                                   child: CustomTextField(
                                     controller: cdv.dobController,
-                                    hint: 'Enter DOB',
+                                    hint: 'Select dates',
                                     suffixIcon:
                                         const Icon(Icons.calendar_month),
                                   ),
@@ -370,20 +385,22 @@ class _PrdoductListState extends State<PrdoductList> {
 
                             CustomDropdown(
                               hint: 'Select Brand',
-                              items: const ["Brand", "LG"],
-                              // selectedItem: 'Brand',
-                              onChanged: (String? value) {},
+                              items: productVm.brand ?? [],
+                              selectedItem: cdv.selectedBrand,
+                              onChanged: (String? value) {
+                                productVm.setSelBrand(value);
+                              },
                             ),
                             const SizedBox(height: 15),
 
-                            CustomDropdown(
-                              hint: 'Select Size',
-                              items: const ["Size", "walt"],
-                              // selectedItem: 'Size',
-                              onChanged: (String? value) {},
-                            ),
+                            // CustomDropdown(
+                            //   hint: 'Select Size',
+                            //   items: const ["Size", "walt"],
+                            //   // selectedItem: 'Size',
+                            //   onChanged: (String? value) {},
+                            // ),
 
-                            const SizedBox(height: 30),
+                            // const SizedBox(height: 30),
 
                             // Provides spacing before the button
                             const Spacer(),
@@ -391,6 +408,16 @@ class _PrdoductListState extends State<PrdoductList> {
                               height: 44,
                               width: double.infinity,
                               onPressed: () {
+                                if (productVm.tabindex == 0) {
+                                  productVm.resetProductPagination();
+                                  productVm.fetchProductList(
+                                      isSolarProduct: true);
+                                } else {
+                                  productVm.resetProductPagination();
+                                  productVm.fetchProductList(
+                                      isSolarProduct: false);
+                                }
+
                                 Navigator.pop(context);
                               },
                               text: "Apply",

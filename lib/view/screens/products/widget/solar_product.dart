@@ -176,7 +176,7 @@ class _SolarProductListState extends State<SolarProductList> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "Brand",
+                                        item.brand ?? "Brand",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium!
@@ -195,28 +195,28 @@ class _SolarProductListState extends State<SolarProductList> {
                                               color: AppColors.primeryColor,
                                             ),
                                       ),
-                                      Text(
-                                        "Size",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall!
-                                            .copyWith(
-                                              height: 1.7,
-                                              color: AppColors.primeryColor,
-                                            ),
-                                      ),
-                                      Text(
-                                        item.creation?.day.toString() ?? "",
-                                        // "1200*100 / 1350 *700",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelSmall!
-                                            .copyWith(
-                                              height: 1.7,
-                                              color: AppColors.primeryColor,
-                                            ),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
+                                      // Text(
+                                      //   "Size",
+                                      //   style: Theme.of(context)
+                                      //       .textTheme
+                                      //       .bodySmall!
+                                      //       .copyWith(
+                                      //         height: 1.7,
+                                      //         color: AppColors.primeryColor,
+                                      //       ),
+                                      // ),
+                                      // Text(
+                                      //   item.creation?.day.toString() ?? "",
+                                      //   // "1200*100 / 1350 *700",
+                                      //   style: Theme.of(context)
+                                      //       .textTheme
+                                      //       .labelSmall!
+                                      //       .copyWith(
+                                      //         height: 1.7,
+                                      //         color: AppColors.primeryColor,
+                                      //       ),
+                                      //   overflow: TextOverflow.ellipsis,
+                                      // ),
                                       const SizedBox(
                                         height: 20,
                                       ),

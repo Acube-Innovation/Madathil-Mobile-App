@@ -57,12 +57,20 @@ class _PaymentModeScreenState extends State<PaymentModeScreen> {
         Navigator.of(context).pop();
         if (value) {
           productVm.clearamount();
-          toast(isError: true, "SUCCESS: ${response.paymentId}", context);
+          // toast(isError: true, "SUCCESS: ${response.paymentId}", context);
+          Fluttertoast.showToast(
+              backgroundColor: AppColors.green,
+              msg: "SUCCESS: ${response.paymentId}",
+              toastLength: Toast.LENGTH_SHORT);
 
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => const HomePage()));
         } else {
-          toast(productVm.errormsg, context);
+          // toast(productVm.errormsg, context);
+          Fluttertoast.showToast(
+              backgroundColor: AppColors.red,
+              msg: productVm.errormsg ?? "",
+              toastLength: Toast.LENGTH_SHORT);
         }
       });
     } else {
@@ -76,12 +84,20 @@ class _PaymentModeScreenState extends State<PaymentModeScreen> {
         Navigator.of(context).pop();
         if (value) {
           productVm.clearamount();
-          toast("SUCCESS: ${response.paymentId}", context);
+          // toast("SUCCESS: ${response.paymentId}", context, isError: );
+          Fluttertoast.showToast(
+              backgroundColor: AppColors.green,
+              msg: "SUCCESS: ${response.paymentId}",
+              toastLength: Toast.LENGTH_SHORT);
 
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => const HomePage()));
         } else {
-          toast(isError: false, productVm.errormsg, context);
+          Fluttertoast.showToast(
+              backgroundColor: AppColors.red,
+              msg: productVm.errormsg ?? "",
+              toastLength: Toast.LENGTH_SHORT);
+          // toast(isError: false, productVm.errormsg, context);
         }
       });
     }
@@ -129,6 +145,7 @@ class _PaymentModeScreenState extends State<PaymentModeScreen> {
   Widget build(BuildContext context) {
     final commonVm = Provider.of<CommonDataViewmodel>(context, listen: false);
     final productVm = Provider.of<ProductViewmodel>(context, listen: false);
+    final orderVm = Provider.of<OrderViewmodel>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
         title: "Payment Mode",
@@ -194,11 +211,37 @@ class _PaymentModeScreenState extends State<PaymentModeScreen> {
               openCheckout(
                   int.tryParse(productVm.amountController.text)?.toInt());
             } else {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const PaymentSuccess(),
-                  ));
+              if (widget.isfromCheckOut == true) {
+                productVm
+                    .createPayment(
+                        orderId: productVm.checkOutData?.name,
+                        payment: productVm.selectedpayment,
+                        txnId: DateTime.now().toString(),
+                        amount: int.tryParse(productVm.amountController.text))
+                    .then((value) {
+                  if (value) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PaymentSuccess(),
+                        ));
+                  }
+                });
+              } else {
+                productVm
+                    .createPayment(
+                        orderId: orderVm.orderDetail?.name,
+                        payment: productVm.selectedpayment,
+                        txnId: DateTime.now().toString(),
+                        amount: int.tryParse(productVm.amountController.text))
+                    .then((value) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const PaymentSuccess(),
+                      ));
+                });
+              }
             }
           },
         ),
