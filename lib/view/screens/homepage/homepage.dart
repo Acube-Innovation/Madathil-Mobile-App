@@ -10,11 +10,9 @@ import 'package:madathil/view/screens/homepage/components/drawer_widget.dart';
 import 'package:madathil/view/screens/homepage/components/home_item_widget.dart';
 import 'package:madathil/view/screens/leads/leads_screen.dart';
 import 'package:madathil/view/screens/orders/orders_screen.dart';
-import 'package:madathil/view/screens/payment_mode/payment_mode.dart';
 import 'package:madathil/view/screens/products/product_list.dart';
 import 'package:madathil/view/screens/profile/profile_screen.dart';
 import 'package:madathil/view/screens/service/service_history_screen.dart';
-import 'package:madathil/view/screens/service_list/service_list.dart';
 import 'package:madathil/view/screens/tasks/task_screen.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:madathil/viewmodel/leads_viewmodel.dart';
@@ -47,114 +45,113 @@ class HomePage extends StatelessWidget {
             )
           ],
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: Column(
-              children: [
-                getDashboardDetails("admin", context),
-                const SizedBox(height: 10),
-                getBody("admin", context),
-              ],
+        body: Consumer<CommonDataViewmodel>(builder: (context, cdv, _) {
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: cdv.homeDetailData == null
+                  ? const Center(child: CupertinoActivityIndicator())
+                  : Column(
+                      children: [
+                        getDashboardDetails("admin", context, cdv),
+                        const SizedBox(height: 10),
+                        getBody("admin", context, cdv),
+                      ],
+                    ),
             ),
-          ),
-        ));
+          );
+        }));
   }
 
-  getDashboardDetails(String? login, BuildContext context) {
-    return Consumer<CommonDataViewmodel>(builder: (context, cdv, _) {
-      var data = cdv.homeDetailData?.message;
-      return Card(
-        elevation: 5,
-        child: SizedBox(
-          height: 120,
-          child: cdv.homeDetailData == null
-              ? const CupertinoActivityIndicator()
-              : Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    InkWell(
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LeadsScreen())),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            data?.openLeads.toString() ?? "",
-                            style: const TextStyle(
-                                color: AppColors.primaryLightColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 22),
-                          ),
-                          const Text(
-                            "New Leads",
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
+  getDashboardDetails(
+      String? login, BuildContext context, CommonDataViewmodel cdv) {
+    var data = cdv.homeDetailData?.message;
+    return Card(
+      elevation: 5,
+      child: SizedBox(
+        height: 120,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            InkWell(
+              onTap: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const LeadsScreen())),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    data?.openLeads.toString() ?? "",
+                    style: const TextStyle(
+                        color: AppColors.primaryLightColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22),
+                  ),
+                  const Text(
+                    "New Leads",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
                     ),
-                    const VerticalDivider(endIndent: 50, indent: 50),
-                    InkWell(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            data?.sales.toString() ?? "",
-                            style: const TextStyle(
-                                color: AppColors.primaryLightColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 22),
-                          ),
-                          const Text(
-                            "Sales",
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
+                  ),
+                ],
+              ),
+            ),
+            const VerticalDivider(endIndent: 50, indent: 50),
+            InkWell(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    data?.sales.toString() ?? "",
+                    style: const TextStyle(
+                        color: AppColors.primaryLightColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22),
+                  ),
+                  const Text(
+                    "Sales",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
                     ),
-                    const VerticalDivider(endIndent: 50, indent: 50),
-                    InkWell(
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ReferalScreen())),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            data?.referralPoints.toString() ?? "",
-                            style: const TextStyle(
-                                color: AppColors.primaryLightColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 22),
-                          ),
-                          const Text(
-                            "Reference Points",
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
+                  ),
+                ],
+              ),
+            ),
+            const VerticalDivider(endIndent: 50, indent: 50),
+            InkWell(
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ReferalScreen())),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    data?.referralPoints.toString() ?? "",
+                    style: const TextStyle(
+                        color: AppColors.primaryLightColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22),
+                  ),
+                  const Text(
+                    "Reference Points",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
                     ),
-                  ],
-                ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-      );
-    });
+      ),
+    );
   }
 
-  getBody(String? login, BuildContext context) {
+  getBody(String? login, BuildContext context, CommonDataViewmodel cdv) {
     switch (login) {
       case "admin":
         return Column(

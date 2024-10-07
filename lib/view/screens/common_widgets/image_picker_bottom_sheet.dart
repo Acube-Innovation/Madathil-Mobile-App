@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:madathil/viewmodel/customer_viewmodel.dart';
 import 'package:provider/provider.dart';
 

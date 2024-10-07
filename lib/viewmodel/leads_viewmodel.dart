@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:madathil/model/model_class/api_response_model/create_address_response_model.dart';
+import 'package:madathil/model/model_class/api_response_model/image_uploade_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_creation_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_list_own_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_source_list_response.dart';
@@ -131,6 +135,31 @@ class LeadsViewmodel extends ChangeNotifier {
   * leads creation api call
   * */
 
+  /*
+  * file uploade api call
+  * */
+
+  Future<ImageUploadeResponse?> uploadDocument(
+    File file,
+  ) async {
+    var data = FormData.fromMap({
+      'file': await MultipartFile.fromFile(
+        file.path,
+        filename: file.path.split('/').last,
+      ),
+    });
+
+    return await apiRepository.documentUpload(data);
+  }
+
+  String? _leadCreationImage;
+  String? get leadCreationImage => _leadCreationImage;
+
+  addImage(String? val) {
+    _leadCreationImage = val;
+    notifyListeners();
+  }
+
   String? _leadCreationDetails;
   String? get leadCreationDetails => _leadCreationDetails;
 
@@ -194,11 +223,11 @@ class LeadsViewmodel extends ChangeNotifier {
           await apiRepository.getLeadsListOwn(page,
               fromdate: fromdate, todate: todate, searchTerm: searchTerm);
       if ((leadsListOwnResponse?.data ?? []).isNotEmpty) {
-        notifyListeners();
         _leadsListOwnResponse = leadsListOwnResponse;
+        notifyListeners();
         return true;
       }
-      _leadsListOwnList = null;
+      _leadsListOwnResponse = null;
       notifyListeners();
       return false;
     } catch (e) {
@@ -225,15 +254,14 @@ class LeadsViewmodel extends ChangeNotifier {
       return;
     }
     _isLoadingleadsListOwnPagination = true;
-    notifyListeners();
     await getLeadsListOwnApi(_leadsListOwnCurrentPage,
         fromdate: fromdate, todate: todate, searchTerm: searchTerm);
     final apiResponse = leadsListOwnResponse;
+    final apiPosts = apiResponse?.data ?? [];
+    if (apiPosts.length < 10) {
+      _reachedLastPageleadsListOwn = true;
+    }
     if (apiResponse != null) {
-      final apiPosts = apiResponse.data ?? [];
-      if (apiPosts.length < 10) {
-        _reachedLastPageleadsListOwn = true;
-      }
       if (apiPosts.isNotEmpty) {
         _leadsListOwnList?.addAll(apiPosts);
       }
@@ -275,7 +303,7 @@ class LeadsViewmodel extends ChangeNotifier {
         _leadsListOtherResponse = leadsListOtherResponse;
         return true;
       }
-      _leadsListOtherList = null;
+      _leadsListOtherResponse = null;
       notifyListeners();
       return false;
     } catch (e) {
@@ -308,11 +336,11 @@ class LeadsViewmodel extends ChangeNotifier {
     await getLeadsListOtherApi(_leadsListOtherCurrentPage, uderID,
         fromdate: fromdate, todate: todate, searchTerm: searchTerm);
     final apiResponse = leadsListOtherResponse;
+    final apiPosts = apiResponse?.data ?? [];
+    if (apiPosts.length < 10) {
+      _reachedLastPageleadsListOther = true;
+    }
     if (apiResponse != null) {
-      final apiPosts = apiResponse.data ?? [];
-      if (apiPosts.length < 10) {
-        _reachedLastPageleadsListOther = true;
-      }
       if (apiPosts.isNotEmpty) {
         _leadsListOtherList?.addAll(apiPosts);
       }

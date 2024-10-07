@@ -1,11 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:madathil/utils/custom_loader.dart';
 import 'package:madathil/utils/util_functions.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
 import 'package:madathil/view/screens/common_widgets/custom_dropdown.dart';
 import 'package:madathil/view/screens/common_widgets/custom_text_field.dart';
+import 'package:madathil/view/screens/common_widgets/image_picker_bottom_sheet.dart';
 import 'package:madathil/viewmodel/auth_viewmodel.dart';
+import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:madathil/viewmodel/leads_viewmodel.dart';
 import 'package:provider/provider.dart';
 import '../../../utils/color/app_colors.dart';
@@ -165,7 +170,7 @@ class LeadCreationScreen extends StatelessWidget {
                     onchaged: (val) {},
                     controller: cnsmrNoCTLR,
                     hint: 'Enter the Consumer Number',
-                    validator: UtilFunctions.validateName,
+                    validator: UtilFunctions.validateConsumerNumber,
                   ),
                   const SizedBox(height: 10),
 
@@ -227,80 +232,107 @@ class LeadCreationScreen extends StatelessWidget {
                         ),
                   ),
 
-                  CustomTextField(
-                      onchaged: (val) {},
-                      suffixIcon: const Icon(Icons.camera_alt_outlined,
-                          color: AppColors.primeryColor),
-                      enabled: false,
-                      hint: 'Select image of the lead',
-                      validator: (val) {
-                        return;
-                      }),
-                  const SizedBox(height: 10),
-
-                  // Add Lead Button
-                  CustomButton(
-                    text: "Add Lead",
-                    height: 43,
-                    width: double.maxFinite,
-                    onPressed: () {
-                      if (authVm.formKey1.currentState!.validate()) {
-                        UtilFunctions.loaderPopup(context);
-                        // Handle lead addition logic
-                        Provider.of<LeadsViewmodel>(context, listen: false)
-                            .createLead({
-                          "lead_name": ldNameCTLR.text,
-                          "ld_source": ldSourceCTLR.text,
-                          "lead_category": ldCtgryCTLR.text,
-                          "number_to_be_contacted": cntNoCTLR.text,
-                          "email_id": cntEmailCTLR.text,
-                          "consumer_number": cnsmrNoCTLR.text,
-                          "aadhaar_number": adhrNoCTLR.text,
-                          // "image":
-                          //     "/files/Screenshot from 2024-09-23 12-29-00.png",
-                          // "latitude": "9.1231231",
-                          // "longitude": "76.312312"
-                        }).then(
-                          (value) {
-                            if (value) {
-                              // Handle lead addition logic
-                              Provider.of<LeadsViewmodel>(context,
-                                      listen: false)
-                                  .createLeadAddress({
-                                "address_line1": adrsCTLR.text,
-                                "city": cityCTLR.text,
-                                "links": [
-                                  {
-                                    "link_doctype": "Lead",
-                                    "link_name": "CRM-LEAD-2024-170859"
-                                  }
-                                ]
-                              }).then(
-                                (value) {
-                                  toast("Lead created successfully", context);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
+                  Consumer<LeadsViewmodel>(builder: (context, lvm, _) {
+                    return InkWell(
+                      onTap: () {
+                        showModalBottomSheet(
+                            isDismissible: true,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.white,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return ImagePickerBottomSheet1(
+                                onImagePicked: (XFile? image) {
+                                  lvm
+                                      .uploadDocument(File(image?.path ?? ""))
+                                      .then((val) {
+                                    if (val?.message?.fileUrl != null) {
+                                      lvm.addImage(val?.message?.fileUrl);
+                                    } else {
+                                      toast("failed to  upload document ",
+                                          context);
+                                    }
+                                  });
                                 },
                               );
-                            } else {
-                              Navigator.pop(context);
-                              toast(
-                                  Provider.of<LeadsViewmodel>(context,
-                                          listen: false)
-                                      .errormsg,
-                                  context,
-                                  isError: true);
-                            }
-                          },
-                        );
-                      } else {
-                        // Handle validation failure
-                        toast(
-                            "Please check if all the fields are added", context,
-                            isError: true);
-                      }
-                    },
-                  ),
+                            });
+                      },
+                      child: CustomTextField(
+                          onchaged: (val) {},
+                          suffixIcon: const Icon(Icons.camera_alt_outlined,
+                              color: AppColors.primeryColor),
+                          enabled: false,
+                          hint: lvm.leadCreationImage ??
+                              'Select image of the lead',
+                          validator: (val) {
+                            return;
+                          }),
+                    );
+                  }),
+                  const SizedBox(height: 10),
+                  // Add Lead Button
+                  Consumer2<LeadsViewmodel, CommonDataViewmodel>(
+                      builder: (context, lvm, cdv, _) {
+                    return CustomButton(
+                      text: "Add Lead",
+                      height: 43,
+                      width: double.maxFinite,
+                      onPressed: () async {
+                        if (authVm.formKey1.currentState!.validate()) {
+                          UtilFunctions.loaderPopup(context);
+                          await UtilFunctions()
+                              .checkLocationPermission(context);
+                          if (cdv.lat != null && cdv.long != null) {
+                            lvm.createLead({
+                              "lead_name": ldNameCTLR.text,
+                              "ld_source": ldSourceCTLR.text,
+                              "lead_category": ldCtgryCTLR.text,
+                              "number_to_be_contacted": cntNoCTLR.text,
+                              "email_id": cntEmailCTLR.text,
+                              "consumer_number": cnsmrNoCTLR.text,
+                              "aadhaar_number": adhrNoCTLR.text,
+                              "image": lvm.leadCreationImage,
+                              "latitude": cdv.lat,
+                              "longitude": cdv.long
+                            }).then(
+                              (value) {
+                                if (value) {
+                                  // Handle lead addition logic
+                                  lvm.createLeadAddress({
+                                    "address_line1": adrsCTLR.text,
+                                    "city": cityCTLR.text,
+                                    "links": [
+                                      {
+                                        "link_doctype": "Lead",
+                                        "link_name":
+                                            lvm.leadCreationDetails ?? ""
+                                      }
+                                    ]
+                                  }).then(
+                                    (value) {
+                                      toast(
+                                          "Lead created successfully", context);
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                    },
+                                  );
+                                } else {
+                                  toast(lvm.errormsg, context, isError: true);
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                }
+                              },
+                            );
+                          }
+                        } else {
+                          // Handle validation failure
+                          toast("Please check if all the fields are added",
+                              context,
+                              isError: true);
+                        }
+                      },
+                    );
+                  }),
                   const SizedBox(height: 10),
                 ],
               ),

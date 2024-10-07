@@ -69,7 +69,6 @@ class TasksScreen extends StatelessWidget {
   void showfilterPopup(BuildContext context,
       {bool? isOtherTask, String? otherOwner}) {
     showModalBottomSheet(
-      isDismissible: false,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       context: context,
@@ -115,6 +114,15 @@ class TasksScreen extends StatelessWidget {
                                 GestureDetector(
                                   onTap: () {
                                     tvm.clearFilter();
+                                    tvm.clearDates();
+                                    if (isOtherTask!) {
+                                      tvm.resettasksListOtherPagination();
+                                      tvm.getTasksListOther(id: otherOwnerId);
+                                    } else {
+                                      tvm.resettasksListOwnPagination();
+                                      tvm.getTasksListOwn();
+                                    }
+
                                     Navigator.pop(context);
                                   },
                                   child: const Icon(
@@ -175,6 +183,9 @@ class TasksScreen extends StatelessWidget {
                                   Provider.of<TasksViewmodel>(context,
                                           listen: false)
                                       .resettasksListOtherPagination();
+                                  Provider.of<TasksViewmodel>(context,
+                                          listen: false)
+                                      .resettasksListOwnPagination();
                                   if (isOtherTask!) {
                                     Provider.of<TasksViewmodel>(context,
                                             listen: false)

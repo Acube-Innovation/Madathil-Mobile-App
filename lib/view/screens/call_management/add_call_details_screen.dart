@@ -523,8 +523,8 @@ class AddCallDetailsScreen extends StatelessWidget {
                                 Provider.of<CallViewModel>(context,
                                         listen: false)
                                     .fetchCallList();
-                                toast("Service Added Successfully", context,
-                                    isError: true);
+                                toast("Call Details Added Successfully", context,
+                                    isError: false);
                                 Navigator.pop(context);
                               } else {
                                 toast(cvm.errormsg, context);
@@ -533,7 +533,7 @@ class AddCallDetailsScreen extends StatelessWidget {
 
                             // Navigator.pop(context);
                           } else {
-                            toast("Required Field missing", context);
+                            toast("Required Field missing", context, isError: true);
                           }
                         },
                       ),

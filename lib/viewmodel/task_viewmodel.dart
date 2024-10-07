@@ -339,7 +339,7 @@ class TasksViewmodel extends ChangeNotifier {
         notifyListeners();
         return true;
       }
-      _tasksListOtherList = null;
+      _tasksListOtherResponse = null;
       notifyListeners();
       return false;
     } catch (e) {
@@ -374,11 +374,11 @@ class TasksViewmodel extends ChangeNotifier {
     await getTasksListOthersApi(_tasksListOtherCurrentPage,
         fromdate: fromdate, todate: todate, searchTerm: searchTerm, id: id);
     final apiResponse = tasksListOtherResponse;
+    final apiPosts = apiResponse?.data ?? [];
+    if (apiPosts.length < 10) {
+      _reachedLastPagetasksListOther = true;
+    }
     if (apiResponse != null) {
-      final apiPosts = apiResponse.data ?? [];
-      if (apiPosts.length < 10) {
-        _reachedLastPagetasksListOther = true;
-      }
       if (apiPosts.isNotEmpty) {
         _tasksListOtherList?.addAll(apiPosts);
       }
@@ -424,7 +424,7 @@ class TasksViewmodel extends ChangeNotifier {
         notifyListeners();
         return true;
       }
-      _tasksListOwnList = null;
+      _tasksListOwnResponse = null;
       notifyListeners();
       return false;
     } catch (e) {
@@ -455,11 +455,11 @@ class TasksViewmodel extends ChangeNotifier {
     await getTasksListOwnsApi(_tasksListOwnCurrentPage,
         fromdate: fromdate, todate: todate, searchTerm: searchTerm);
     final apiResponse = tasksListOwnResponse;
+    final apiPosts = apiResponse?.message ?? [];
+    if (apiPosts.length < 10) {
+      _reachedLastPagetasksListOwn = true;
+    }
     if (apiResponse != null) {
-      final apiPosts = apiResponse.message ?? [];
-      if (apiPosts.length < 10) {
-        _reachedLastPagetasksListOwn = true;
-      }
       if (apiPosts.isNotEmpty) {
         _tasksListOwnList?.addAll(apiPosts);
       }
