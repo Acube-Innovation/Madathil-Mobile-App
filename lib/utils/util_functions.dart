@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:location/location.dart' as loc;
+import 'package:madathil/viewmodel/common_viewmodel.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 class UtilFunctions {
   static String? validateName(String? value) {
@@ -12,6 +16,15 @@ class UtilFunctions {
       return 'Mobile number is required';
     } else if (!RegExp(r'^\d{10}$').hasMatch(value)) {
       return 'Enter a valid 10-digit mobile number';
+    }
+    return null;
+  }
+
+  static String? validateConsumerNumber(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Consumer number is required';
+    } else if (!RegExp(r'^\d{13}$').hasMatch(value)) {
+      return 'Enter a valid 13-digit Consumer number';
     }
     return null;
   }
@@ -75,14 +88,14 @@ class UtilFunctions {
   }
 
   static String? validateCustomerNumber(String? value) {
-    return value == null || value.isEmpty ? 'Customer Number is required' : null;
+    return value == null || value.isEmpty
+        ? 'Customer Number is required'
+        : null;
   }
-
 
   static String? validateConversationTime(String? value) {
     return value == null || value.isEmpty ? 'Date and Time is required' : null;
   }
-
 
   static String? validatePoints(String? value) {
     return value == null || value.isEmpty ? 'Call title is required' : null;
@@ -152,6 +165,79 @@ class UtilFunctions {
 
   static String? requiredField(String? value) {
     return value == null || value.isEmpty ? 'Required Field' : null;
+  }
+
+  //get location
+
+  Future<void> checkLocationPermission(BuildContext context) async {
+    UtilFunctions.loaderPopup(context);
+    loc.Location location = loc.Location();
+
+    bool serviceEnabled;
+    loc.PermissionStatus permissionGranted;
+
+    serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
+        Navigator.pop(context);
+        await _goToSettings(context);
+        return;
+      }
+    }
+
+    permissionGranted = await location.hasPermission();
+    if (permissionGranted == loc.PermissionStatus.denied ||
+        permissionGranted == loc.PermissionStatus.deniedForever) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != loc.PermissionStatus.granted) {
+        Navigator.pop(context);
+        await _goToSettings(context);
+        return;
+      }
+    }
+
+    if (permissionGranted == loc.PermissionStatus.granted) {
+      loc.LocationData locationData = await location.getLocation();
+      if (locationData.latitude != null && locationData.longitude != null) {
+        Provider.of<CommonDataViewmodel>(context, listen: false).updateLatLong(
+            lat: locationData.latitude, long: locationData.longitude);
+      }
+      Navigator.pop(context);
+    }
+  }
+
+  Future<void> _goToSettings(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        title: Text(
+          'Permission Required',
+          style: Theme.of(context)
+              .textTheme
+              .titleLarge
+              ?.copyWith(color: AppColors.black),
+        ),
+        content: Text(
+          'Please enable location permission from settings.',
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(color: AppColors.black),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              // Open the device settings
+              openAppSettings();
+            },
+            child: const Text('Open Settings'),
+          ),
+        ],
+      ),
+    );
   }
 }
 

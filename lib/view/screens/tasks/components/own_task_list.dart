@@ -45,8 +45,6 @@ class _OwnTasksState extends State<OwnTasks> {
               contentPadding: const EdgeInsets.only(left: 30),
               suffix: InkWell(
                 onTap: () {
-                  // if ((controller?.text ?? "").isNotEmpty) {
-                  //   controller?.clear();
                   //   Provider.of<TasksViewmodel>(context, listen: false)
                   //     .resettasksListOwnPagination();
                   // Provider.of<TasksViewmodel>(context, listen: false)

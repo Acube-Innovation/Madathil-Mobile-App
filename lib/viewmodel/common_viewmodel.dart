@@ -40,6 +40,20 @@ class CommonDataViewmodel extends ChangeNotifier {
 
   TextEditingController dobController = TextEditingController();
 
+  //lat and long
+
+  //lat and long update
+  double? _lat;
+  double? _long;
+  double? get lat => _lat;
+  double? get long => _long;
+
+  updateLatLong({double? lat, double? long}) {
+    _lat = lat;
+    _long = long;
+    notifyListeners();
+  }
+
   Future<void> selectDate(BuildContext context) async {
     final DateTime today = DateTime.now();
     final DateTime firstDate =
@@ -130,13 +144,13 @@ class CommonDataViewmodel extends ChangeNotifier {
     try {
       _isloading = true;
       notifyListeners();
-      CheckInCheckOutResponse? response =
-          await apiRepository.employeeCheckin(data: {
-        "employee": employeeId,
-        "log_type": logType,
-        "latitude": "9.76686867",
-        "longitude": "76.12312312"
-      });
+      CheckInCheckOutResponse? response = await apiRepository.employeeCheckin(
+          data: {
+            "employee": employeeId,
+            "log_type": logType,
+            "latitude": lat,
+            "longitude": long
+          });
       if (response?.data != null) {
         _isloading = false;
         notifyListeners();
@@ -512,11 +526,11 @@ class CommonDataViewmodel extends ChangeNotifier {
         todate: todate,
         isOthersAttendance: isOthersAttendance);
     final apiResponse = attendanceList;
+    final apiPosts = apiResponse?.data ?? [];
+    if (apiPosts.length < 10) {
+      _reachedLastPageattendanceList = true;
+    }
     if (apiResponse != null) {
-      final apiPosts = apiResponse.data ?? [];
-      if (apiPosts.length < 10) {
-        _reachedLastPageattendanceList = true;
-      }
       if (apiPosts.isNotEmpty) {
         _attendanceListData?.addAll(apiPosts);
       }

@@ -72,12 +72,12 @@ class DrawerWidget extends StatelessWidget {
             );
           }),
           const SizedBox(height: 20),
-          drawerItem("Settings", AppImages.settingsImage, () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const OrderTranscationList()));
-          }),
+          // drawerItem("Settings", AppImages.settingsImage, () {
+          //   Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //           builder: (context) => const OrderTranscationList()));
+          // }),
           const SizedBox(height: 20),
           const Divider(indent: 20, endIndent: 20),
           const SizedBox(height: 20),

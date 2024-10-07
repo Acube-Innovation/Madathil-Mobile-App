@@ -209,6 +209,7 @@ class CustomerViewmodel extends ChangeNotifier {
     _customerUtilModel = null;
     notifyListeners();
   }
+
   /*
   * file uploade api call
   * */

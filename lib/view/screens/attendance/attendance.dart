@@ -70,31 +70,38 @@ class AttendancePage extends StatelessWidget {
                         },
                       )),
             InkWell(
-              onTap: () {
+              onTap: () async {
                 // Implement check-in logic
                 UtilFunctions.loaderPopup(context);
-                cdv
-                    .employeeCheckin(
-                        logType: ((cdv.checkOutListResponse?.data ?? [])
-                                    .isNotEmpty &&
-                                (isCheckIn(cdv
-                                        .checkOutListResponse?.data?.first) ??
-                                    false))
-                            ? "OUT"
-                            : "IN")
-                    .then(
-                  (value) {
-                    if (value) {
-                      cdv
-                          .employeeCheckinList()
-                          .then((value) => Navigator.pop(context));
-                    } else {
-                      toast("Something went wrong, Please try again", context,
-                          isError: true);
-                      Navigator.pop(context);
-                    }
-                  },
-                );
+                await UtilFunctions().checkLocationPermission(context);
+                if (cdv.lat != null && cdv.long != null) {
+                  cdv
+                      .employeeCheckin(
+                          logType: ((cdv.checkOutListResponse?.data ?? [])
+                                      .isNotEmpty &&
+                                  (isCheckIn(cdv
+                                          .checkOutListResponse?.data?.first) ??
+                                      false))
+                              ? "OUT"
+                              : "IN")
+                      .then(
+                    (value) {
+                      if (value) {
+                        cdv
+                            .employeeCheckinList()
+                            .then((value) => Navigator.pop(context));
+                      } else {
+                        toast("Something went wrong, Please try again", context,
+                            isError: true);
+                        Navigator.pop(context);
+                      }
+                    },
+                  );
+                } else {
+                  toast("Location fetching failed, Please try again", context,
+                      isError: true);
+                  Navigator.pop(context);
+                }
               },
               child: Container(
                 width: 190,
