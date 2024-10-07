@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:madathil/app_images.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/utils/color/util_functions.dart';
 import 'package:madathil/view/screens/Referal/referal_screen.dart';
 import 'package:madathil/view/screens/attendance/attendance.dart';
 import 'package:madathil/view/screens/call_management/call_list_screen.dart';
@@ -26,41 +28,54 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        drawer: const DrawerWidget(),
-        appBar: AppBar(
-          title:
-              Text("Hi, User!", style: Theme.of(context).textTheme.titleSmall),
-          actions: [
-            InkWell(
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ProfileScreen())),
+    DateTime preBackpress = DateTime.now();
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        final timegap = DateTime.now().difference(preBackpress);
+        final cantExit = timegap >= const Duration(seconds: 2);
+        preBackpress = DateTime.now();
+        if (cantExit) {
+          toast('Press Back button again to Exit', context);
+        } else {
+          SystemNavigator.pop();
+        }
+      },
+      child: Scaffold(
+          drawer: const DrawerWidget(),
+          appBar: AppBar(
+            title: Text("Hi, User!",
+                style: Theme.of(context).textTheme.titleSmall),
+            actions: [
+              InkWell(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ProfileScreen())),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.only(right: 20.0, top: 10, bottom: 10),
+                  child: Image.asset(AppImages.userImage, height: 20),
+                ),
+              )
+            ],
+          ),
+          body: Consumer<CommonDataViewmodel>(builder: (context, cdv, _) {
+            return SingleChildScrollView(
               child: Padding(
-                padding:
-                    const EdgeInsets.only(right: 20.0, top: 10, bottom: 10),
-                child: Image.asset(AppImages.userImage, height: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: cdv.homeDetailData == null
+                    ? const Center(child: CupertinoActivityIndicator())
+                    : Column(
+                        children: [
+                          getDashboardDetails("admin", context, cdv),
+                          const SizedBox(height: 10),
+                          getBody("admin", context, cdv),
+                        ],
+                      ),
               ),
-            )
-          ],
-        ),
-        body: Consumer<CommonDataViewmodel>(builder: (context, cdv, _) {
-          return SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: cdv.homeDetailData == null
-                  ? const Center(child: CupertinoActivityIndicator())
-                  : Column(
-                      children: [
-                        getDashboardDetails("admin", context, cdv),
-                        const SizedBox(height: 10),
-                        getBody("admin", context, cdv),
-                      ],
-                    ),
-            ),
-          );
-        }));
+            );
+          })),
+    );
   }
 
   getDashboardDetails(

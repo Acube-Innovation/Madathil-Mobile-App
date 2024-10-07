@@ -254,7 +254,6 @@ class LoginScreen extends StatelessWidget {
           onPressed: () {
             if (authVm.formKey.currentState!.validate()) {
               UtilFunctions.loaderPopup(context);
-
               authVm
                   .login(
                       username: emailCtlr.text.trim(),
@@ -265,8 +264,9 @@ class LoginScreen extends StatelessWidget {
                       DataBoxKey.kUserName, emailCtlr.text.trim());
                   Provider.of<CommonDataViewmodel>(context, listen: false)
                       .getHomeDetails();
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => const HomePage()));
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => const HomePage()),
+                      (route) => false);
                 } else {
                   Navigator.of(context).pop();
                   toast(isError: false, authVm.errormsg ?? "", context);

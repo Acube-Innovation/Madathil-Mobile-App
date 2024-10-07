@@ -11,7 +11,6 @@ import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
 import 'package:madathil/view/screens/common_widgets/custom_text_field.dart';
 import 'package:madathil/view/screens/common_widgets/image_picker_bottom_sheet.dart';
 import 'package:madathil/view/screens/customer/customer_detail_screen.dart';
-import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:madathil/viewmodel/customer_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -188,13 +187,12 @@ class AddNewCustomer extends StatelessWidget {
                   ),
                   CustomTextField(
                     // controller: pincodeCTLR,
-                    hint: "Enter your country",
-                    hintcolor: AppColors.grey,
+                    hint: "India",
+                    hintcolor: AppColors.grey, enabled: false,
                     onchaged: (val) {
-                      customerVm.addCstAddressUtilModelData(country: val);
+                      customerVm.addCstAddressUtilModelData(country: "India");
                       // dashboardVM.setReviewMsg(val);
                     },
-                    validator: UtilFunctions.requiredField,
                   ),
                   const SizedBox(
                     height: 10,

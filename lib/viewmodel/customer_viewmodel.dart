@@ -196,8 +196,8 @@ class CustomerViewmodel extends ChangeNotifier {
     _cstAddressUtilModel = CstAddressUtilModel(
       city: city ?? _cstAddressUtilModel?.city,
       pinCode: pincode ?? _cstAddressUtilModel?.pinCode,
-      state: state ?? _cstAddressUtilModel?.state,
-      country: country ?? _cstAddressUtilModel?.country,
+      state: state ?? _cstAddressUtilModel?.state, country: "India",
+      // country: country ?? _cstAddressUtilModel?.country,
       addressLine1: address1 ?? _cstAddressUtilModel?.addressLine1,
       addressLine2: address2 ?? _cstAddressUtilModel?.addressLine2,
     );
