@@ -329,58 +329,64 @@ class _ChangeCustomerState extends State<ChangeCustomer> {
               child: CustomButton(
                 text: "Select",
                 onPressed: () {
-                  DateTime today = DateTime.now();
+                  if (customerVm.selectedAddress != null) {
+                    DateTime today = DateTime.now();
 
-                  DateTime nextDay = today.add(const Duration(days: 2));
+                    DateTime nextDay = today.add(const Duration(days: 2));
 
-                  String nextDayString =
-                      "${nextDay.year}-${nextDay.month.toString().padLeft(2, '0')}-${nextDay.day.toString().padLeft(2, '0')}";
-                  UtilFunctions.loaderPopup(context);
-                  if (widget.isFromCart == true) {
-                    productVm
-                        .createCheckOut(
-                            customer: customerVm.selectedAddress?.customerName,
-                            date: nextDayString,
-                            cartItmes: productVm.cartItmes)
-                        .then((value) {
-                      customerVm.getCustomerAddress(
-                          name: customerVm.selectedAddress?.customerName);
-                      Navigator.of(context).pop();
-
-                      if (value) {
-                        productVm.clearCart();
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const CheckOutScreen(),
-                            ));
-                      } else {
+                    String nextDayString =
+                        "${nextDay.year}-${nextDay.month.toString().padLeft(2, '0')}-${nextDay.day.toString().padLeft(2, '0')}";
+                    UtilFunctions.loaderPopup(context);
+                    if (widget.isFromCart == true) {
+                      productVm
+                          .createCheckOut(
+                              customer:
+                                  customerVm.selectedAddress?.customerName,
+                              date: nextDayString,
+                              cartItmes: productVm.cartItmes)
+                          .then((value) {
+                        customerVm.getCustomerAddress(
+                            name: customerVm.selectedAddress?.customerName);
                         Navigator.of(context).pop();
-                        toast(customerVm.errormsg, context);
-                      }
-                    });
+
+                        if (value) {
+                          productVm.clearCart();
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const CheckOutScreen(),
+                              ));
+                        } else {
+                          Navigator.of(context).pop();
+                          toast(customerVm.errormsg, context, isError: true);
+                        }
+                      });
+                    } else {
+                      productVm
+                          .createCheckOut(
+                              customer:
+                                  customerVm.selectedAddress?.customerName,
+                              date: nextDayString,
+                              productData: productVm.productData)
+                          .then((value) {
+                        customerVm.getCustomerAddress(
+                            name: customerVm.selectedAddress?.customerName);
+                        Navigator.of(context).pop();
+
+                        if (value) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const CheckOutScreen(),
+                              ));
+                        } else {
+                          Navigator.of(context).pop();
+                          toast(customerVm.errormsg, context, isError: true);
+                        }
+                      });
+                    }
                   } else {
-                    productVm
-                        .createCheckOut(
-                            customer: customerVm.selectedAddress?.customerName,
-                            date: nextDayString,
-                            productData: productVm.productData)
-                        .then((value) {
-                      customerVm.getCustomerAddress(
-                          name: customerVm.selectedAddress?.customerName);
-                      Navigator.of(context).pop();
-
-                      if (value) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const CheckOutScreen(),
-                            ));
-                      } else {
-                        Navigator.of(context).pop();
-                        toast(customerVm.errormsg, context);
-                      }
-                    });
+                    toast("Please select a customer", context, isError: true);
                   }
                 },
               ),

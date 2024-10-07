@@ -97,4 +97,8 @@ class ApiUrls {
       '/api/method/a3sola_solar_management.api.get_home_details';
 
   static const kOrderTransactionList = '/api/resource/Payment Entry';
+
+  static const kbrands = '/api/resource/Brand';
+  static const kForgotPassword =
+      '/api/method/frappe.core.doctype.user.user.reset_password';
 }

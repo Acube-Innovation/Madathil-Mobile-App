@@ -185,17 +185,17 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               .copyWith(color: AppColors.black, height: 1.7),
                         ),
                         const Spacer(),
-                        Container(
-                          padding: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.reefGold.withOpacity(0.1)),
-                          child: const Icon(
-                            Icons.arrow_forward_ios,
-                            color: AppColors.reefGold,
-                            size: 15,
-                          ),
-                        ),
+                        // Container(
+                        //   padding: const EdgeInsets.all(5),
+                        //   decoration: BoxDecoration(
+                        //       shape: BoxShape.circle,
+                        //       color: AppColors.reefGold.withOpacity(0.1)),
+                        //   child: const Icon(
+                        //     Icons.arrow_forward_ios,
+                        //     color: AppColors.reefGold,
+                        //     size: 15,
+                        //   ),
+                        // ),
                       ],
                     ),
                     const SizedBox(
@@ -236,74 +236,20 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               : const Text("N/A"),
                         ),
                         const Spacer(),
-                        Container(
-                          padding: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.reefGold.withOpacity(0.1)),
-                          child: const Icon(
-                            Icons.arrow_forward_ios,
-                            color: AppColors.reefGold,
-                            size: 15,
-                          ),
-                        ),
+                        // Container(
+                        //   padding: const EdgeInsets.all(5),
+                        //   decoration: BoxDecoration(
+                        //       shape: BoxShape.circle,
+                        //       color: AppColors.reefGold.withOpacity(0.1)),
+                        //   child: const Icon(
+                        //     Icons.arrow_forward_ios,
+                        //     color: AppColors.reefGold,
+                        //     size: 15,
+                        //   ),
+                        // ),
                       ],
                     ),
-                    // const SizedBox(
-                    //   height: 10,
-                    // ),
-                    // Text(
-                    //   "Payment Mode",
-                    //   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    //         color: AppColors.grey,
-                    //       ),
-                    // ),
-                    // Row(
-                    //   children: [
-                    //     const Icon(
-                    //       Icons.attach_money,
-                    //       color: AppColors.reefGold,
-                    //     ),
-                    //     const SizedBox(
-                    //       width: 10,
-                    //     ),
-                    //     Padding(
-                    //       padding: const EdgeInsets.only(top: 8),
-                    //       child: Column(
-                    //         children: [
-                    //           Text(
-                    //             "VISA Classic",
-                    //             style: Theme.of(context)
-                    //                 .textTheme
-                    //                 .bodySmall!
-                    //                 .copyWith(
-                    //                     color: AppColors.black, height: 1.7),
-                    //           ),
-                    //           Text(
-                    //             "******0000",
-                    //             style: Theme.of(context)
-                    //                 .textTheme
-                    //                 .bodySmall!
-                    //                 .copyWith(
-                    //                     color: AppColors.black, height: 1.7),
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //     const Spacer(),
-                    //     Container(
-                    //       padding: const EdgeInsets.all(5),
-                    //       decoration: BoxDecoration(
-                    //           shape: BoxShape.circle,
-                    //           color: AppColors.reefGold.withOpacity(0.1)),
-                    //       child: const Icon(
-                    //         Icons.arrow_forward_ios,
-                    //         color: AppColors.reefGold,
-                    //         size: 15,
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
+
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 10),
                       child: Divider(),

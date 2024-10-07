@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:madathil/constants.dart';
 import 'package:madathil/model/services/local_db/hive_constants.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/utils/custom_loader.dart';
 import 'package:madathil/utils/util_functions.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
@@ -112,14 +113,84 @@ class LoginScreen extends StatelessWidget {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) => const PrdoductList()
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext ctx) => Dialog(
+                                    shape: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(15.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const SizedBox(height: 10),
+                                          Text('Forgot Password',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyLarge!
+                                                  .copyWith(
+                                                      height: 1.7,
+                                                      color: AppColors
+                                                          .primeryColor)),
+                                          const SizedBox(height: 20),
+                                          Column(
+                                            children: [
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              CustomTextField(
+                                                keyboardType:
+                                                    TextInputType.text,
+                                                hint: "Enter Email",
+                                                controller: emailCtlr,
+                                                validator:
+                                                    UtilFunctions.requiredField,
+                                              ),
+                                              const SizedBox(
+                                                height: 30,
+                                              ),
+                                              CustomButton(
+                                                text: "Submit",
+                                                onPressed: () {
+                                                  UtilFunctions.loaderPopup(
+                                                      context);
 
-                                  //  const ProfileScreen()
+                                                  authVm
+                                                      .forgotPassword(
+                                                          email: emailCtlr.text)
+                                                      .then((value) {
+                                                    Navigator.pop(context);
+                                                    if (value) {
+                                                      toast(
+                                                          authVm.resetpwdMesage,
+                                                          context,
+                                                          isError: false);
+                                                    } else {
+                                                      toast(authVm.errormsg,
+                                                          context,
+                                                          isError: true);
+                                                    }
+                                                  });
+                                                },
+                                              )
+                                            ],
+                                          ),
+                                          const SizedBox(height: 10),
+                                        ],
+                                      ),
+                                    )));
 
-                                  ),
-                            );
+                            // Navigator.of(context).push(
+                            //   MaterialPageRoute(
+                            //       builder: (context) => const PrdoductList()
+
+                            //       //  const ProfileScreen()
+
+                            //       ),
+                            // );
                           },
                           child: Text(
                             "Forgot Password?",
@@ -132,39 +203,39 @@ class LoginScreen extends StatelessWidget {
                                 ),
                           ),
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const CustomerRegistration(),
-                              ),
-                            );
-                          },
-                          child: RichText(
-                              text: TextSpan(children: [
-                            TextSpan(
-                              text: "New User?",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                    height: 1.7,
-                                    color: AppColors.black,
-                                  ),
-                            ),
-                            TextSpan(
-                              text: "  Register here",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                    height: 1.7,
-                                    color: AppColors.primeryColor,
-                                  ),
-                            ),
-                          ])),
-                        ),
+                        // GestureDetector(
+                        //   onTap: () {
+                        //     Navigator.of(context).push(
+                        //       MaterialPageRoute(
+                        //         builder: (context) =>
+                        //             const CustomerRegistration(),
+                        //       ),
+                        //     );
+                        //   },
+                        //   child: RichText(
+                        //       text: TextSpan(children: [
+                        //     TextSpan(
+                        //       text: "New User?",
+                        //       style: Theme.of(context)
+                        //           .textTheme
+                        //           .bodyMedium!
+                        //           .copyWith(
+                        //             height: 1.7,
+                        //             color: AppColors.black,
+                        //           ),
+                        //     ),
+                        //     TextSpan(
+                        //       text: "  Register here",
+                        //       style: Theme.of(context)
+                        //           .textTheme
+                        //           .bodyMedium!
+                        //           .copyWith(
+                        //             height: 1.7,
+                        //             color: AppColors.primeryColor,
+                        //           ),
+                        //     ),
+                        //   ])),
+                        // ),
                       ],
                     ),
                   ),
@@ -198,15 +269,17 @@ class LoginScreen extends StatelessWidget {
                       builder: (context) => const HomePage()));
                 } else {
                   Navigator.of(context).pop();
-                  toast(isError: true, authVm.errormsg ?? "", context);
+                  toast(isError: false, authVm.errormsg ?? "", context);
                 }
               });
             } else {
-              toast("Required Field missing", context);
+              toast("Required Field missing", context, isError: true);
             }
           },
         ),
       ),
     );
   }
+
+  void showResetPopUp(BuildContext context) {}
 }

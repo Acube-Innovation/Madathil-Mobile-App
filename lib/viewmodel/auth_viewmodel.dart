@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:madathil/constants.dart';
 import 'package:madathil/model/model_class/api_response_model/login_response.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
 
@@ -46,5 +47,27 @@ class AuthViewmodel extends ChangeNotifier {
   setObscure(bool value) {
     obscureText = !value;
     notifyListeners();
+  }
+
+  String? resetpwdMesage;
+  Future<bool> forgotPassword({String? email}) async {
+    try {
+      var response = await apiRepository.forgotPassword(data: {"user": email});
+      if (response?.serverMessages != null) {
+        resetpwdMesage =
+            "Password reset instructions have been sent to your email";
+        log(resetpwdMesage ?? "");
+        notifyListeners();
+        return true;
+      } else {
+        _errormsg = "Invalid login credentials";
+        notifyListeners();
+        return false;
+      }
+    } catch (e) {
+      log(e.toString());
+      _errormsg = e.toString();
+      return false;
+    }
   }
 }
