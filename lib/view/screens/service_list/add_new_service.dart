@@ -239,7 +239,7 @@ class AddService extends StatelessWidget {
                             .addNewService(
                           customer: customer,
                           maintenenceType: maintenanceType,
-                          status: cdv.selectedStatus,
+                          status: cdv.selectedStatusAdd,
                           item: item,
                           servicePerson: cdv.selectedPerson,
                           problem: problemContoller.text,
@@ -257,10 +257,10 @@ class AddService extends StatelessWidget {
                                     listen: false)
                                 .fetchServiceHistoryList();
                             toast("Service Added Successfully", context,
-                                isError: true);
+                                isError: false);
                             Navigator.pop(context);
                           } else {
-                            toast(cdv.errormsg, context);
+                            toast(cdv.errormsg, context, isError: true);
                           }
                         });
                       }

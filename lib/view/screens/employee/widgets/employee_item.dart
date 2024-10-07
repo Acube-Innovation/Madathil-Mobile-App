@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:madathil/app_images.dart';
+import 'package:madathil/model/services/api_service/api_urls.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/utils/custom_loader.dart';
 import 'package:madathil/utils/no_data_found.dart';
@@ -34,7 +35,14 @@ class _EmployeeItemState extends State<EmployeeItem> {
         if (cdv.isloading!) {
           return const CustomLoader();
         } else {
-          return const NoDataFOund();
+          return NoDataFOund(
+            onRefresh: () async {
+              Provider.of<CommonDataViewmodel>(context, listen: false)
+                  .resetEmployeePagination();
+              Provider.of<CommonDataViewmodel>(context, listen: false)
+                  .fetchEmployeeList();
+            },
+          );
         }
       } else {
         return RefreshIndicator(
@@ -80,9 +88,15 @@ class _EmployeeItemState extends State<EmployeeItem> {
                           }
                         } else {
                           if (cdv.employeePost!.isEmpty) {
-                            return const Center(
-                                child: Text(
-                              "No Service History available.",
+                            return Center(child: NoDataFOund(
+                              onRefresh: () {
+                                Provider.of<CommonDataViewmodel>(context,
+                                        listen: false)
+                                    .resetEmployeePagination();
+                                Provider.of<CommonDataViewmodel>(context,
+                                        listen: false)
+                                    .fetchEmployeeList();
+                              },
                             ));
                           } else {
                             return const Column(
@@ -135,9 +149,18 @@ class _EmployeeItemState extends State<EmployeeItem> {
                                       Center(
                                           child: Padding(
                                         padding: const EdgeInsets.all(8.0),
-                                        child: Image.asset(
-                                            AppImages.maleEmployee,
-                                            width: 70),
+                                        child: CircleAvatar(
+                                          radius: 30,
+                                          backgroundImage: 
+                                                          item.image !=
+                                                      null &&
+                                                  item.image!
+                                                      .isNotEmpty
+                                              ? NetworkImage(
+                                                  "${ApiUrls.kProdBaseURL}${item.image}")
+                                              : const AssetImage(
+                                                  AppImages.maleEmployee),
+                                        ),
                                       )),
 
                                       Column(

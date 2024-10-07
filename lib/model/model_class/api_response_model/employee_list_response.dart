@@ -52,6 +52,7 @@ class Employees {
   String? employeeRegion;
   String? employeeArea;
   String? employeePanchayat;
+  String? image;
 
   Employees({
     this.name,
@@ -62,6 +63,7 @@ class Employees {
     this.employeeRegion,
     this.employeeArea,
     this.employeePanchayat,
+    this.image,
   });
 
   Employees.fromJson(Map<String, dynamic> json) {
@@ -73,6 +75,7 @@ class Employees {
     employeeRegion = json['employee_region'];
     employeeArea = json['employee_area'];
     employeePanchayat = json['employee_panchayat'];
+    image = json['image'];
   }
 
   Map<String, dynamic> toJson() {
@@ -85,6 +88,7 @@ class Employees {
     data['employee_region'] = employeeRegion;
     data['employee_area'] = employeeArea;
     data['employee_panchayat'] = employeePanchayat;
+    data['image'] = image;
     return data;
   }
 }

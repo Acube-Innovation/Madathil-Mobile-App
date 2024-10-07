@@ -219,10 +219,16 @@ class AddClosingStatment extends StatelessWidget {
                           .then((value) {
                         Navigator.pop(context);
                         if (value) {
+                          Provider.of<CommonDataViewmodel>(context,
+                                  listen: false)
+                              .resetClosingPagination();
+                          Provider.of<CommonDataViewmodel>(context,
+                                  listen: false)
+                              .fetchClosingStatmentList();
                           toast("Closing Statment added succesfully", context,
-                              isError: true);
+                              isError: false);
 
-                              Navigator.pop(context);
+                          Navigator.pop(context);
                         } else {
                           toast(cdv.errormsg, context);
                         }

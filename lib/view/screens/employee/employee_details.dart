@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:madathil/app_images.dart';
 import 'package:madathil/model/model_class/api_response_model/employee_list_response.dart';
+import 'package:madathil/model/services/api_service/api_urls.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/attendance/attendance_history.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
@@ -49,8 +50,14 @@ class _EmployeeDetailsState extends State<EmployeeDetails> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Center(
-                          child:
-                              Image.asset(AppImages.maleEmployee, width: 120)),
+                          child: CircleAvatar(
+                        radius: 60,
+                        backgroundImage: cdv.employeeData?.image != null &&
+                                cdv.employeeData!.image!.isNotEmpty
+                            ? NetworkImage(
+                                "${ApiUrls.kProdBaseURL}${cdv.employeeData?.image}")
+                            : const AssetImage(AppImages.maleEmployee),
+                      )),
                       const SizedBox(
                         height: 15,
                       ),

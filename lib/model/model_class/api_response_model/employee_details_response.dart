@@ -26,6 +26,7 @@ class EmployeeData {
   int? docstatus;
   String? employee;
   String? namingSeries;
+  String? image;
   String? firstName;
   String? middleName;
   String? lastName;
@@ -76,6 +77,7 @@ class EmployeeData {
     this.modifiedBy,
     this.idx,
     this.docstatus,
+    this.image,
     this.employee,
     this.namingSeries,
     this.firstName,
@@ -138,6 +140,7 @@ class EmployeeData {
     company = json['company'];
     status = json['status'];
     gender = json['gender'];
+    image = json['image'];
     dateOfBirth = json['date_of_birth'];
     dateOfJoining = json['date_of_joining'];
     dealer = json['dealer'];
@@ -183,6 +186,7 @@ class EmployeeData {
     data['modified_by'] = this.modifiedBy;
     data['idx'] = this.idx;
     data['docstatus'] = this.docstatus;
+    data['image'] = this.image;
     data['employee'] = this.employee;
     data['naming_series'] = this.namingSeries;
     data['first_name'] = this.firstName;

@@ -1436,7 +1436,8 @@ class CommonDataViewmodel extends ChangeNotifier {
           "user_id",
           "cell_number",
           "permanent_address",
-          "current_address"
+          "current_address",
+          "image",
         ]),
       };
 

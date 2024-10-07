@@ -100,17 +100,17 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                             ),
                           ],
                         ),
-                        Text(
-                          pvm.paymentDetails?.partyType ?? 'N/A',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineMedium!
-                              .copyWith(
-                                height: 1.7,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.black,
-                              ),
-                        ),
+                        // Text(
+                        //   pvm.paymentDetails?.partyType ?? 'N/A',
+                        //   style: Theme.of(context)
+                        //       .textTheme
+                        //       .headlineMedium!
+                        //       .copyWith(
+                        //         height: 1.7,
+                        //         fontWeight: FontWeight.w500,
+                        //         color: AppColors.black,
+                        //       ),
+                        // ),
                         const SizedBox(
                           height: 16,
                         ),
@@ -152,7 +152,8 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Transaction ID : ',
