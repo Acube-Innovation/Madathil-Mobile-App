@@ -20,6 +20,7 @@ class _TransactionItemState extends State<TransactionItem> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       Provider.of<PaymentViewmodel>(context, listen: false).clearFilter('all');
+      Provider.of<PaymentViewmodel>(context, listen: false).clearSearchVal();
       Provider.of<PaymentViewmodel>(context, listen: false)
           .resetPaymentPagination();
       Provider.of<PaymentViewmodel>(context, listen: false)
