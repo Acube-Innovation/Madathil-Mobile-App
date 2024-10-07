@@ -52,14 +52,14 @@ class _SearchableDropdownState extends State<ItemSearchableDropdown> {
             Text(
               _selectedItem ?? widget.hintText,
               style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      height: 0,
-                      color: _selectedItem != null
-                     ? AppColors.black
-                     : AppColors.grey.withOpacity(0.5),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500),
+                  height: 0,
+                  color: _selectedItem != null
+                      ? AppColors.black
+                      : AppColors.grey.withOpacity(0.5),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500),
             ),
-            const Icon(Icons.arrow_drop_down),
+            const Icon(Icons.keyboard_arrow_down),
           ],
         ),
       ),
@@ -87,8 +87,7 @@ class _SearchableDropdownState extends State<ItemSearchableDropdown> {
                           prefixIcon: Icon(Icons.search),
                         ),
                         onChanged: (value) {
-                          _fetchItems(
-                              searchItem: value); // Trigger the search
+                          _fetchItems(searchItem: value); // Trigger the search
                         },
                       ),
                     ),
@@ -99,8 +98,7 @@ class _SearchableDropdownState extends State<ItemSearchableDropdown> {
                                 shrinkWrap: true,
                                 itemCount: customerViewModel.items.length,
                                 itemBuilder: (context, index) {
-                                  String item =
-                                      customerViewModel.items[index];
+                                  String item = customerViewModel.items[index];
                                   return ListTile(
                                     title: Text(item),
                                     onTap: () {

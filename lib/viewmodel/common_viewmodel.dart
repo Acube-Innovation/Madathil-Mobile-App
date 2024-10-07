@@ -213,8 +213,6 @@ class CommonDataViewmodel extends ChangeNotifier {
         if (response?.message?.employeeId != null) {
           hiveInstance?.saveData(
               DataBoxKey.kEmpId, response?.message?.employeeId);
-          hiveInstance?.saveData(
-              DataBoxKey.kUserName, response?.message?.email);
         }
         notifyListeners();
         return true;
@@ -240,17 +238,21 @@ class CommonDataViewmodel extends ChangeNotifier {
       String? business,
       String? kw,
       String? margin,
-      String? expense}) async {
+      String? expense,
+      String? closeAmount}) async {
     try {
       AddClosingStatmentResponse? response =
           await apiRepository.addClosingStatment(data: {
         "customer_name": customerName,
-        "mobile_no": mobNo,
-        "address": address,
+        "mobile_number": mobNo,
+        "customer_address": address,
         "item": item,
+        "employee_id": employeeId,
+        "select_business": business,
         "kw": kw,
-        "margin": margin,
-        "expense": expense
+        "item_margin": margin,
+        "project_cost": closeAmount,
+        "item_expense": expense
       });
 
       if (response?.data != null) {
@@ -1581,6 +1583,8 @@ class CommonDataViewmodel extends ChangeNotifier {
           await apiRepository.getPointList(param: param);
 
       if (response?.message != null) {
+        pointsMessage = null;
+        closingStatements = null;
         closingStatements = response?.message?.closingStatements;
         pointsMessage = response?.message;
 
@@ -1719,8 +1723,7 @@ class CommonDataViewmodel extends ChangeNotifier {
 
     _paginationorederTransaction = true;
 
-    await getOrderTransactionList(
-        page: orederTransactionCurrentPage, txnid: txnid);
+    await getOrderTransactionList(page: orederTransactionCurrentPage);
 
     final apiResponse = orderTransactionList;
     if (apiResponse != null) {
