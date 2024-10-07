@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:madathil/constants.dart';
 import 'package:madathil/model/model_class/api_response_model/call_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_history_response.dart';
@@ -27,7 +28,9 @@ class PaymentViewmodel extends ChangeNotifier {
   TextEditingController searchControllerPaymentHistory =
       TextEditingController();
   TextEditingController dobController = TextEditingController();
+  TextEditingController amountController = TextEditingController();
   bool filterOn = false;
+  bool searching = false;
 
   String? paymentSearchfn;
 
@@ -56,6 +59,11 @@ class PaymentViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setSearchbool(bool value) {
+    searching = value;
+    notifyListeners();
+  }
+
   clearSearchVal() {
     paymentSearchfn = null;
     searchControllerPaymentHistory.clear();
@@ -78,7 +86,11 @@ class PaymentViewmodel extends ChangeNotifier {
       isLoading = true;
       notifyListeners();
       Map<String, dynamic> filters = {
-        "party": ["like", paymentSearchfn != null ? "$paymentSearchfn%" : "%"],
+        "party": [
+          "like",
+          paymentSearchfn != null ? "%${paymentSearchfn?.trim()}%" : "%"
+        ],
+        // "user": username,
       };
 
       // Only add "posting_date" filter if start and end dates are provided
@@ -222,6 +234,7 @@ class PaymentViewmodel extends ChangeNotifier {
     paymentCurrentPage = 0;
     _paginationclosing = false;
     paymentReachLength = false;
+    searching = false;
     notifyListeners();
   }
 
@@ -239,6 +252,7 @@ class PaymentViewmodel extends ChangeNotifier {
       paymentMode = null;
     } else if (filter == "amount") {
       amount = null;
+      amountController.clear();
     } else if (filter == 'date') {
       // _start = null;
       // _end = null;
@@ -251,6 +265,7 @@ class PaymentViewmodel extends ChangeNotifier {
       startFormatted = null;
       endFormatted = null;
       dobController.clear();
+      amountController.clear();
     }
     if (paymentMode == null &&
         amount == null &&
@@ -344,5 +359,4 @@ class PaymentViewmodel extends ChangeNotifier {
       return [];
     }
   }
-
 }

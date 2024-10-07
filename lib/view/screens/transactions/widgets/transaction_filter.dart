@@ -86,6 +86,7 @@ class TransactionFilterBottomSheet extends StatelessWidget {
                     ),
                     CustomDropdown(
                       hint: 'Mode',
+                      selectedItem: pvm.paymentMode,
                       items: pvm.paymentModenames!,
                       onChanged: (String? value) {
                         mode = value;
@@ -96,7 +97,7 @@ class TransactionFilterBottomSheet extends StatelessWidget {
                     ),
                     CustomTextField(
                       hint: 'Amount',
-                      controller: amountController,
+                      controller: pvm.amountController,
                       hintcolor: AppColors.grey,
                       keyboardType: TextInputType.number,
                       // suffixIcon: Icon(
@@ -115,8 +116,8 @@ class TransactionFilterBottomSheet extends StatelessWidget {
                         //       paymentVm.endFormatted != null) {
                         Navigator.pop(context);
                         paymentVm.filterOn = true;
-                        amountController.text.isNotEmpty
-                            ? paymentVm.amount = int.parse(amountController.text)
+                        pvm.amountController.text.isNotEmpty
+                            ? paymentVm.amount = int.parse(pvm.amountController.text)
                             : null;
                         mode != null ? paymentVm.paymentMode = mode : null;
                         paymentVm.resetPaymentPagination();

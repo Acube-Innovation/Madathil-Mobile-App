@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:madathil/model/model_class/api_response_model/call_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/call_list_response.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/utils/custom_loader.dart';
 
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/viewmodel/call_viewmodel.dart';
@@ -50,11 +51,10 @@ class _CallDetailsScreenState extends State<CallDetailsScreen> {
             duration = callVm.formatTimeFromSeconds(
                 cvm.callDetails!.conversationDuration as double);
           }
-          return cvm.isLoading!
+          return cvm.isLoading
               ? const Center(
-                  child: CircularProgressIndicator(
-                    color: AppColors.secondaryColor,
-                  ),
+                // heightFactor: MediaQuery.of(context).size.height * 0.5,
+                  child: CustomLoader()
                 )
               : Padding(
                   padding: const EdgeInsets.all(24.0),

@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:madathil/constants.dart';
 import 'package:madathil/model/model_class/api_response_model/call_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/call_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/create_call_response.dart';
@@ -76,6 +77,7 @@ class CallViewModel extends ChangeNotifier {
       notifyListeners();
       Map<String, dynamic> filters = {
         "customer": ["like", callSearchfn != null ? "$callSearchfn%" : "%"],
+        "user": username
       };
 
       // Only add "posting_date" filter if start and end dates are provided
@@ -524,6 +526,7 @@ class CallViewModel extends ChangeNotifier {
 
       var response = await apiRepository.createCall(data: {
         "customer": customerName,
+        "user": username,
         "called_number": customerNumber,
         "caller_number": "9632587410",
         "called_date": calledDate,
