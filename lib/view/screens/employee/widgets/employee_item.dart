@@ -178,6 +178,8 @@ class _EmployeeItemState extends State<EmployeeItem> {
                                                   fontWeight: FontWeight.bold,
                                                   color: AppColors.black,
                                                 ),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 2,
                                           ),
                                           Text(
                                             item.designation ?? "",

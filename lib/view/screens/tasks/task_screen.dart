@@ -132,7 +132,9 @@ class TasksScreen extends StatelessWidget {
                                     dismissible: true,
                                     minimumDate: DateTime.now()
                                         .subtract(const Duration(days: 365)),
-                                    maximumDate: DateTime.now(), onApplyClick:
+                                    maximumDate: DateTime.now()
+                                        .add(const Duration(days: 30)),
+                                    onApplyClick:
                                         (DateTime startDate, DateTime endDate) {
                                   tvm.addFromToTime(
                                       (DateFormat('dd MMM yyyy')

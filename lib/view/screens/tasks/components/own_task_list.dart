@@ -128,24 +128,25 @@ class _OwnTasksState extends State<OwnTasks> {
                               }
                               return const CustomLoader();
                             } else {
-                              if (lvm.tasksListOwnList!.isEmpty) {
-                                return NoDataFOund(
-                                  onRefresh: () {
-                                    controller?.clear();
-                                    lvm.clearDates();
-                                    lvm.resettasksListOwnPagination();
-                                    lvm.getTasksListOwn();
-                                  },
-                                );
-                              } else {
-                                return Container();
-                              }
+                              // if (lvm.tasksListOwnList!.isEmpty) {
+                              //   return NoDataFOund(
+                              //     onRefresh: () {
+                              //       controller?.clear();
+                              //       lvm.clearDates();
+                              //       lvm.resettasksListOwnPagination();
+                              //       lvm.getTasksListOwn();
+                              //     },
+                              //   );
+                              // } else {
+                              //   return Container();
+                              // }
                             }
                           }
                         } else {
                           return TaskListItem(
                               data: lvm.tasksListOwnList?[index]);
                         }
+                        return null;
                       },
                     )
                   : lvm.isLoadingtasksListOwnPagination

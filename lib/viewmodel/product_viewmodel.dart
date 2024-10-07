@@ -99,7 +99,7 @@ class ProductViewmodel extends ChangeNotifier {
               ],
               "item_name": [
                 "like",
-                productSearchfn != null ? "$productSearchfn %" : "%"
+                productSearchfn != null ? "%$productSearchfn%" : "%"
               ]
             }),
             "limit_start": page! * 10,
@@ -112,7 +112,7 @@ class ProductViewmodel extends ChangeNotifier {
               "business": "Solar",
               "item_name": [
                 "like",
-                productSearchfn != null ? "$productSearchfn %" : "%"
+                productSearchfn != null ? "%$productSearchfn%" : "%"
               ]
             }),
             "limit_start": page! * 10,
@@ -131,7 +131,7 @@ class ProductViewmodel extends ChangeNotifier {
               ],
               "item_name": [
                 "like",
-                productSearchfn != null ? "$productSearchfn %" : "%"
+                productSearchfn != null ? "%$productSearchfn%" : "%"
               ]
             }),
             "limit_start": page! * 10,
@@ -144,7 +144,7 @@ class ProductViewmodel extends ChangeNotifier {
               "business": "Trading",
               "item_name": [
                 "like",
-                productSearchfn != null ? "$productSearchfn %" : "%"
+                productSearchfn != null ? "%$productSearchfn%" : "%"
               ]
             }),
             "limit_start": page! * 10,

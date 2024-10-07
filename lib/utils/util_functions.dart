@@ -62,6 +62,10 @@ class UtilFunctions {
     return value == null || value.isEmpty ? 'Closed Kw is required' : null;
   }
 
+    static String? validateAdvance(String? value) {
+    return value == null || value.isEmpty ? 'Advance is required' : null;
+  }
+
   static String? validateItemMargin(String? value) {
     return value == null || value.isEmpty ? 'Item margin is required' : null;
   }

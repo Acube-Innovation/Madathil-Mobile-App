@@ -94,20 +94,20 @@ class _ClosingStatmentsListScreenState
           )
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Provider.of<CommonDataViewmodel>(context, listen: false)
-              .getCustomerList();
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     Provider.of<CommonDataViewmodel>(context, listen: false)
+      //         .getCustomerList();
 
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const AddClosingStatment()));
-        },
-        backgroundColor: AppColors.primeryColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: const Icon(Icons.add),
-      ),
+      //     Navigator.push(
+      //         context,
+      //         MaterialPageRoute(
+      //             builder: (context) => const AddClosingStatment()));
+      //   },
+      //   backgroundColor: AppColors.primeryColor,
+      //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      //   child: const Icon(Icons.add),
+      // ),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(

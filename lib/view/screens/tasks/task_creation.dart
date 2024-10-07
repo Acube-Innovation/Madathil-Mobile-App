@@ -198,6 +198,7 @@ class TaskCreationScreen extends StatelessWidget {
                         onPressed: () {
                           if (taskVm.formKey.currentState!.validate()) {
                             // Proceed with task creation if form is valid
+                            UtilFunctions.loaderPopup(context);
                             taskVm.createTask({
                               "subject": titleCTLR.text,
                               "description": descCTLR.text,
@@ -215,6 +216,8 @@ class TaskCreationScreen extends StatelessWidget {
                                 }
                               ]
                             }).then((value) {
+                              toast("Task created successfully", context);
+                              Navigator.pop(context);
                               Navigator.pop(context);
                             });
                           }

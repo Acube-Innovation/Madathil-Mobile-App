@@ -127,6 +127,7 @@ class _CallDetailsScreenState extends State<CallDetailsScreen> {
                       const SizedBox(
                         height: 20,
                       ),
+                      if(cvm.callDetails?.conversationDuration != null)
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -151,12 +152,43 @@ class _CallDetailsScreenState extends State<CallDetailsScreen> {
                                     color: AppColors.black,
                                     fontSize: 18,
                                     fontWeight: FontWeight.w400),
-                          )
-                        ],
-                      ),
-                      const SizedBox(
+                          ),
+                          const SizedBox(
                         height: 25,
                       ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Call Status",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge!
+                                .copyWith(
+                                    height: 0,
+                                    color: AppColors.grey,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal),
+                          ),
+                          Text(
+                            cvm.callDetails?.callStatus ?? 'N/A',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge!
+                                .copyWith(
+                                    height: 0,
+                                    color: AppColors.black,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w400),
+                          ),
+                          const SizedBox(
+                        height: 25,
+                      ),
+                        ],
+                      ),
+                      
                       const Divider(
                         color: AppColors.black,
                       ),

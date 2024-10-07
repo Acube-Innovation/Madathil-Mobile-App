@@ -428,12 +428,10 @@ class TasksViewmodel extends ChangeNotifier {
       notifyListeners();
       return false;
     } catch (e) {
+      print("error: ${e.toString()}");
       _errormsg = e.toString();
-      if (kDebugMode) {
-        print("error: ${e.toString()}");
-      }
+      if (kDebugMode) {}
       notifyListeners();
-
       return false;
     }
   }
@@ -469,9 +467,7 @@ class TasksViewmodel extends ChangeNotifier {
       notifyListeners();
     }
     _isLoadingtasksListOwnPagination = false;
-    if ((tasksListOwnList ?? []).isNotEmpty) {
-      notifyListeners();
-    }
+    notifyListeners();
   }
 
   void resettasksListOwnPagination() {

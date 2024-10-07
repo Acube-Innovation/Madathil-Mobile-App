@@ -17,8 +17,9 @@ class AddClosingStatment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-    TextEditingController customerNameController = TextEditingController();
+    TextEditingController advanceController = TextEditingController();
     TextEditingController mobNoController = TextEditingController();
+    TextEditingController closeamountController = TextEditingController();
     TextEditingController addressController = TextEditingController();
     TextEditingController businessController = TextEditingController();
     TextEditingController itemNameController = TextEditingController();
@@ -28,6 +29,7 @@ class AddClosingStatment extends StatelessWidget {
     final cdv = Provider.of<CommonDataViewmodel>(context, listen: false);
     String? customer;
     String? item;
+    String? business;
 
     return Scaffold(
       appBar: const CustomAppBar(title: "Add Closing Statement"),
@@ -54,6 +56,12 @@ class AddClosingStatment extends StatelessWidget {
                   hintText: "Select Customer",
                   onItemSelected: (selectedCustomer) {
                     customer = selectedCustomer;
+                  },
+                  validator: (selectedCustomer) {
+                    if (selectedCustomer == null || selectedCustomer.isEmpty) {
+                      return 'Please select a customer';
+                    }
+                    return null;
                   },
                 ),
                 const SizedBox(
@@ -100,7 +108,7 @@ class AddClosingStatment extends StatelessWidget {
                   height: 18,
                 ),
                 Text(
-                  "Business",
+                  "Select Business",
                   style: Theme.of(context).textTheme.titleMedium!.copyWith(
                       height: 0,
                       color: AppColors.grey,
@@ -110,10 +118,20 @@ class AddClosingStatment extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                CustomTextField(
-                  validator: UtilFunctions.validateBusiness,
-                  hint: "Solar",
-                  controller: businessController,
+                CustomDropdown(
+                  validator: (p0) {
+                    if (p0 == null) {
+                      return "Please select business";
+                    }
+
+                    return null;
+                  },
+                  hint: 'Select Business',
+                  items: const ["Solar", "Trading"],
+                  // selectedItem: 'Brand',
+                  onChanged: (String? value) {
+                    business = value;
+                  },
                 ),
                 const SizedBox(
                   height: 18,
@@ -139,6 +157,26 @@ class AddClosingStatment extends StatelessWidget {
                   height: 18,
                 ),
                 Text(
+                  "Advance",
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      height: 0,
+                      color: AppColors.grey,
+                      fontSize: 12,
+                      fontWeight: FontWeight.normal),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomTextField(
+                  keyboardType: TextInputType.number,
+                  validator: UtilFunctions.validateAdvance,
+                  hint: "2500.0",
+                  controller: advanceController,
+                ),
+                const SizedBox(
+                  height: 18,
+                ),
+                Text(
                   "Closed Kw",
                   style: Theme.of(context).textTheme.titleMedium!.copyWith(
                       height: 0,
@@ -159,7 +197,7 @@ class AddClosingStatment extends StatelessWidget {
                   height: 18,
                 ),
                 Text(
-                  "Item Margin",
+                  "Close amount",
                   style: Theme.of(context).textTheme.titleMedium!.copyWith(
                       height: 0,
                       color: AppColors.grey,
@@ -173,6 +211,26 @@ class AddClosingStatment extends StatelessWidget {
                   keyboardType: TextInputType.number,
                   validator: UtilFunctions.validateItemMargin,
                   hint: "230.0",
+                  controller: closeamountController,
+                ),
+                const SizedBox(
+                  height: 18,
+                ),
+                Text(
+                  "Item Margin",
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      height: 0,
+                      color: AppColors.grey,
+                      fontSize: 12,
+                      fontWeight: FontWeight.normal),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomTextField(
+                  keyboardType: TextInputType.number,
+                  validator: UtilFunctions.validateItemMargin,
+                  hint: "130.0",
                   controller: itemMarginController,
                 ),
                 const SizedBox(
@@ -203,18 +261,18 @@ class AddClosingStatment extends StatelessWidget {
                   height: 43,
                   width: double.maxFinite,
                   onPressed: () async {
-                    if (formKey.currentState!.validate()) {
+                    if (formKey.currentState?.validate() ?? false) {
                       UtilFunctions.loaderPopup(context);
                       await cdv
                           .addClosingStatment(
                         customerName: customer,
                         mobNo: mobNoController.text,
-                        business: businessController.text,
+                        business: business,
                         item: item,
                         kw: closedkwController.text,
                         margin: itemMarginController.text,
-                        expense: itemExpenseController.text,
                         address: addressController.text,
+                        closeAmount: closeamountController.text,
                       )
                           .then((value) {
                         Navigator.pop(context);
@@ -240,7 +298,7 @@ class AddClosingStatment extends StatelessWidget {
                       //         builder: (context) =>
                       //             const CongratulationsScreen()));
                     } else {
-                      toast("Required Field missing", context);
+                      toast("Required Field missing", context, isError: true);
                     }
                   },
                 )

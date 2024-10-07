@@ -224,17 +224,21 @@ class CommonDataViewmodel extends ChangeNotifier {
       String? business,
       String? kw,
       String? margin,
-      String? expense}) async {
+      String? expense,
+      String? closeAmount}) async {
     try {
       AddClosingStatmentResponse? response =
           await apiRepository.addClosingStatment(data: {
         "customer_name": customerName,
-        "mobile_no": mobNo,
-        "address": address,
+        "mobile_number": mobNo,
+        "customer_address": address,
         "item": item,
+        "employee_id": employeeId,
+        "select_business": business,
         "kw": kw,
-        "margin": margin,
-        "expense": expense
+        "item_margin": margin,
+        "project_cost": closeAmount,
+        "item_expense": expense
       });
 
       if (response?.data != null) {
@@ -689,8 +693,6 @@ class CommonDataViewmodel extends ChangeNotifier {
       notifyListeners();
 
       Map<String, dynamic>? param = {};
-
-
 
       if (startFormatted != null && endFormatted != null) {
         param = {
@@ -1567,6 +1569,8 @@ class CommonDataViewmodel extends ChangeNotifier {
           await apiRepository.getPointList(param: param);
 
       if (response?.message != null) {
+        pointsMessage = null;
+        closingStatements = null;
         closingStatements = response?.message?.closingStatements;
         pointsMessage = response?.message;
 
@@ -1604,7 +1608,7 @@ class CommonDataViewmodel extends ChangeNotifier {
       notifyListeners();
       Map<String, dynamic>? param = {};
 
-     // String? email = hiveInstance!.getData(DataBoxKey.kEmpId);
+      // String? email = hiveInstance!.getData(DataBoxKey.kEmpId);
       log("email ---- $username");
 
       param = {"user": username, "name": id};
@@ -1642,7 +1646,7 @@ class CommonDataViewmodel extends ChangeNotifier {
       _transactionInvoiceListResponse;
   List<PaymentHistoryList>? orderTransactionList = [];
 
-  Future<bool> getOrderTransactionList({int? page}) async {
+  Future<bool> getOrderTransactionList({int? page, String? txnid}) async {
     try {
       _isloading = true;
       notifyListeners();
@@ -1664,7 +1668,7 @@ class CommonDataViewmodel extends ChangeNotifier {
           "status"
         ]),
         "filters": jsonEncode([
-          ["Payment Entry Reference", "reference_name", "=", "SINV-24-00004"]
+          ["Payment Entry Reference", "reference_name", "=", txnid]
         ]),
         "limit_start": page! * 10,
         "limit": 10,
@@ -1698,7 +1702,7 @@ class CommonDataViewmodel extends ChangeNotifier {
   bool _paginationorederTransaction = false;
   bool get ispaginationorederTransaction => _paginationorederTransaction;
 
-  fetchOrderTransactionList() async {
+  fetchOrderTransactionList(String? txnid) async {
     if (_paginationorederTransaction || orederTransactionReachLength) {
       return;
     }

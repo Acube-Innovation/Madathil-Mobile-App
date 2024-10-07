@@ -5,9 +5,11 @@ import 'package:madathil/model/model_class/api_response_model/sales_order_detail
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/utils/color/util_functions.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
+import 'package:madathil/view/screens/orders/transactions_list_screen.dart';
 
 class InvoiceCard extends StatelessWidget {
   final Invoice? invoice;
+
   const InvoiceCard({super.key, this.invoice});
 
   @override
@@ -149,25 +151,35 @@ class InvoiceCard extends StatelessWidget {
         const SizedBox(
           height: 5,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Text(
-              "Transaction",
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall!
-                  .copyWith(color: AppColors.blue, height: 1.7),
-            ),
-            const SizedBox(
-              width: 2,
-            ),
-            const CustomPngImage(
-              imageName: AppImages.trans,
-              height: 20,
-              width: 20,
-            ),
-          ],
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => OrderTranscationList(
+                          txnid: invoice?.name,
+                        )));
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                "Transaction",
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall!
+                    .copyWith(color: AppColors.blue, height: 1.7),
+              ),
+              const SizedBox(
+                width: 2,
+              ),
+              const CustomPngImage(
+                imageName: AppImages.trans,
+                height: 20,
+                width: 20,
+              ),
+            ],
+          ),
         )
       ],
     );

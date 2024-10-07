@@ -198,7 +198,7 @@ class LoginScreen extends StatelessWidget {
                       builder: (context) => const HomePage()));
                 } else {
                   Navigator.of(context).pop();
-                  toast(authVm.errormsg ?? "", context);
+                  toast(isError: true, authVm.errormsg ?? "", context);
                 }
               });
             } else {

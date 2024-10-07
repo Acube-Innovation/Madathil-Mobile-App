@@ -276,7 +276,11 @@ class LeadCreationScreen extends StatelessWidget {
                                   }
                                 ]
                               }).then(
-                                (value) => Navigator.pop(context),
+                                (value) {
+                                  toast("Lead created successfully", context);
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
                               );
                             } else {
                               Navigator.pop(context);

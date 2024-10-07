@@ -37,21 +37,32 @@ class CustomerViewmodel extends ChangeNotifier {
     log("selectedAddress----->${_selectedAddress?.toJson()}");
     notifyListeners(); // Notify listeners when the value changes
   }
+
+  TextEditingController searchController = TextEditingController();
+
   /*
   *  getCustomerList  api call
   * */
-
+  String? customerSearchfn;
   List<Customer>? customerList = [];
 
   Future<bool> getCustomerList({int? page}) async {
     try {
       setLoader(true);
+      Map<String, dynamic> filters = {};
+      if ((customerSearchfn != null) && (customerSearchfn!.isNotEmpty)) {
+        filters["customer_name"] = ["like", "%$customerSearchfn%"];
+        filters["disabled"] = "false";
+      } else {
+        filters["disabled"] = "false";
+      }
 
       CustomerListResponse? response =
           await apiRepository.getCustomerList(param: {
         "fields": jsonEncode(
             ["name", "customer_name", "image", "email_id", "mobile_no"]),
-        "filters": jsonEncode({"disabled": "false"}),
+        "filters": jsonEncode(filters),
+        // jsonEncode({"disabled": "false"}),
         "order_by": "modified desc",
         "limit": 10,
         "limit_start": page! * 0
@@ -114,6 +125,17 @@ class CustomerViewmodel extends ChangeNotifier {
     cstListCurrentPage = 0;
     _paginationcstList = false;
     cstListReachLength = false;
+    notifyListeners();
+  }
+
+  void setSearchValue(String val) {
+    customerSearchfn = val;
+    notifyListeners();
+  }
+
+  clearSearch() {
+    customerSearchfn = null;
+    searchController.clear();
     notifyListeners();
   }
 

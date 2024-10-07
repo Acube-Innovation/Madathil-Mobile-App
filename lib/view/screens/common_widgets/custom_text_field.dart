@@ -55,7 +55,9 @@ class CustomTextField extends StatelessWidget {
       validator: validator,
       onChanged: onchaged,
       style: const TextStyle(
-          color: Color.fromRGBO(37, 37, 37, 1), fontFamily: "Poppins"),
+          fontWeight: FontWeight.normal,
+          color: Color.fromRGBO(37, 37, 37, 1),
+          fontFamily: "Poppins"),
       obscureText: obscureText,
       enabled: enabled,
       keyboardType: keyboardType,

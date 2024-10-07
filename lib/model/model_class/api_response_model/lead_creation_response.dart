@@ -25,10 +25,10 @@ class Data {
   dynamic parent;
   dynamic parentfield;
   dynamic parenttype;
-  int? idx;
-  int? docstatus;
-  int? organizationLead;
-  int? emiCustomer;
+  dynamic idx;
+  dynamic docstatus;
+  dynamic organizationLead;
+  dynamic emiCustomer;
   dynamic bankLoanProvider;
   String? namingSeries;
   String? leadName;
@@ -66,8 +66,8 @@ class Data {
   dynamic boardName;
   dynamic category;
   dynamic schemeName;
-  int? subsidyPercent;
-  int? subsidyAmount;
+  dynamic subsidyPercent;
+  dynamic subsidyAmount;
   dynamic contactBy;
   dynamic escalationManager;
   dynamic contactDate;
@@ -82,7 +82,7 @@ class Data {
   String? averageElectricityBill;
   dynamic averageElectricityBills;
   dynamic buildingType1;
-  int? subsidyPercentage;
+  dynamic subsidyPercentage;
   dynamic notes;
   String? addressLink;
   dynamic contactLink;
@@ -102,7 +102,7 @@ class Data {
   dynamic website;
   dynamic schem;
   String? subsidy2;
-  int? fetchCurrentLocation;
+  dynamic fetchCurrentLocation;
   dynamic latitude;
   dynamic longitude;
   dynamic area;
@@ -111,9 +111,9 @@ class Data {
   dynamic category3;
   dynamic roofType3;
   String? averageElectricityBill1;
-  int? averagesElectricityBill;
+  dynamic averagesElectricityBill;
   dynamic connectionType;
-  int? connectedLoad;
+  dynamic connectedLoad;
   dynamic buildingType3;
   dynamic marketSegment;
   dynamic industry;
@@ -122,15 +122,15 @@ class Data {
   dynamic postingDate;
   dynamic images;
   String? company;
-  int? proposedProjectCapacity;
+  dynamic proposedProjectCapacity;
   dynamic territory;
   String? language;
-  int? unsubscribed;
-  int? blogSubscriber;
+  dynamic unsubscribed;
+  dynamic blogSubscriber;
   String? title;
-  int? cnot;
-  int? enot;
-  int? lownot;
+  dynamic cnot;
+  dynamic enot;
+  dynamic lownot;
   String? doctype;
 
   Data({

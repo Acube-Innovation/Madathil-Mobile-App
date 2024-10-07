@@ -108,26 +108,27 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
                           }
                           return const CustomLoader();
                         } else {
-                          if (cdv.attendanceListData!.isEmpty) {
-                            return NoDataFOund(
-                              onRefresh: () {
-                                cdv.clearDates();
-                                cdv.resetattendanceListPagination();
-                                cdv.getattendanceListOwn(
-                                    isOthersAttendance:
-                                        widget.isOthersAttendance!
-                                            ? widget.employeeID
-                                            : null);
-                              },
-                            );
-                          } else {
-                            return const CustomLoader();
-                          }
+                          // if (cdv.attendanceListData!.isEmpty) {
+                          //   return NoDataFOund(
+                          //     onRefresh: () {
+                          //       cdv.clearDates();
+                          //       cdv.resetattendanceListPagination();
+                          //       cdv.getattendanceListOwn(
+                          //           isOthersAttendance:
+                          //               widget.isOthersAttendance!
+                          //                   ? widget.employeeID
+                          //                   : null);
+                          //     },
+                          //   );
+                          // } else {
+                          //   return const CustomLoader();
+                          // }
                         }
                       }
                     } else {
                       return AttendanceHistoryItem(data: data);
                     }
+                    return null;
                   },
                 ),
         );
