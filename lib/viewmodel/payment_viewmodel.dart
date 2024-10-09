@@ -87,7 +87,7 @@ class PaymentViewmodel extends ChangeNotifier {
       notifyListeners();
       Map<String, dynamic> filters = {
         "party": ["like", paymentSearchfn != null ? "%$paymentSearchfn%" : "%"],
-
+        "owner": username
       };
 
       // Only add "posting_date" filter if start and end dates are provided
