@@ -96,7 +96,8 @@ class ServiceHistoryScreen extends StatelessWidget {
                     ),
 
                     if (commonVm.startDateService != null &&
-                        commonVm.endDateService != null)
+                        commonVm.endDateService != null &&
+                        commonVm.isFilterOn == true) ...{
                       Container(
                         decoration: BoxDecoration(
                           border: Border.all(color: AppColors.primeryColor),
@@ -136,6 +137,7 @@ class ServiceHistoryScreen extends StatelessWidget {
                           ),
                         ),
                       ),
+                    },
 
                     /// filter button
                     ///
@@ -173,14 +175,6 @@ class ServiceHistoryScreen extends StatelessWidget {
     final commonVm = Provider.of<CommonDataViewmodel>(context, listen: false);
 
     String? tempSelectedStatus = commonVm.selectedStatus;
-
-    DateTime? tempStartDate = commonVm.startDateService != null
-        ? DateTime.parse(commonVm.startDateService!)
-        : null;
-
-    DateTime? tempEndDate = commonVm.endDateService != null
-        ? DateTime.parse(commonVm.endDateService!)
-        : null;
 
     showModalBottomSheet(
       isDismissible: true,
@@ -307,6 +301,8 @@ class ServiceHistoryScreen extends StatelessWidget {
                               if (commonVm.startDateService != null &&
                                   commonVm.endDateService != null &&
                                   tempSelectedStatus == null) {
+                                cdv.isFilterOn = true;
+                                log("${commonVm.isFilterOn}");
                                 log("dateee ---- ${commonVm.startDateService}");
                                 commonVm.resetServiceHistoryPagination();
                                 commonVm.fetchServiceHistoryList();
@@ -314,10 +310,12 @@ class ServiceHistoryScreen extends StatelessWidget {
                                 commonVm.setSelectedStatus(tempSelectedStatus);
                                 commonVm.resetServiceHistoryPagination();
                                 commonVm.fetchServiceHistoryList();
+                                cdv.isFilterOn = true;
                               } else {
                                 commonVm.setSelectedStatus(tempSelectedStatus);
                                 commonVm.resetServiceHistoryPagination();
                                 commonVm.fetchServiceHistoryList();
+                                cdv.isFilterOn = true;
                               }
                             },
                             text: "Apply",

@@ -951,6 +951,8 @@ class CommonDataViewmodel extends ChangeNotifier {
   * service history list api call
   * */
 
+  bool isFilterOn = false;
+
   DateTime? _startservice;
   DateTime? _endservice;
 
@@ -1164,6 +1166,7 @@ class CommonDataViewmodel extends ChangeNotifier {
     startDateService = null;
     endDateService = null;
     dobController.clear();
+    isFilterOn = false;
     notifyListeners();
   }
 
