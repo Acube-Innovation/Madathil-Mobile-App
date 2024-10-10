@@ -14,6 +14,7 @@ import 'package:madathil/viewmodel/leads_viewmodel.dart';
 import 'package:madathil/viewmodel/order_viewmodel.dart';
 import 'package:madathil/viewmodel/payment_viewmodel.dart';
 import 'package:madathil/viewmodel/product_viewmodel.dart';
+import 'package:madathil/viewmodel/salary_viewmodel.dart';
 import 'package:madathil/viewmodel/task_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
@@ -63,8 +64,10 @@ class MyApp extends StatelessWidget {
           create: (_) => PaymentViewmodel(apiRepository: ApiRepository())),
       ChangeNotifierProvider(
           create: (_) => OrderViewmodel(apiRepository: ApiRepository())),
-        ChangeNotifierProvider(
+      ChangeNotifierProvider(
           create: (_) => CallViewModel(apiRepository: ApiRepository())),
+      ChangeNotifierProvider(
+          create: (_) => SalaryViewmodel(apiRepository: ApiRepository())),
     ];
   }
 }

@@ -15,10 +15,8 @@ import 'package:madathil/model/model_class/api_response_model/closingstatment_de
 import 'package:madathil/model/model_class/api_response_model/customer_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/employee_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/employee_list_response.dart';
-import 'package:madathil/model/model_class/api_response_model/image_uploade_response.dart';
 import 'package:madathil/model/model_class/api_response_model/home_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
-import 'package:madathil/model/model_class/api_response_model/order_transaction_list.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_history_response.dart';
 import 'package:madathil/model/model_class/api_response_model/point_dettails_response.dart';
 import 'package:madathil/model/model_class/api_response_model/points_list_model_response.dart';

@@ -17,6 +17,8 @@ class AppImages {
   static const String maleEmployee = "assets/images/male_user.png";
   static const String arrow = "assets/images/arrow.png";
   static const String forward = "assets/images/forward.png";
+  static const String salary = "assets/images/salary.png";
+  static const String salaryItem = "assets/images/salary_.png";
 
   static const String profileImage = "assets/images/profile.png";
   static const String serviceHistoryImage = "assets/images/service_history.png";

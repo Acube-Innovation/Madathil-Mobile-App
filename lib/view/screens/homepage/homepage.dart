@@ -14,6 +14,7 @@ import 'package:madathil/view/screens/leads/leads_screen.dart';
 import 'package:madathil/view/screens/orders/orders_screen.dart';
 import 'package:madathil/view/screens/products/product_list.dart';
 import 'package:madathil/view/screens/profile/profile_screen.dart';
+import 'package:madathil/view/screens/salary/salary_screen.dart';
 import 'package:madathil/view/screens/service/service_history_screen.dart';
 import 'package:madathil/view/screens/tasks/task_screen.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
@@ -311,6 +312,25 @@ class HomePage extends StatelessWidget {
                             builder: (context) => const EmployeeListScreen()));
                   },
                 ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                HomeItemWidget(
+                  image: AppImages.salary,
+                  title: "Salary",
+                  onTap: () {
+                    Provider.of<CommonDataViewmodel>(context, listen: false)
+                        .clearDates();
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SalaryScreen()));
+                  },
+                ),
+                const SizedBox(width: 8),
+                const Expanded(child: SizedBox())
               ],
             ),
           ],
