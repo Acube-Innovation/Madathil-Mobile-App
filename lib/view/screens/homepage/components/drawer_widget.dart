@@ -4,6 +4,7 @@ import 'package:madathil/constants.dart';
 import 'package:madathil/view/screens/Referal/referal_screen.dart';
 import 'package:madathil/view/screens/attendance/attendance_history.dart';
 import 'package:madathil/view/screens/login/login_screen.dart';
+import 'package:madathil/view/screens/payments/payments_list.dart';
 import 'package:madathil/view/screens/points/customer_points_screen.dart';
 import 'package:madathil/view/screens/profile/profile_screen.dart';
 import 'package:madathil/view/screens/service/service_history_screen.dart';
@@ -67,7 +68,7 @@ class DrawerWidget extends StatelessWidget {
             );
           }),
           const SizedBox(height: 20),
-          drawerItem("Referal", AppImages.pointsImage, () {
+          drawerItem("Referal", AppImages.referalImage, () {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const ReferalScreen()),
             );
@@ -79,6 +80,11 @@ class DrawerWidget extends StatelessWidget {
           //       MaterialPageRoute(
           //           builder: (context) => const OrderTranscationList()));
           // }),
+             drawerItem("Payments", AppImages.walletImage, () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const PaymentListScreen()),
+            );
+          }),
           const SizedBox(height: 20),
           const Divider(indent: 20, endIndent: 20),
           const SizedBox(height: 20),
