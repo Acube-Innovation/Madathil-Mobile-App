@@ -102,6 +102,10 @@ class ApiUrls {
   static const kForgotPassword =
       '/api/method/frappe.core.doctype.user.user.reset_password';
 
+  static const kmonthlypayments =
+      '/api/method/a3sola_solar_management.api.get_monthly_payment_summary';
+  static const kmonthlypaymentsdetails =
+      '/api/method/a3sola_solar_management.api.get_monthly_payment_details';
   static const kMonthlySalary =
       '/api/method/a3sola_solar_management.api.get_monthly_summary_for_user';
   static const kMonthlySalaryDetails =

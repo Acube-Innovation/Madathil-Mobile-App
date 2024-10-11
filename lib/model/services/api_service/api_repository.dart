@@ -38,6 +38,8 @@ import 'package:madathil/model/model_class/api_response_model/lead_source_list_r
 import 'package:madathil/model/model_class/api_response_model/leads_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/list_users_response.dart';
 import 'package:madathil/model/model_class/api_response_model/login_response.dart';
+import 'package:madathil/model/model_class/api_response_model/monthly_payment_details_response.dart';
+import 'package:madathil/model/model_class/api_response_model/monthly_payments_response.dart';
 import 'package:madathil/model/model_class/api_response_model/monthly_salary_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/monthly_salary_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/order_transaction_list.dart';
@@ -491,6 +493,17 @@ class ApiRepository {
         apiUrl: ApiUrls.kForgotPassword, data: data);
   }
 
+  Future<MonthlyPaymentsResponse?> getMonthlyPaymentsList(
+      {Map<String, dynamic>? param}) async {
+    return _apiViewModel!.get<MonthlyPaymentsResponse>(
+        apiUrl: ApiUrls.kmonthlypayments, params: param);
+  }
+
+  Future<MonthlyPaymentsDetailsResponse?> getMonthlyPaymentDetails(
+      {Map<String, dynamic>? param}) {
+    return _apiViewModel!.get<MonthlyPaymentsDetailsResponse>(
+        apiUrl: ApiUrls.kmonthlypaymentsdetails, params: param);
+=======
   Future<MonthlySalaryListResponse?> getMonthlySalaryList(String employeeId) {
     return _apiViewModel!.get<MonthlySalaryListResponse>(
         apiUrl: '${ApiUrls.kMonthlySalary}?employee_id=$employeeId');

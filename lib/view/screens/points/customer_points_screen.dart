@@ -93,7 +93,7 @@ class _CustomerPointsScreenState extends State<CustomerPointsScreen> {
               children: [
                 PointsCard(
                     points:
-                        '${cdv.pointsMessage?.totalPoints?.toDouble().round() ?? 0}pts'),
+                        '${cdv.pointsMessage?.totalPoints?.toDouble().round() ?? 0}'),
                 const SizedBox(
                   height: 30,
                 ),

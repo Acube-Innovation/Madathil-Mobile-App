@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:madathil/constants.dart';
+import 'package:madathil/model/model_class/api_response_model/monthly_payment_details_response.dart';
+import 'package:madathil/model/model_class/api_response_model/monthly_payments_response.dart';
 import 'package:madathil/model/model_class/api_response_model/monthly_salary_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/monthly_salary_list_response.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
@@ -82,82 +86,87 @@ class SalaryViewmodel extends ChangeNotifier {
     }
   }
 
+
   /*
-  * Salary List api call
+  * Payment List api call
   * */
 
-  // clearSalaryData() {
-  //   _SalaryList = null;
-  //   _SalaryListData = [];
-  //   notifyListeners();
-  // }
+  List<MonthlySalarySummary>? monthlySalarySummary;
 
-  // //
-  // SalaryList? _SalaryList;
-  // SalaryList? get SalaryList => _SalaryList;
+  Future<bool> getMonthlyPaymentsList() async {
+    try {
+      _isloading = true;
 
-  // Future<bool> getSalaryList(int page,
-  //     {String? fromdate, String? todate, String? isOthersSalary}) async {
-  //   try {
-  //     _isloading = true;
-  //     SalaryList? response = await apiRepository.getSalaryList(page,
-  //         fromdate: fromdate, todate: todate, isOthersSalary: isOthersSalary);
-  //     if ((response?.data ?? []).isNotEmpty) {
-  //       _SalaryList = response;
-  //       _isloading = false;
-  //       notifyListeners();
-  //       return true;
-  //     } else {
-  //       _isloading = false;
-  //       notifyListeners();
-  //       return false;
-  //     }
-  //   } catch (e) {
-  //     _isloading = false;
-  //     _errormsg = e.toString();
-  //     print("error: $e");
-  //     return false;
-  //   }
-  // }
+      notifyListeners();
 
-  // //Salary list pagination
+      Map<String, dynamic>? param = {};
 
-  // List<SalaryListData>? _SalaryListData = [];
-  // List<SalaryListData>? get SalaryListData => _SalaryListData;
-  // bool _isLoadingSalaryListPagination = false;
-  // bool get isLoadingSalaryListPagination => _isLoadingSalaryListPagination;
-  // int _SalaryListCurrentPage = 0;
-  // bool _reachedLastPageSalaryList = false;
-  // bool get reachedLastPageSalaryList => _reachedLastPageSalaryList;
+      param = {"employee_id": employeeId};
 
-  // Future<void> getSalaryListOwn({String? isOthersSalary}) async {
-  //   if (_isLoadingSalaryListPagination || _reachedLastPageSalaryList) {
-  //     return;
-  //   }
-  //   _isLoadingSalaryListPagination = true;
-  //   notifyListeners();
-  //   await getSalaryList(_SalaryListCurrentPage,
-  //       fromdate: fromdate, todate: todate, isOthersSalary: isOthersSalary);
-  //   final apiResponse = SalaryList;
-  //   final apiPosts = apiResponse?.data ?? [];
-  //   if (apiPosts.length < 10) {
-  //     _reachedLastPageSalaryList = true;
-  //   }
-  //   if (apiResponse != null) {
-  //     if (apiPosts.isNotEmpty) {
-  //       _SalaryListData?.addAll(apiPosts);
-  //     }
-  //     _SalaryListCurrentPage++;
-  //   }
-  //   _isLoadingSalaryListPagination = false;
-  //   notifyListeners();
-  // }
+      MonthlyPaymentsResponse? response =
+          await apiRepository.getMonthlyPaymentsList(param: param);
 
-  // void resetSalaryListPagination() {
-  //   _SalaryListData = [];
-  //   _SalaryListCurrentPage = 0;
-  //   _isLoadingSalaryListPagination = false;
-  //   _reachedLastPageSalaryList = false;
-  //   notifyListeners();
-  // }
+      if (response?.message != null) {
+        monthlySalarySummary = response?.message?.monthlySalarySummary;
+
+        log('response--------------$monthlySalarySummary');
+        _isloading = false;
+        notifyListeners();
+        return true;
+      }
+
+      _isloading = false;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _errormsg = e.toString();
+      _isloading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  /*
+  * Payment details api call
+  * */
+
+  List<Payments>? payments;
+
+  Future<bool> getMonthlyPaymentDetails({String? month}) async {
+    try {
+      _isloading = true;
+      notifyListeners();
+
+      Map<String, dynamic>? param = {};
+
+      param = {"employee_id": employeeId, "month": month};
+
+      MonthlyPaymentsDetailsResponse? response =
+          await apiRepository.getMonthlyPaymentDetails(param: param);
+
+      payments = response?.message?.payments;
+
+      if (response?.message != null) {
+        _isloading = false;
+        notifyListeners();
+        return true;
+      }
+      _isloading = false;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _errormsg = e.toString();
+      _isloading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  clearmonthlySalarySummary() {
+    monthlySalarySummary?.clear();
+  }
+
+  clearMonthlyPaymentsDetails() {
+    payments?.clear();
+  }
 }
