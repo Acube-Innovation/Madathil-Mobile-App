@@ -19,12 +19,16 @@ class AppImages {
   static const String forward = "assets/images/forward.png";
   static const String salary = "assets/images/salary.png";
   static const String salaryItem = "assets/images/salary_.png";
+  static const String paymentItem = "assets/images/ledger.png";
 
   static const String profileImage = "assets/images/profile.png";
   static const String serviceHistoryImage = "assets/images/service_history.png";
   static const String attendancehistoryImage =
       "assets/images/attendance_history.png";
   static const String pointsImage = "assets/images/points.png";
+  static const String referalImage = "assets/images/refer.png";
+  static const String walletImage = "assets/images/wallet.png";
+
   static const String settingsImage = "assets/images/settings.png";
   static const String termsImage = "assets/images/t_and_c.png";
   static const String supportImage = "assets/images/support.png";
