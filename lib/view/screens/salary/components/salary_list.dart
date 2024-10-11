@@ -1,17 +1,19 @@
+
 import 'package:flutter/material.dart';
 import 'package:madathil/app_images.dart';
+import 'package:madathil/model/model_class/api_response_model/monthly_salary_list_response.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/salary/components/salary_detail_screen.dart';
 
 class SalaryListItem extends StatelessWidget {
-  final dynamic data;
+  final Summary? data;
   const SalaryListItem({super.key, this.data});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const SalaryDetailScreen())),
+          MaterialPageRoute(builder: (context) => SalaryDetailScreen(month: data?.month))),
       child: Card(
         elevation: 5,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -30,13 +32,13 @@ class SalaryListItem extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "D72",
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(color: AppColors.black),
-                    ),
+                    // Text(
+                    //   "D72",
+                    //   style: Theme.of(context)
+                    //       .textTheme
+                    //       .bodySmall
+                    //       ?.copyWith(color: AppColors.black),
+                    // ),
                     Text(
                       "Salary Date: ",
                       style: Theme.of(context)
@@ -45,7 +47,7 @@ class SalaryListItem extends StatelessWidget {
                           ?.copyWith(color: AppColors.grey),
                     ),
                     Text(
-                      "02 Sept 2024",
+                      data?.monthString ?? 'N/A',
                       style: Theme.of(context)
                           .textTheme
                           .titleLarge
@@ -88,7 +90,7 @@ class SalaryListItem extends StatelessWidget {
                                     ?.copyWith(color: AppColors.grey),
                               ),
                               Text(
-                                "27,000",
+                                data?.points.toString() ?? 'N/A',
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleLarge
@@ -112,7 +114,7 @@ class SalaryListItem extends StatelessWidget {
                                     ?.copyWith(color: AppColors.grey),
                               ),
                               Text(
-                                "50,000",
+                                data?.salary.toString() ?? 'N/A',
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleLarge
