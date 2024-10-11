@@ -106,7 +106,7 @@ class _ReceentActivityItemState extends State<ReceentActivityItem> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                      "You Earned ${item.holderPoints?.toDouble().round()} points",
+                                      "You Earned \n${item.holderPoints?.toDouble().round()} points",
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleLarge!
