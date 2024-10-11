@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:madathil/constants.dart';
 import 'package:madathil/model/model_class/api_response_model/monthly_payment_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/monthly_payments_response.dart';
+import 'package:madathil/model/model_class/api_response_model/monthly_salary_details_response.dart';
+import 'package:madathil/model/model_class/api_response_model/monthly_salary_list_response.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
 
 class SalaryViewmodel extends ChangeNotifier {
@@ -36,84 +38,54 @@ class SalaryViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  /*
-  * Salary List api call
-  * */
+  setLoader(bool value) {
+    _isloading = value;
+    notifyListeners();
+  }
 
-  // clearSalaryData() {
-  //   _SalaryList = null;
-  //   _SalaryListData = [];
-  //   notifyListeners();
-  // }
+  MonthlySalaryListResponse? monthlySalaryListResponse;
+  MonthlySalaryDetailsResponse? monthlySalaryDetailsResponse;
 
-  // //
-  // SalaryList? _SalaryList;
-  // SalaryList? get SalaryList => _SalaryList;
+  fetchMonthlySalaryList() async {
+    setLoader(true);
+    try {
+      MonthlySalaryListResponse? response =
+          await apiRepository.getMonthlySalaryList(employeeId!);
+      if (response?.message != null) {
+        monthlySalaryDetailsResponse = null;
+        monthlySalaryListResponse = response;
+        notifyListeners();
+        return true;
+      }
+    } catch (e) {
+      print('error --------------------------- $e');
+      return false;
+    }
+    setLoader(false);
+  }
 
-  // Future<bool> getSalaryList(int page,
-  //     {String? fromdate, String? todate, String? isOthersSalary}) async {
-  //   try {
-  //     _isloading = true;
-  //     SalaryList? response = await apiRepository.getSalaryList(page,
-  //         fromdate: fromdate, todate: todate, isOthersSalary: isOthersSalary);
-  //     if ((response?.data ?? []).isNotEmpty) {
-  //       _SalaryList = response;
-  //       _isloading = false;
-  //       notifyListeners();
-  //       return true;
-  //     } else {
-  //       _isloading = false;
-  //       notifyListeners();
-  //       return false;
-  //     }
-  //   } catch (e) {
-  //     _isloading = false;
-  //     _errormsg = e.toString();
-  //     print("error: $e");
-  //     return false;
-  //   }
-  // }
+  clearSalaryList() {
+    monthlySalaryListResponse = null;
+  }
 
-  // //Salary list pagination
+  fetchMonthlySalaryDetails(String? month) async {
+    setLoader(true);
+    try {
+      MonthlySalaryDetailsResponse? response =
+          await apiRepository.getMonthlySalaryDetails(employeeId!, month!);
 
-  // List<SalaryListData>? _SalaryListData = [];
-  // List<SalaryListData>? get SalaryListData => _SalaryListData;
-  // bool _isLoadingSalaryListPagination = false;
-  // bool get isLoadingSalaryListPagination => _isLoadingSalaryListPagination;
-  // int _SalaryListCurrentPage = 0;
-  // bool _reachedLastPageSalaryList = false;
-  // bool get reachedLastPageSalaryList => _reachedLastPageSalaryList;
+      if (response != null) {
+        monthlySalaryDetailsResponse = null;
+        monthlySalaryDetailsResponse = response;
+        _isloading = false;
+        notifyListeners();
+        return true;
+      }
+    } catch (e) {
+      print('e -------------------------------- $e');
+    }
+  }
 
-  // Future<void> getSalaryListOwn({String? isOthersSalary}) async {
-  //   if (_isLoadingSalaryListPagination || _reachedLastPageSalaryList) {
-  //     return;
-  //   }
-  //   _isLoadingSalaryListPagination = true;
-  //   notifyListeners();
-  //   await getSalaryList(_SalaryListCurrentPage,
-  //       fromdate: fromdate, todate: todate, isOthersSalary: isOthersSalary);
-  //   final apiResponse = SalaryList;
-  //   final apiPosts = apiResponse?.data ?? [];
-  //   if (apiPosts.length < 10) {
-  //     _reachedLastPageSalaryList = true;
-  //   }
-  //   if (apiResponse != null) {
-  //     if (apiPosts.isNotEmpty) {
-  //       _SalaryListData?.addAll(apiPosts);
-  //     }
-  //     _SalaryListCurrentPage++;
-  //   }
-  //   _isLoadingSalaryListPagination = false;
-  //   notifyListeners();
-  // }
-
-  // void resetSalaryListPagination() {
-  //   _SalaryListData = [];
-  //   _SalaryListCurrentPage = 0;
-  //   _isLoadingSalaryListPagination = false;
-  //   _reachedLastPageSalaryList = false;
-  //   notifyListeners();
-  // }
 
   /*
   * Payment List api call

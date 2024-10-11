@@ -43,6 +43,8 @@ import 'package:madathil/model/model_class/api_response_model/list_users_respons
 import 'package:madathil/model/model_class/api_response_model/login_response.dart';
 import 'package:madathil/model/model_class/api_response_model/monthly_payment_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/monthly_payments_response.dart';
+import 'package:madathil/model/model_class/api_response_model/monthly_salary_details_response.dart';
+import 'package:madathil/model/model_class/api_response_model/monthly_salary_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/order_transaction_list.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_history_response.dart';
@@ -348,11 +350,10 @@ class ApiViewModel {
         return MonthlyPaymentsResponse?.fromJson(json) as T;
         case MonthlyPaymentsDetailsResponse:
         return MonthlyPaymentsDetailsResponse?.fromJson(json) as T;
-
-        
-
-
-        
+      case MonthlySalaryListResponse:
+        return MonthlySalaryListResponse?.fromJson(json) as T;
+      case MonthlySalaryDetailsResponse:
+        return MonthlySalaryDetailsResponse?.fromJson(json) as T;
 
       default:
         throw FromJsonNotImplementedException();
