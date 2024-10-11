@@ -503,7 +503,8 @@ class ApiRepository {
       {Map<String, dynamic>? param}) {
     return _apiViewModel!.get<MonthlyPaymentsDetailsResponse>(
         apiUrl: ApiUrls.kmonthlypaymentsdetails, params: param);
-=======
+  }
+
   Future<MonthlySalaryListResponse?> getMonthlySalaryList(String employeeId) {
     return _apiViewModel!.get<MonthlySalaryListResponse>(
         apiUrl: '${ApiUrls.kMonthlySalary}?employee_id=$employeeId');
@@ -512,6 +513,7 @@ class ApiRepository {
   Future<MonthlySalaryDetailsResponse?> getMonthlySalaryDetails(
       String employeeId, String month) {
     return _apiViewModel!.get<MonthlySalaryDetailsResponse>(
-        apiUrl: '${ApiUrls.kMonthlySalaryDetails}?employee_id=$employeeId&month=$month');
+        apiUrl:
+            '${ApiUrls.kMonthlySalaryDetails}?employee_id=$employeeId&month=$month');
   }
 }

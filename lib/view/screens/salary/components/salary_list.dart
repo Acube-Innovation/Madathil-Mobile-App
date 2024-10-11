@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:madathil/app_images.dart';
 import 'package:madathil/model/model_class/api_response_model/monthly_salary_list_response.dart';
@@ -12,8 +11,10 @@ class SalaryListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Navigator.push(context,
-          MaterialPageRoute(builder: (context) => SalaryDetailScreen(month: data?.month))),
+      onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => SalaryDetailScreen(month: data?.month))),
       child: Card(
         elevation: 5,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
