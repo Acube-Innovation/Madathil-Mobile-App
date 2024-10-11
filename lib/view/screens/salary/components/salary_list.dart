@@ -114,7 +114,7 @@ class SalaryListItem extends StatelessWidget {
                                     ?.copyWith(color: AppColors.grey),
                               ),
                               Text(
-                                data?.salary.toString() ?? 'N/A',
+                                '₹ ${data?.salary.toString() ?? 'N/A'}',
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleLarge
