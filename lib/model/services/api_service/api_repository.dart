@@ -38,6 +38,8 @@ import 'package:madathil/model/model_class/api_response_model/lead_source_list_r
 import 'package:madathil/model/model_class/api_response_model/leads_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/list_users_response.dart';
 import 'package:madathil/model/model_class/api_response_model/login_response.dart';
+import 'package:madathil/model/model_class/api_response_model/monthly_payment_details_response.dart';
+import 'package:madathil/model/model_class/api_response_model/monthly_payments_response.dart';
 import 'package:madathil/model/model_class/api_response_model/order_transaction_list.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_history_response.dart';
@@ -487,5 +489,17 @@ class ApiRepository {
       {Map<String, dynamic>? data}) async {
     return _apiViewModel!.post<ForgotPasswordResponse>(
         apiUrl: ApiUrls.kForgotPassword, data: data);
+  }
+
+  Future<MonthlyPaymentsResponse?> getMonthlyPaymentsList(
+      {Map<String, dynamic>? param}) async {
+    return _apiViewModel!.get<MonthlyPaymentsResponse>(
+        apiUrl: ApiUrls.kmonthlypayments, params: param);
+  }
+
+  Future<MonthlyPaymentsDetailsResponse?> getMonthlyPaymentDetails(
+      {Map<String, dynamic>? param}) {
+    return _apiViewModel!.get<MonthlyPaymentsDetailsResponse>(
+        apiUrl: ApiUrls.kmonthlypaymentsdetails, params: param);
   }
 }

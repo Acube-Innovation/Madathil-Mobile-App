@@ -115,7 +115,9 @@ class _ReceentActivityItemState extends State<ReceentActivityItem> {
                                               color: AppColors.black,
                                               fontSize:
                                                   15, // Responsive font size
-                                              fontWeight: FontWeight.bold)),
+                                              fontWeight: FontWeight.bold),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 5,),
                                   Text(item.item ?? 'N/A',
                                       style: Theme.of(context)
                                           .textTheme

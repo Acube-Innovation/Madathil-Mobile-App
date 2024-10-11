@@ -34,28 +34,30 @@ class PointsCard extends StatelessWidget {
               width: 100, // Static width for the image
             ),
             SizedBox(width: screenWidth * 0.05), // Responsive spacing
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  
+                    Text(
+                      points, // Dynamic points
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                          height: 0,
+                          color: AppColors.white,
+                          fontSize: 35, // Responsive font size
+                          fontWeight: FontWeight.w400),
+                    ),
+                 
                   Text(
-                    points, // Dynamic points
+                    "Total points achieved", // Static description
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(
                         height: 0,
                         color: AppColors.white,
-                        fontSize: 35, // Responsive font size
-                        fontWeight: FontWeight.w400),
-                  ),
-               
-                Text(
-                  "Total points achieved", // Static description
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                      height: 0,
-                      color: AppColors.white,
-                      fontSize: screenWidth * 0.04, // Responsive font size
-                      fontWeight: FontWeight.normal),
-                )
-              ],
+                        fontSize: screenWidth * 0.04, // Responsive font size
+                        fontWeight: FontWeight.normal),
+                  )
+                ],
+              ),
             )
           ],
         ),
