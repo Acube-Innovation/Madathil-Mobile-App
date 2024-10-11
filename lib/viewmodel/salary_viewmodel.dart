@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:madathil/constants.dart';
+import 'package:madathil/model/model_class/api_response_model/monthly_salary_details_response.dart';
+import 'package:madathil/model/model_class/api_response_model/monthly_salary_list_response.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
 
 class SalaryViewmodel extends ChangeNotifier {
@@ -6,7 +9,7 @@ class SalaryViewmodel extends ChangeNotifier {
 
   SalaryViewmodel({required this.apiRepository});
 
-  final bool _isloading = false;
+  bool _isloading = false;
   bool? get isloading => _isloading;
 
   String? _errormsg;
@@ -29,6 +32,54 @@ class SalaryViewmodel extends ChangeNotifier {
     _fromdate = null;
     _todate = null;
     notifyListeners();
+  }
+
+  setLoader(bool value) {
+    _isloading = value;
+    notifyListeners();
+  }
+
+  MonthlySalaryListResponse? monthlySalaryListResponse;
+  MonthlySalaryDetailsResponse? monthlySalaryDetailsResponse;
+
+  fetchMonthlySalaryList() async {
+    setLoader(true);
+    try {
+      MonthlySalaryListResponse? response =
+          await apiRepository.getMonthlySalaryList(employeeId!);
+      if (response?.message != null) {
+        monthlySalaryDetailsResponse = null;
+        monthlySalaryListResponse = response;
+        notifyListeners();
+        return true;
+      }
+    } catch (e) {
+      print('error --------------------------- $e');
+      return false;
+    }
+    setLoader(false);
+  }
+
+  clearSalaryList() {
+    monthlySalaryListResponse = null;
+  }
+
+  fetchMonthlySalaryDetails(String? month) async {
+    setLoader(true);
+    try {
+      MonthlySalaryDetailsResponse? response =
+          await apiRepository.getMonthlySalaryDetails(employeeId!, month!);
+
+      if (response != null) {
+        monthlySalaryDetailsResponse = null;
+        monthlySalaryDetailsResponse = response;
+        _isloading = false;
+        notifyListeners();
+        return true;
+      }
+    } catch (e) {
+      print('e -------------------------------- $e');
+    }
   }
 
   /*

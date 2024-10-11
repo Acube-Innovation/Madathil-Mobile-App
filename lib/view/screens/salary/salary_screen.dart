@@ -1,89 +1,85 @@
-import 'package:custom_date_range_picker/custom_date_range_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/utils/custom_loader.dart';
 import 'package:madathil/utils/no_data_found.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/salary/components/salary_list.dart';
 import 'package:madathil/viewmodel/salary_viewmodel.dart';
-import 'package:madathil/viewmodel/task_viewmodel.dart';
 import 'package:provider/provider.dart';
 
-class SalaryScreen extends StatelessWidget {
+class SalaryScreen extends StatefulWidget {
   const SalaryScreen({super.key});
+
+  @override
+  State<SalaryScreen> createState() => _SalaryScreenState();
+}
+
+class _SalaryScreenState extends State<SalaryScreen> {
+  bool _isInitialized = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitialized) {
+      // Fetch data here after the widget tree is built
+      Provider.of<SalaryViewmodel>(context, listen: false)
+          .fetchMonthlySalaryList();
+      _isInitialized = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
         title: "Salary",
-        actions: [
-          IconButton(
-              onPressed: () {
-                showCustomDateRangePicker(context,
-                    dismissible: true,
-                    minimumDate:
-                        DateTime.now().subtract(const Duration(days: 365)),
-                    maximumDate: DateTime.now(),
-                    onApplyClick: (DateTime startDate, DateTime endDate) async {
-                  var sdv =
-                      Provider.of<SalaryViewmodel>(context, listen: false);
-                  await sdv.addFromToTime(
-                      (DateFormat('dd MMM yyyy').format(startDate)),
-                      (DateFormat('dd MMM yyyy').format(endDate)));
-                  // sdv.resetattendanceListPagination();
-                  // sdv.getattendanceListOwn(
-                  //     isOthersAttendance: widget.isOthersAttendance!
-                  //         ? widget.employeeID
-                  //         : null);
-                },
-                    onCancelClick: () {},
-                    backgroundColor: AppColors.white,
-                    primaryColor: AppColors.secondaryColor);
-              },
-              icon: const Icon(Icons.calendar_month_rounded))
-        ],
+        // The commented calendar picker logic can be added here if needed
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: Consumer<TasksViewmodel>(builder: (context, lvm, _) {
+        child: Consumer<SalaryViewmodel>(builder: (context, svm, _) {
           return RefreshIndicator(
+            color: AppColors.primeryColor,
             onRefresh: () async {
-              lvm.clearDates();
-              lvm.resettasksListOwnPagination();
-              lvm.getTasksListOwn();
+              svm.clearSalaryList();
+              svm.fetchMonthlySalaryList();
             },
-            child: (lvm.tasksListOwnList ?? []).isNotEmpty
+            child: (svm.monthlySalaryListResponse?.message?.summary ?? [])
+                    .isNotEmpty
                 ? ListView.builder(
                     shrinkWrap: true,
-                    itemCount: (lvm.tasksListOwnList ?? []).length + 1,
+                    itemCount:
+                        (svm.monthlySalaryListResponse?.message?.summary ?? [])
+                                .length +
+                            1,
                     itemBuilder: (context, index) {
-                      if (index == (lvm.tasksListOwnList ?? []).length) {
-                        if (lvm.isLoadingtasksListOwnPagination) {
-                          return const CustomLoader();
-                        } else {
-                          if (!lvm.reachedLastPagetasksListOwn) {
-                            if (!lvm.isLoadingtasksListOwnPagination) {
-                              lvm.getTasksListOwn();
-                            }
-                            return const CustomLoader();
-                          }
-                        }
+                      if (index ==
+                          (svm.monthlySalaryListResponse?.message?.summary ??
+                                  [])
+                              .length) {
+                        // if (svm.isLoadingSalaryListPagination) {
+                        //   return const CustomLoader();
+                        // } else {
+                        //   if (!svm.reachedLastPageSalaryList) {
+                        //     if (!svm.isLoadingSalaryListPagination) {
+                        //       svm.fetchMonthlySalaryList();
+                        //     }
+                        //     return const CustomLoader();
+                        //   }
+                        // }
                       } else {
                         return SalaryListItem(
-                            data: lvm.tasksListOwnList?[index]);
+                            data: svm.monthlySalaryListResponse?.message
+                                ?.summary![index]);
                       }
                       return null;
                     },
                   )
-                : lvm.isLoadingtasksListOwnPagination
+                : svm.isloading == true
                     ? const CustomLoader()
                     : NoDataFOund(
                         onRefresh: () {
-                          lvm.clearFilter();
-                          lvm.resettasksListOwnPagination();
-                          lvm.getTasksListOwn();
+                          svm.fetchMonthlySalaryList();
                         },
                       ),
           );
