@@ -31,10 +31,7 @@ class _SalaryScreenState extends State<SalaryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: "Salary",
-        // The commented calendar picker logic can be added here if needed
-      ),
+      appBar: const CustomAppBar(title: "Salary"),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: Consumer<SalaryViewmodel>(builder: (context, svm, _) {
