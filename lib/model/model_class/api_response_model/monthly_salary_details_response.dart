@@ -71,6 +71,8 @@ class DetailedRows {
   int? points;
   double? salary;
   double? incentives;
+  double? totalInvoiceAmount;
+  double? totalPaidAmount;
 
   DetailedRows(
       {this.closingStatement,
@@ -80,7 +82,9 @@ class DetailedRows {
       this.closingDate,
       this.points,
       this.salary,
-      this.incentives});
+      this.incentives,
+      this.totalInvoiceAmount,
+      this.totalPaidAmount});
 
   DetailedRows.fromJson(Map<String, dynamic> json) {
     closingStatement = json['closing_statement'];
@@ -91,6 +95,8 @@ class DetailedRows {
     points = json['points'];
     salary = json['salary'];
     incentives = json['incentives'];
+    totalInvoiceAmount = json['total_invoice_amount'];
+    totalPaidAmount = json['paid_invoice_amount'];
   }
 
   Map<String, dynamic> toJson() {
@@ -103,6 +109,8 @@ class DetailedRows {
     data['points'] = this.points;
     data['salary'] = this.salary;
     data['incentives'] = this.incentives;
+    data['total_invoice_amount'] = this.totalInvoiceAmount;
+    data['paid_invoice_amount'] = this.totalPaidAmount;
     return data;
   }
 }

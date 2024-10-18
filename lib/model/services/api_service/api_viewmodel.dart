@@ -32,6 +32,7 @@ import 'package:madathil/model/model_class/api_response_model/get_customer_addre
 import 'package:madathil/model/model_class/api_response_model/get_customer_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get_order_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get_order_status_response.dart';
+import 'package:madathil/model/model_class/api_response_model/get_quotation_lead_response.dart';
 import 'package:madathil/model/model_class/api_response_model/home_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/image_uploade_response.dart';
 import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
@@ -54,6 +55,7 @@ import 'package:madathil/model/model_class/api_response_model/points_list_model_
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
 import 'package:madathil/model/model_class/api_response_model/profile_details_response.dart';
+import 'package:madathil/model/model_class/api_response_model/quotation_filer_response.dart';
 import 'package:madathil/model/model_class/api_response_model/sales_order_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/sales_persons_list_response_addservice.dart';
 import 'package:madathil/model/model_class/api_response_model/service_history_detailsresponse.dart';
@@ -354,6 +356,15 @@ class ApiViewModel {
         return MonthlySalaryListResponse?.fromJson(json) as T;
       case MonthlySalaryDetailsResponse:
         return MonthlySalaryDetailsResponse?.fromJson(json) as T;
+         case GetQuotationLeadResponse:
+        return GetQuotationLeadResponse?.fromJson(json) as T;
+         case QuotationFileResponse:
+        return QuotationFileResponse?.fromJson(json) as T;
+
+        
+
+
+        
 
       default:
         throw FromJsonNotImplementedException();

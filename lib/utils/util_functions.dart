@@ -42,6 +42,12 @@ class UtilFunctions {
     return value == null || value.isEmpty ? 'address is required' : null;
   }
 
+    static String? validateKw(String? value) {
+    return value == null || value.isEmpty ? 'kw is required' : null;
+  }
+
+  
+
   static String? validatepincode(String? value) {
     return value == null || value.isEmpty ? 'pincode is required' : null;
   }

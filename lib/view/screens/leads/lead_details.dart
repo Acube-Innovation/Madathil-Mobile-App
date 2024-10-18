@@ -1,11 +1,16 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/utils/color/util_functions.dart';
 import 'package:madathil/utils/custom_loader.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
+import 'package:madathil/view/screens/leads/components/custom_button_wit_icon.dart';
 import 'package:madathil/view/screens/profile/widgets/detail_card.dart';
 import 'package:madathil/viewmodel/leads_viewmodel.dart';
+import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
 class LeadDetailScreen extends StatelessWidget {
@@ -147,7 +152,63 @@ class LeadDetailScreen extends StatelessWidget {
                   text: "Order Product",
                   height: 60,
                   onPressed: () {},
-                )
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                lvm.leadsDetails?.data?.status == "Converted"
+                    ? CustomButtonWithIcon(
+                        icon: Icons.file_download_sharp,
+                        color: AppColors.orange,
+                        text: "Download Quotation",
+                        height: 60,
+                        onPressed: () async {
+                          UtilFunctions.loaderPopup(context);
+
+                          if (lvm.leadsDetails?.data?.name != null) {
+                            await lvm
+                                .getQuotationLead(
+                                    leadId: lvm.leadsDetails?.data?.name)
+                                .then((value) {
+
+                                  Navigator.pop(context);
+                              if (value) {
+                                 UtilFunctions.loaderPopup(context);
+                                lvm
+                                    .getQuotationFile(
+                                        quotationId:
+                                            lvm.quotationLead?.first.name)
+                                    .then((value) {
+                                  Navigator.pop(context);
+                                  if (value) {
+
+                                     UtilFunctions.loaderPopup(context);
+                                    //
+
+                                    lvm
+                                        .getQuotation(
+                                            quotationPath: lvm.quotationLeadFile
+                                                ?.first.fileUrl)
+                                        .then((value) {
+                                          Navigator.pop(context);
+                                      if (value) {
+                                        log("${lvm.file?.path.toLowerCase()}");
+
+                                        OpenFile.open(lvm.file?.path);
+                                      } else {
+                                        toast(lvm.errormsg, context);
+                                      }
+                                    });
+                                  } else {
+                                    toast(lvm.errormsg, context);
+                                  }
+                                });
+                              }
+                            });
+                          }
+                        },
+                      )
+                    : const SizedBox()
               ],
             ),
           ),

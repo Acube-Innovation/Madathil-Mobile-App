@@ -27,6 +27,7 @@ class LeadCreationScreen extends StatelessWidget {
     TextEditingController cntNoCTLR = TextEditingController();
     TextEditingController cntEmailCTLR = TextEditingController();
     TextEditingController cnsmrNoCTLR = TextEditingController();
+    TextEditingController kwCTLR = TextEditingController();
     TextEditingController adhrNoCTLR = TextEditingController();
     TextEditingController adrsCTLR = TextEditingController();
     TextEditingController cityCTLR = TextEditingController();
@@ -174,6 +175,23 @@ class LeadCreationScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
 
+                  // kw of lead
+                  Text(
+                    "kw",
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                          height: 1.7,
+                          color: AppColors.grey,
+                        ),
+                  ),
+                  const SizedBox(height: 5),
+                  CustomTextField(
+                    onchaged: (val) {},
+                    controller: kwCTLR,
+                    hint: 'Enter the kw',
+                    validator: UtilFunctions.validateKw,
+                  ),
+                  const SizedBox(height: 10),
+
                   // Aadhar Number
                   Text(
                     "Aadhar Number",
@@ -293,7 +311,10 @@ class LeadCreationScreen extends StatelessWidget {
                               "aadhaar_number": adhrNoCTLR.text,
                               "image": lvm.leadCreationImage,
                               "latitude": cdv.lat,
-                              "longitude": cdv.long
+                              "longitude": cdv.long,
+                              "lead_tracking": [
+                                {"feedback": kwCTLR.text},
+                              ]
                             }).then(
                               (value) {
                                 if (value) {
