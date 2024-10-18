@@ -253,6 +253,22 @@ class _SalaeyDetailsListItemState extends State<SalaeyDetailsListItem> {
                             .bodyMedium
                             ?.copyWith(color: AppColors.grey),
                       ),
+                       const SizedBox(height: 5),
+                      Text(
+                        "Total amount : ₹${widget.data?.totalInvoiceAmount}",
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(color: AppColors.grey),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        "Amount paid : ₹ ${widget.data?.totalPaidAmount}",
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(color: AppColors.grey),
+                      ),
                     ],
                   ),
                 ),
@@ -271,6 +287,8 @@ class _SalaeyDetailsListItemState extends State<SalaeyDetailsListItem> {
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: AppColors.primaryLightColor, fontSize: 20),
                     ),
+
+                    
                     // const SizedBox(height: 10),
                     // Icon(
                     //   _isExpanded

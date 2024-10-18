@@ -29,6 +29,7 @@ import 'package:madathil/model/model_class/api_response_model/get_customer_addre
 import 'package:madathil/model/model_class/api_response_model/get_customer_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get_order_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get_order_status_response.dart';
+import 'package:madathil/model/model_class/api_response_model/get_quotation_lead_response.dart';
 import 'package:madathil/model/model_class/api_response_model/home_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/image_uploade_response.dart';
 import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
@@ -51,6 +52,7 @@ import 'package:madathil/model/model_class/api_response_model/points_list_model_
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
 import 'package:madathil/model/model_class/api_response_model/profile_details_response.dart';
+import 'package:madathil/model/model_class/api_response_model/quotation_filer_response.dart';
 import 'package:madathil/model/model_class/api_response_model/sales_order_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/sales_persons_list_response_addservice.dart';
 import 'package:madathil/model/model_class/api_response_model/service_history_detailsresponse.dart';
@@ -516,4 +518,46 @@ class ApiRepository {
         apiUrl:
             '${ApiUrls.kMonthlySalaryDetails}?employee_id=$employeeId&month=$month');
   }
+
+  Future<GetQuotationLeadResponse?> getQuotationLead(
+      {Map<String, dynamic>? param}) async {
+    return _apiViewModel!.get<GetQuotationLeadResponse>(
+        apiUrl: ApiUrls.kQuotation, params: param);
+  }
+
+  Future<QuotationFileResponse?> getQuotationFile(
+      {Map<String, dynamic>? param}) async {
+    return _apiViewModel!
+        .get<QuotationFileResponse>(apiUrl: ApiUrls.kFiles, params: param);
+  }
+
+  Future<http.Response> getQuotation (String? quotationPath) async {
+    final url = Uri.parse(
+        '${ApiUrls.kProdBaseURL}$quotationPath');
+    Map<String, dynamic>? savedCookies =
+        hiveInstance?.getData(DataBoxKey.cookie);
+
+    final Map<String, String> headers = {
+      'Accept': 'application/pdf',
+    };
+
+    if (savedCookies != null && savedCookies.isNotEmpty) {
+      String cookieHeader =
+          savedCookies.entries.map((e) => '${e.key}=${e.value}').join('; ');
+      headers[HttpHeaders.cookieHeader] = cookieHeader;
+    }
+
+    // Make the GET request
+    final response = await http.get(url, headers: headers);
+
+    // Check the status code for errors
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      log(response.body);
+      throw HttpException(
+          'Failed to fetch invoice. Status code: ${response.statusCode}');
+    }
+  }
+  
 }

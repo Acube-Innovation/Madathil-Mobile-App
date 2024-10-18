@@ -1,14 +1,21 @@
+import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
 import 'package:flutter/foundation.dart';
 import 'package:madathil/model/model_class/api_response_model/create_address_response_model.dart';
+import 'package:madathil/model/model_class/api_response_model/get_quotation_lead_response.dart';
 import 'package:madathil/model/model_class/api_response_model/image_uploade_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_creation_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_list_own_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_source_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/leads_detail_response.dart';
+import 'package:madathil/model/model_class/api_response_model/quotation_filer_response.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
+import 'package:path_provider/path_provider.dart';
 
 class LeadsViewmodel extends ChangeNotifier {
   final ApiRepository apiRepository;
@@ -358,5 +365,132 @@ class LeadsViewmodel extends ChangeNotifier {
     _isLoadingleadsListOtherPagination = false;
     _reachedLastPageleadsListOther = false;
     notifyListeners();
+  }
+
+  List<QuotationLeadData>? quotationLead;
+
+  Future<bool> getQuotationLead({String? leadId}) async {
+    try {
+      setLoader(true);
+      notifyListeners();
+
+      Map<String, dynamic>? param = {};
+
+      param = {
+        "filters": jsonEncode({
+          "party_name": leadId,
+        }),
+      };
+
+      GetQuotationLeadResponse? response =
+          await apiRepository.getQuotationLead(param: param);
+
+      if (response?.data != null) {
+        quotationLead = response?.data;
+        setLoader(false);
+        notifyListeners();
+        return true;
+      }
+
+      setLoader(false);
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _errormsg = e.toString();
+      setLoader(false);
+      notifyListeners();
+      return false;
+    }
+  }
+
+  List<QuotationLeadFile>? quotationLeadFile;
+
+  Future<bool> getQuotationFile({String? quotationId}) async {
+    try {
+      Map<String, dynamic>? param = {};
+
+      param = {
+        "filters": jsonEncode({
+          "attached_to_doctype": "Quotation",
+          "attached_to_name": quotationId,
+        }),
+        "fields": jsonEncode([
+          "file_url",
+        ]),
+      };
+
+      QuotationFileResponse? response =
+          await apiRepository.getQuotationFile(param: param);
+
+      if (response?.data != null) {
+        quotationLeadFile = response?.data;
+        return true;
+      }
+
+      return false;
+    } catch (e) {
+      _errormsg = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
+  File? _file;
+  File? get file => _file;
+
+  Future<bool> getQuotation({String? quotationPath}) async {
+    setLoader(true);
+    try {
+      // Call the API to get the quotation bytes
+      http.Response res = await apiRepository.getQuotation(quotationPath);
+      dynamic getQuotationData = res.bodyBytes;
+
+      if (getQuotationData != null) {
+        // Get the appropriate directory based on the platform
+        final Directory? appDir = Platform.isAndroid
+            ? await getExternalStorageDirectory()
+            : await getApplicationDocumentsDirectory();
+
+        if (appDir == null) {
+          throw Exception("Unable to find the directory to save the file.");
+        }
+
+        // Ensure the directory exists
+        if (!await appDir.exists()) {
+          await appDir.create(recursive: true);
+        }
+
+        // Generate the file path and name
+        String tempPath = appDir.path;
+        final String fileName = path.basename(quotationPath!);
+        final String fullPath =
+            path.join(tempPath, fileName); // Safely join paths
+
+        log('Saving file to: $fullPath');
+        File file = File(fullPath);
+
+        // Create the file if it doesn't exist
+        if (!await file.exists()) {
+          await file.create();
+        }
+
+        // Write the bytes to the file
+        await file.writeAsBytes(getQuotationData);
+        _file = file;
+
+        log("File saved at: ${file.path}");
+        setLoader(false);
+        notifyListeners();
+        return true;
+      }
+
+      setLoader(false);
+      return false;
+    } catch (e) {
+      _errormsg = e.toString();
+      print("Exception: ${e.toString()}");
+      notifyListeners();
+      return false;
+    }
   }
 }
