@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
+import 'package:madathil/model/model_class/api_response_model/assign_employee_lead_response.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/foundation.dart';
 import 'package:madathil/model/model_class/api_response_model/create_address_response_model.dart';
@@ -493,4 +494,57 @@ class LeadsViewmodel extends ChangeNotifier {
       return false;
     }
   }
+
+  /*
+  * assign employee api call
+  * */
+
+  Future<bool> assignEmployeeLead({String? leadId, assignTo}) async {
+    try {
+      setLoader(true);
+      notifyListeners();
+
+      log("assignTo ------$assignTo");
+      log("assignTo ------$leadId");
+
+      FormData formData = FormData.fromMap({
+        'assign_to': jsonEncode([assignTo]),
+        'description': "libiya",
+        'doctype': "Lead",
+        'name': leadId,
+      });
+
+      logFormData(formData);
+      
+
+      AssignEmployeeLeadResponse? response =
+          await apiRepository.asignEmployeeLead(formData: formData);
+
+      if (response != null) {
+        log("----------success");
+
+        
+        setLoader(false);
+        notifyListeners();
+        return true;
+      } else {
+        setLoader(false);
+        notifyListeners();
+        return false;
+      }
+    } catch (e) {
+      _errormsg = e.toString();
+      log("----------$_errormsg");
+      setLoader(false);
+      notifyListeners();
+      return false;
+    }
+  }
+
+  // Helper function to log FormData content
+void logFormData(FormData formData) {
+  formData.fields.forEach((element) {
+    log("Field: ${element.key} = ${element.value}");
+  });
+}
 }

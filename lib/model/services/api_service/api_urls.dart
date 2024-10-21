@@ -113,4 +113,8 @@ class ApiUrls {
 
       static const kQuotation = '/api/resource/Quotation';
       static const kFiles = '/api/resource/File';
+
+      static const kEmployeeDropDown = '/api/resource/User';
+      static const kAssignEmployee = '/api/method/frappe.desk.form.assign_to.add';
+
 }

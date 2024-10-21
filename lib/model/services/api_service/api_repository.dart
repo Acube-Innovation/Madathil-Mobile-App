@@ -1,11 +1,13 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:madathil/constants.dart';
 import 'package:madathil/model/model_class/api_response_model/add_closing_statment_response.dart';
 import 'package:madathil/model/model_class/api_response_model/add_new_service_response.dart';
+import 'package:madathil/model/model_class/api_response_model/assign_employee_lead_response.dart';
 import 'package:madathil/model/model_class/api_response_model/attendance_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/call_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/call_list_response.dart';
@@ -37,6 +39,7 @@ import 'package:madathil/model/model_class/api_response_model/lead_creation_resp
 import 'package:madathil/model/model_class/api_response_model/lead_list_own_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_source_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/leads_detail_response.dart';
+import 'package:madathil/model/model_class/api_response_model/list_employee_dropdown_response.dart';
 import 'package:madathil/model/model_class/api_response_model/list_users_response.dart';
 import 'package:madathil/model/model_class/api_response_model/login_response.dart';
 import 'package:madathil/model/model_class/api_response_model/monthly_payment_details_response.dart';
@@ -531,9 +534,8 @@ class ApiRepository {
         .get<QuotationFileResponse>(apiUrl: ApiUrls.kFiles, params: param);
   }
 
-  Future<http.Response> getQuotation (String? quotationPath) async {
-    final url = Uri.parse(
-        '${ApiUrls.kProdBaseURL}$quotationPath');
+  Future<http.Response> getQuotation(String? quotationPath) async {
+    final url = Uri.parse('${ApiUrls.kProdBaseURL}$quotationPath');
     Map<String, dynamic>? savedCookies =
         hiveInstance?.getData(DataBoxKey.cookie);
 
@@ -559,5 +561,16 @@ class ApiRepository {
           'Failed to fetch invoice. Status code: ${response.statusCode}');
     }
   }
-  
+
+  Future<ListEmployeeDropDownResponse?> getEmployeeDropDownList(
+      {Map<String, dynamic>? param}) async {
+    return _apiViewModel!.get<ListEmployeeDropDownResponse>(
+        apiUrl: ApiUrls.kEmployeeDropDown, params: param);
+  }
+
+  Future<AssignEmployeeLeadResponse?> asignEmployeeLead(
+      {FormData? formData}) async {
+    return _apiViewModel!.postFormdata<AssignEmployeeLeadResponse>(
+        apiUrl: ApiUrls.kAssignEmployee, data: formData!);
+  }
 }

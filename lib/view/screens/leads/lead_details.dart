@@ -6,8 +6,11 @@ import 'package:madathil/utils/color/util_functions.dart';
 import 'package:madathil/utils/custom_loader.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
+import 'package:madathil/view/screens/common_widgets/custom_dropdown.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
+import 'package:madathil/view/screens/employee/widgets/details_button_widegt.dart';
 import 'package:madathil/view/screens/leads/components/custom_button_wit_icon.dart';
+import 'package:madathil/view/screens/leads/components/employee_serachable_dropdown.dart';
 import 'package:madathil/view/screens/profile/widgets/detail_card.dart';
 import 'package:madathil/viewmodel/leads_viewmodel.dart';
 import 'package:open_file/open_file.dart';
@@ -18,6 +21,7 @@ class LeadDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String? employee;
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: CustomAppBar(
@@ -148,6 +152,78 @@ class LeadDetailScreen extends StatelessWidget {
                 const SizedBox(
                   height: 25,
                 ),
+                lvm.leadsDetails?.data?.status == "Lead"
+                    ? DetailsButtonWidegt(
+                        data: "Assign Employee",
+                        onTap: () {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return Consumer<LeadsViewmodel>(
+                                    builder: (context, tvm, _) {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(30.0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          'Select Employee',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge,
+                                        ),
+                                        const SizedBox(height: 20),
+                                        EmployeeSearchableDropdown(
+                                          hintText: "Select Employee to assign",
+                                          onItemSelected: (selectedCustomer) {
+                                            employee = selectedCustomer;
+                                          },
+                                        ),
+                                        const SizedBox(height: 20),
+                                        CustomButton(
+                                          text: "UPDATE LEAD",
+                                          height: 60,
+                                          onPressed: () {
+                                            UtilFunctions.loaderPopup(context);
+
+                                            Provider.of<LeadsViewmodel>(context,
+                                                    listen: false)
+                                                .assignEmployeeLead(
+                                                    assignTo: employee,
+                                                    leadId: lvm.leadsDetails
+                                                        ?.data?.name)
+                                                .then((value) {
+                                              Navigator.pop(context);
+
+                                              if (value) {
+                                                Navigator.pop(context);
+
+                                                
+                                                toast(
+                                                    "Employee assigned succesfully",
+                                                    context);
+                                              } else {
+                                                Navigator.pop(context);
+                                                toast(
+                                                    lvm.errormsg ??
+                                                        'Something went wrong',
+                                                    context,
+                                                    isError: true);
+                                              }
+                                            });
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                });
+                              });
+                        },
+                      )
+                    : const SizedBox(),
+                const SizedBox(
+                  height: 25,
+                ),
                 CustomButton(
                   text: "Order Product",
                   height: 60,
@@ -170,10 +246,9 @@ class LeadDetailScreen extends StatelessWidget {
                                 .getQuotationLead(
                                     leadId: lvm.leadsDetails?.data?.name)
                                 .then((value) {
-
-                                  Navigator.pop(context);
+                              Navigator.pop(context);
                               if (value) {
-                                 UtilFunctions.loaderPopup(context);
+                                UtilFunctions.loaderPopup(context);
                                 lvm
                                     .getQuotationFile(
                                         quotationId:
@@ -181,8 +256,7 @@ class LeadDetailScreen extends StatelessWidget {
                                     .then((value) {
                                   Navigator.pop(context);
                                   if (value) {
-
-                                     UtilFunctions.loaderPopup(context);
+                                    UtilFunctions.loaderPopup(context);
                                     //
 
                                     lvm
@@ -190,7 +264,7 @@ class LeadDetailScreen extends StatelessWidget {
                                             quotationPath: lvm.quotationLeadFile
                                                 ?.first.fileUrl)
                                         .then((value) {
-                                          Navigator.pop(context);
+                                      Navigator.pop(context);
                                       if (value) {
                                         log("${lvm.file?.path.toLowerCase()}");
 
