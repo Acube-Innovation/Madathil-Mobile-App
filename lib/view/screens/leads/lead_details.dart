@@ -150,12 +150,65 @@ class LeadDetailScreen extends StatelessWidget {
                   value2: lvm.leadsDetails?.data?.consumerNumber ?? "N/A",
                 ),
                 const SizedBox(
+                  height: 10,
+                ),
+
+                //assigned to show only if assigned to someone and lead is not closed
+
+                if (lvm.leadsDetails?.data?.status == "Lead" &&
+                    lvm.leadsDetails?.data?.contactBy != null) ...{
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15),
+                    child: Text(
+                      "Assigned To",
+                      style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                            height: 1.7,
+                            color: AppColors.grey,
+                          ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 15),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.grey),
+                        color: AppColors.grey.withOpacity(0.1)),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              lvm.leadsDetails?.data?.contactBy ?? "",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                    height: 1.7,
+                                    color: AppColors.black,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                },
+                const SizedBox(
                   height: 25,
                 ),
+
+                //assign button will be shown only if lead is not closed
+
                 lvm.leadsDetails?.data?.status == "Lead"
                     ? DetailsButtonWidegt(
                         data: "Assign Employee",
                         onTap: () {
+                          employee = null;
+
                           showModalBottomSheet(
                               context: context,
                               builder: (BuildContext context) {
@@ -184,33 +237,57 @@ class LeadDetailScreen extends StatelessWidget {
                                           text: "UPDATE LEAD",
                                           height: 60,
                                           onPressed: () {
-                                            UtilFunctions.loaderPopup(context);
+                                            if (employee != null) {
+                                              UtilFunctions.loaderPopup(
+                                                  context);
 
-                                            Provider.of<LeadsViewmodel>(context,
-                                                    listen: false)
-                                                .assignEmployeeLead(
-                                                    assignTo: employee,
-                                                    leadId: lvm.leadsDetails
-                                                        ?.data?.name)
-                                                .then((value) {
+                                              Provider.of<LeadsViewmodel>(
+                                                      context,
+                                                      listen: false)
+                                                  .assignEmployeeLead(
+                                                      assignTo: employee,
+                                                      leadId: lvm.leadsDetails
+                                                          ?.data?.name)
+                                                  .then((value) {
+                                                Navigator.pop(context);
+
+                                                if (value) {
+                                                  Navigator.pop(context);
+
+                                                  Provider.of<LeadsViewmodel>(
+                                                          context,
+                                                          listen: false)
+                                                      .getLeadsDetails(
+                                                          id: lvm.leadsDetails
+                                                              ?.data?.name);
+
+                                                  if (lvm.serverMessage !=
+                                                      null) {
+                                                    toast(
+                                                        "Already in the assigned employee list",
+                                                        context,
+                                                        isError: true);
+                                                  } else {
+                                                    toast(
+                                                        "Employee assigned succesfully",
+                                                        context);
+                                                  }
+                                                } else {
+                                                  Navigator.pop(context);
+                                                  toast(
+                                                      lvm.errormsg ??
+                                                          'Something went wrong',
+                                                      context,
+                                                      isError: true);
+                                                }
+                                              });
+                                            } else {
                                               Navigator.pop(context);
 
-                                              if (value) {
-                                                Navigator.pop(context);
-
-                                                
-                                                toast(
-                                                    "Employee assigned succesfully",
-                                                    context);
-                                              } else {
-                                                Navigator.pop(context);
-                                                toast(
-                                                    lvm.errormsg ??
-                                                        'Something went wrong',
-                                                    context,
-                                                    isError: true);
-                                              }
-                                            });
+                                              toast("Please select employee",
+                                                  context,
+                                                  isError: true);
+                                            }
                                           },
                                         )
                                       ],

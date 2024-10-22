@@ -499,13 +499,15 @@ class LeadsViewmodel extends ChangeNotifier {
   * assign employee api call
   * */
 
+  List<ServerMessage>? serverMessage;
+
   Future<bool> assignEmployeeLead({String? leadId, assignTo}) async {
     try {
       setLoader(true);
       notifyListeners();
 
       log("assignTo ------$assignTo");
-      log("assignTo ------$leadId");
+      log("leadId ------$leadId");
 
       FormData formData = FormData.fromMap({
         'assign_to': jsonEncode([assignTo]),
@@ -515,15 +517,14 @@ class LeadsViewmodel extends ChangeNotifier {
       });
 
       logFormData(formData);
-      
 
       AssignEmployeeLeadResponse? response =
           await apiRepository.asignEmployeeLead(formData: formData);
 
-      if (response != null) {
+      if (response?.messages != null) {
+        serverMessage = response?.serverMessages;
         log("----------success");
 
-        
         setLoader(false);
         notifyListeners();
         return true;
@@ -542,9 +543,9 @@ class LeadsViewmodel extends ChangeNotifier {
   }
 
   // Helper function to log FormData content
-void logFormData(FormData formData) {
-  formData.fields.forEach((element) {
-    log("Field: ${element.key} = ${element.value}");
-  });
-}
+  void logFormData(FormData formData) {
+    formData.fields.forEach((element) {
+      log("Field: ${element.key} = ${element.value}");
+    });
+  }
 }
