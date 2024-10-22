@@ -104,7 +104,7 @@ class _EmployeeItemState extends State<EmployeeItem> {
                                 SizedBox(height: 200),
                                 Center(
                                     child: Text(
-                                  "No more Service History available.",
+                                  "No more Employees available.",
                                   style: TextStyle(color: Colors.grey),
                                 )),
                               ],

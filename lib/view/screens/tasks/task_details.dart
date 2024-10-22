@@ -188,7 +188,7 @@ class TaskDetailScreen extends StatelessWidget {
                 height: 25,
               ),
               CustomButton(
-                text: "UDPDATE TASK",
+                text: "UPDATE TASK",
                 height: 60,
                 onPressed: () {
                   Provider.of<TasksViewmodel>(context, listen: false)
@@ -218,7 +218,7 @@ class TaskDetailScreen extends StatelessWidget {
                                     : const CupertinoActivityIndicator(),
                                 const SizedBox(height: 20),
                                 CustomButton(
-                                  text: "UDPDATE TASK",
+                                  text: "UPDATE TASK",
                                   height: 60,
                                   onPressed: () {
                                     UtilFunctions.loaderPopup(context);
