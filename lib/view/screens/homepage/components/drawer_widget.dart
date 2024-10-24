@@ -80,11 +80,11 @@ class DrawerWidget extends StatelessWidget {
           //       MaterialPageRoute(
           //           builder: (context) => const OrderTranscationList()));
           // }),
-             drawerItem("Payments", AppImages.walletImage, () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const PaymentListScreen()),
-            );
-          }),
+          //    drawerItem("Payments", AppImages.walletImage, () {
+          //   Navigator.of(context).push(
+          //     MaterialPageRoute(builder: (context) => const PaymentListScreen()),
+          //   );
+          // }),
           const SizedBox(height: 20),
           const Divider(indent: 20, endIndent: 20),
           const SizedBox(height: 20),

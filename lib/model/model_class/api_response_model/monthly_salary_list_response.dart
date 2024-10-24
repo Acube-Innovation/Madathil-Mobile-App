@@ -1,77 +1,102 @@
 class MonthlySalaryListResponse {
-  Message? message;
+  final MonthlySalaryMessage? message;
 
   MonthlySalaryListResponse({this.message});
 
-  MonthlySalaryListResponse.fromJson(Map<String, dynamic> json) {
-    message =
-        json['message'] != null ? new Message.fromJson(json['message']) : null;
+  factory MonthlySalaryListResponse.fromJson(Map<String, dynamic> json) {
+    return MonthlySalaryListResponse(
+      message: json['message'] != null
+          ? MonthlySalaryMessage.fromJson(json['message'])
+          : null,
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.message != null) {
-      data['message'] = this.message!.toJson();
-    }
-    return data;
+    return {
+      if (message != null) 'message': message!.toJson(),
+    };
   }
 }
 
-class Message {
-  bool? success;
-  List<Summary>? summary;
+class MonthlySalaryMessage {
+  final bool? success;
+  final int? totalPoints;
+  final int? totalSalaryPoints;
+  final int? totalIncentives;
+  final int? totalSalaryPaid;
+  final List<Summary>? summary;
 
-  Message({this.success, this.summary});
+  MonthlySalaryMessage({
+    this.success,
+    this.totalPoints,
+    this.totalSalaryPoints,
+    this.totalIncentives,
+    this.totalSalaryPaid,
+    this.summary,
+  });
 
-  Message.fromJson(Map<String, dynamic> json) {
-    success = json['success'];
-    if (json['summary'] != null) {
-      summary = <Summary>[];
-      json['summary'].forEach((v) {
-        summary!.add(new Summary.fromJson(v));
-      });
-    }
+  factory MonthlySalaryMessage.fromJson(Map<String, dynamic> json) {
+    return MonthlySalaryMessage(
+      success: json['success'],
+      totalPoints: (json['total_points'] as num?)?.toInt(),
+      totalSalaryPoints: (json['total_salary_points'] as num?)?.toInt(),
+      totalIncentives: (json['total_incentives'] as num?)?.toInt(),
+      totalSalaryPaid: (json['total_salary_paid'] as num?)?.toInt(),
+      summary: (json['summary'] as List<dynamic>?)
+          ?.map((item) => Summary.fromJson(item))
+          .toList(),
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['success'] = this.success;
-    if (this.summary != null) {
-      data['summary'] = this.summary!.map((v) => v.toJson()).toList();
-    }
-    return data;
+    return {
+      'success': success,
+      'total_points': totalPoints,
+      'total_salary_points': totalSalaryPoints,
+      'total_incentives': totalIncentives,
+      'total_salary_paid': totalSalaryPaid,
+      if (summary != null)
+        'summary': summary!.map((item) => item.toJson()).toList(),
+    };
   }
 }
 
 class Summary {
-  String? month;
-  String? monthString;
-  int? points;
-  int? salary;
-  int? incentives;
+  final String? month;
+  final String? monthString;
+  final int? points;
+  final int? salary;
+  final int? incentives;
+  final int? salaryPaid;
 
-  Summary(
-      {this.month,
-      this.monthString,
-      this.points,
-      this.salary,
-      this.incentives});
+  Summary({
+    this.month,
+    this.monthString,
+    this.points,
+    this.salary,
+    this.incentives,
+    this.salaryPaid,
+  });
 
-  Summary.fromJson(Map<String, dynamic> json) {
-    month = json['month'];
-    monthString = json['month_string'];
-    points = json['points'];
-    salary = json['salary'];
-    incentives = json['incentives'];
+  factory Summary.fromJson(Map<String, dynamic> json) {
+    return Summary(
+      month: json['month'],
+      monthString: json['month_string'],
+      points: (json['points'] as num?)?.toInt(),
+      salary: (json['salary'] as num?)?.toInt(),
+      incentives: (json['incentives'] as num?)?.toInt(),
+      salaryPaid: (json['salary_paid'] as num?)?.toInt(),
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['month'] = this.month;
-    data['month_string'] = this.monthString;
-    data['points'] = this.points;
-    data['salary'] = this.salary;
-    data['incentives'] = this.incentives;
-    return data;
+    return {
+      'month': month,
+      'month_string': monthString,
+      'points': points,
+      'salary': salary,
+      'incentives': incentives,
+      'salary_paid': salaryPaid,
+    };
   }
 }
