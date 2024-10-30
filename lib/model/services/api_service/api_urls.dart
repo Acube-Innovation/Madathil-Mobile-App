@@ -117,4 +117,6 @@ class ApiUrls {
       static const kEmployeeDropDown = '/api/resource/User';
       static const kAssignEmployee = '/api/method/frappe.desk.form.assign_to.add';
 
+      static const kDownloadPaymentReciept = '/api/method/frappe.utils.print_format.download_pdf';
+
 }

@@ -206,6 +206,8 @@ class CommonDataViewmodel extends ChangeNotifier {
 
   Future<bool> getHomeDetails() async {
     try {
+      _isloading = true;
+      notifyListeners();
       HomeDetailResponse? response = await apiRepository.getHomeDetails();
       if (response?.message != null) {
         _homeDetailData = response;
@@ -213,14 +215,18 @@ class CommonDataViewmodel extends ChangeNotifier {
           hiveInstance?.saveData(
               DataBoxKey.kEmpId, response?.message?.employeeId);
         }
+        _isloading = false;
         notifyListeners();
         return true;
       } else {
+        _isloading = false;
         notifyListeners();
         return false;
       }
     } catch (e) {
       _errormsg = e.toString();
+         _isloading = false;
+        notifyListeners();
       return false;
     }
   }
@@ -542,7 +548,8 @@ class CommonDataViewmodel extends ChangeNotifier {
   }
 
   void resetattendanceListPagination() {
-    _attendanceListData = [];
+    _attendanceList = null;
+    _attendanceListData?.clear();
     _attendanceListCurrentPage = 0;
     _isLoadingattendanceListPagination = false;
     _reachedLastPageattendanceList = false;
@@ -1777,7 +1784,8 @@ class CommonDataViewmodel extends ChangeNotifier {
 
     _paginationorederTransaction = true;
 
-    await getOrderTransactionList(page: orederTransactionCurrentPage);
+    await getOrderTransactionList(
+        page: orederTransactionCurrentPage, txnid: txnid);
 
     final apiResponse = orderTransactionList;
     if (apiResponse != null) {

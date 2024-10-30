@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:madathil/app_images.dart';
+import 'package:madathil/model/services/api_service/api_urls.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/utils/color/util_functions.dart';
 import 'package:madathil/view/screens/Referal/referal_screen.dart';
@@ -30,6 +31,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime preBackpress = DateTime.now();
+
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
         final timegap = DateTime.now().difference(preBackpress);
@@ -55,7 +57,17 @@ class HomePage extends StatelessWidget {
                 child: Padding(
                   padding:
                       const EdgeInsets.only(right: 20.0, top: 10, bottom: 10),
-                  child: Image.asset(AppImages.userImage, height: 20),
+                  child: Consumer<CommonDataViewmodel>(builder: (ctx, cdv, _) {
+                    return CircleAvatar(
+                      radius: 20,
+                      backgroundImage: cdv.homeDetailData?.message?.image !=
+                                  null &&
+                              cdv.homeDetailData!.message!.image!.isNotEmpty
+                          ? NetworkImage(
+                              "${ApiUrls.kProdBaseURL}${cdv.homeDetailData?.message?.image}")
+                          : const AssetImage(AppImages.userImage),
+                    );
+                  }),
                 ),
               )
             ],

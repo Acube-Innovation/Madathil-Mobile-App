@@ -249,6 +249,14 @@ class UtilFunctions {
       ),
     );
   }
+
+  String removeHtmlTags(String? htmlString) {
+  if (htmlString == null) return '';
+  // Regular expression to remove HTML tags like <br>, <p>, etc.
+  final RegExp exp = RegExp(r'<[^>]*>', multiLine: true, caseSensitive: false);
+  return htmlString.replaceAll(exp, '').trim();
+}
+
 }
 
 void toast(msg, BuildContext context, {bool? isError = false}) {

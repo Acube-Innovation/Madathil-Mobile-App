@@ -199,7 +199,7 @@ class CartScreen extends StatelessWidget {
                                     ),
                                     // Add spacing between text
                                     Text(
-                                      "\$ ${item.product?.rate?.toInt()}",
+                                      "₹ ${item.product?.rate?.toInt()}",
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleLarge!

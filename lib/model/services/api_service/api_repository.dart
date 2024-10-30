@@ -204,7 +204,7 @@ class ApiRepository {
     print('url:$url');
     return _apiViewModel!.get<LeadsListOwnResponse>(apiUrl: url);
   }
- 
+
   Future<LeadsListOwnResponse?> getLeadsListOther(int page, String userID,
       {String? fromdate, String? todate, String? searchTerm}) {
     return _apiViewModel!.get<LeadsListOwnResponse>(
@@ -572,5 +572,34 @@ class ApiRepository {
       {FormData? formData}) async {
     return _apiViewModel!.postFormdata<AssignEmployeeLeadResponse>(
         apiUrl: ApiUrls.kAssignEmployee, data: formData!);
+  }
+
+  Future<http.Response> getPaymentReciept(String? receiptNo) async {
+    final url = Uri.parse(
+        '${ApiUrls.kProdBaseURL}${ApiUrls.kDownloadPaymentReciept}?doctype=Payment Entry&name=$receiptNo&letterhead=Madathil Letterhead Logo Left&format=Madathil Payment Receipt');
+    Map<String, dynamic>? savedCookies =
+        hiveInstance?.getData(DataBoxKey.cookie);
+
+    final Map<String, String> headers = {
+      'Accept': 'application/pdf',
+    };
+
+    if (savedCookies != null && savedCookies.isNotEmpty) {
+      String cookieHeader =
+          savedCookies.entries.map((e) => '${e.key}=${e.value}').join('; ');
+      headers[HttpHeaders.cookieHeader] = cookieHeader;
+    }
+
+    // Make the GET request
+    final response = await http.get(url, headers: headers);
+
+    // Check the status code for errors
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      log(response.body);
+      throw HttpException(
+          'Failed to fetch invoice. Status code: ${response.statusCode}');
+    }
   }
 }

@@ -150,6 +150,13 @@ class UtilFunctions {
 
     return formattedDate;
   }
+
+  static  String removeHtmlTags(String? htmlString) {
+  if (htmlString == null) return '';
+  // Regular expression to remove HTML tags like <br>, <p>, etc.
+  final RegExp exp = RegExp(r'<[^>]*>', multiLine: true, caseSensitive: false);
+  return htmlString.replaceAll(exp, '').trim();
+}
 }
 
 void toast(msg, BuildContext context, {bool? isError = false}) {
@@ -170,4 +177,7 @@ void toast(msg, BuildContext context, {bool? isError = false}) {
       duration: const Duration(seconds: 3),
     ),
   );
+
+
+
 }

@@ -54,11 +54,13 @@ class SalaryViewmodel extends ChangeNotifier {
       if (response?.message != null) {
         monthlySalaryDetailsResponse = null;
         monthlySalaryListResponse = response;
+        setLoader(false);
         notifyListeners();
         return true;
       }
     } catch (e) {
       print('error --------------------------- $e');
+      setLoader(false);
       return false;
     }
     setLoader(false);
@@ -78,14 +80,16 @@ class SalaryViewmodel extends ChangeNotifier {
         monthlySalaryDetailsResponse = null;
         monthlySalaryDetailsResponse = response;
         _isloading = false;
+        setLoader(false);
         notifyListeners();
         return true;
       }
     } catch (e) {
       print('e -------------------------------- $e');
+      setLoader(false);
+      return false;
     }
   }
-
 
   /*
   * Payment List api call

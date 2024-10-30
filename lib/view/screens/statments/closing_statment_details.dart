@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:madathil/app_images.dart';
 import 'package:madathil/model/model_class/api_response_model/closing_statment_list_response.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/utils/color/util_functions.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -204,38 +205,44 @@ class _ClosingStatmentDetailsState extends State<ClosingStatmentDetails> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Address",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall!
-                                              .copyWith(
-                                                fontSize: 12,
-                                                height: 0,
-                                                color: AppColors.black
-                                                    .withOpacity(0.5),
-                                              ),
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Text(
-                                          cdv.closingStatment
-                                                  ?.customerAddress ??
-                                              '',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleLarge!
-                                              .copyWith(
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Address",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall!
+                                                .copyWith(
+                                                  fontSize: 12,
                                                   height: 0,
-                                                  color: AppColors.black,
-                                                  fontSize: 15),
-                                        )
-                                      ],
+                                                  color: AppColors.black
+                                                      .withOpacity(0.5),
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 5,
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                      
+                                            UtilFunctions.removeHtmlTags(cdv.closingStatment
+                                                    ?.customerAddress ??
+                                                '')
+                                            ,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleLarge!
+                                                .copyWith(
+                                                    height: 0,
+                                                    color: AppColors.black,
+                                                    fontSize: 15),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                     Column(
                                       crossAxisAlignment:

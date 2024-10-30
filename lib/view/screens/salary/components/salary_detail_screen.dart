@@ -7,6 +7,7 @@ import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/payments/widgets/payment_item.dart';
 import 'package:madathil/view/screens/payments_1/widgets/payment_details_item.dart';
 import 'package:madathil/view/screens/salary/components/payment_item.dart';
+import 'package:madathil/view/screens/salary/sales_details.dart';
 import 'package:madathil/viewmodel/salary_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -114,7 +115,7 @@ class _SalaryDetailScreenState extends State<SalaryDetailScreen> {
               ),
               _buildSummaryItem(
                 "Total Salary Points",
-                '₹ ${svm.monthlySalaryDetailsResponse?.message?.totalSalary ?? '0.0'}',
+                '${svm.monthlySalaryDetailsResponse?.message?.totalSalary ?? '0.0'}',
               ),
               const VerticalDivider(color: AppColors.white, thickness: 1),
               const SizedBox(
@@ -231,117 +232,125 @@ class _SalaeyDetailsListItemState extends State<SalaeyDetailsListItem> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      elevation: 5,
-      child: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.data?.customerName ?? 'N/A',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge
-                            ?.copyWith(color: AppColors.black),
-                      ),
-                      const SizedBox(height: 5),
-                      Text(
-                        widget.data?.item ?? 'N/A',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: AppColors.black),
-                      ),
-                      const SizedBox(height: 5),
-                      Text(
-                        "Total amount : ₹${widget.data?.totalInvoiceAmount ?? 0}",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: AppColors.grey),
-                      ),
-                      const SizedBox(height: 5),
-                      Text(
-                        "Amount paid : ₹ ${widget.data?.paidInvoiceAmount ?? 0}",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: AppColors.grey),
-                      ),
-                      const SizedBox(height: 5),
-                      Text(
-                        "Points : ${widget.data?.points ?? 0}",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: AppColors.grey),
-                      ),
-                      const SizedBox(height: 5),
-                      Text(
-                        "Salary : ₹ ${widget.data?.salary ?? 0}",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: AppColors.grey),
-                      ),
-                      const SizedBox(height: 5),
-                      Text(
-                        "Incentives : ₹ ${widget.data?.incentives ?? "0"}",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: AppColors.grey),
-                      ),
-                    ],
-                  ),
-                ),
-                // Column(
-                //   crossAxisAlignment: CrossAxisAlignment.center,
-                //   children: [
-                //     Text(
-                //       "salary",
-                //       style: Theme.of(context)
-                //           .textTheme
-                //           .titleSmall
-                //           ?.copyWith(color: AppColors.grey),
-                //     ),
-                //     Text(
-                //       "₹ ${widget.data?.salary}",
-                //       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                //           color: AppColors.primaryLightColor, fontSize: 20),
-                //     ),
+    return GestureDetector(
 
-                //     // const SizedBox(height: 10),
-                //     // Icon(
-                //     //   _isExpanded
-                //     //       ? Icons.arrow_drop_up
-                //     //       : Icons.arrow_drop_down_circle_sharp,
-                //     //   color: AppColors.grey.withOpacity(0.4),
-                //     // ),
-                //   ],
-                // ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            // if (_isExpanded) ...[
-            //   const Divider(thickness: 1, color: AppColors.black),
-            //   const SizedBox(height: 10),
-            //   Text(
-            //     "Transactions details",
-            //     style: Theme.of(context)
-            //         .textTheme
-            //         .bodyMedium
-            //         ?.copyWith(color: AppColors.black),
-            //   ),
-            // ]
-          ],
+      onTap: () {
+        
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>  SalesDetails(data: widget.data,)));
+      },
+
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        elevation: 5,
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.data?.customerName ?? 'N/A',
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge
+                              ?.copyWith(color: AppColors.black),
+                        ),
+                        // const SizedBox(height: 5),
+                        // Text(
+                        //   widget.data?.item ?? 'N/A',
+                        //   style: Theme.of(context)
+                        //       .textTheme
+                        //       .bodyMedium
+                        //       ?.copyWith(color: AppColors.black),
+                        // ),
+                        const SizedBox(height: 5),
+                        Text(
+                          "Project cost : ₹${widget.data?.projectCost ?? 0}",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(color: AppColors.grey),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          "Amount paid : ₹ ${widget.data?.paidInvoiceAmount ?? 0}",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(color: AppColors.grey),
+                        ),
+                        // const SizedBox(height: 5),
+                        // Text(
+                        //   "Points : ${widget.data?.points ?? 0}",
+                        //   style: Theme.of(context)
+                        //       .textTheme
+                        //       .bodyMedium
+                        //       ?.copyWith(color: AppColors.grey),
+                        // ),
+                        // const SizedBox(height: 5),
+                        // Text(
+                        //   "Salary : ₹ ${widget.data?.salary ?? 0}",
+                        //   style: Theme.of(context)
+                        //       .textTheme
+                        //       .bodyMedium
+                        //       ?.copyWith(color: AppColors.grey),
+                        // ),
+                        // const SizedBox(height: 5),
+                        // Text(
+                        //   "Incentives : ₹ ${widget.data?.incentives ?? "0"}",
+                        //   style: Theme.of(context)
+                        //       .textTheme
+                        //       .bodyMedium
+                        //       ?.copyWith(color: AppColors.grey),
+                        // ),
+                      ],
+                    ),
+                  ),
+                  // Column(
+                  //   crossAxisAlignment: CrossAxisAlignment.center,
+                  //   children: [
+                  //     Text(
+                  //       "salary",
+                  //       style: Theme.of(context)
+                  //           .textTheme
+                  //           .titleSmall
+                  //           ?.copyWith(color: AppColors.grey),
+                  //     ),
+                  //     Text(
+                  //       "₹ ${widget.data?.salary}",
+                  //       style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  //           color: AppColors.primaryLightColor, fontSize: 20),
+                  //     ),
+      
+                  //     // const SizedBox(height: 10),
+                  //     // Icon(
+                  //     //   _isExpanded
+                  //     //       ? Icons.arrow_drop_up
+                  //     //       : Icons.arrow_drop_down_circle_sharp,
+                  //     //   color: AppColors.grey.withOpacity(0.4),
+                  //     // ),
+                  //   ],
+                  // ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              // if (_isExpanded) ...[
+              //   const Divider(thickness: 1, color: AppColors.black),
+              //   const SizedBox(height: 10),
+              //   Text(
+              //     "Transactions details",
+              //     style: Theme.of(context)
+              //         .textTheme
+              //         .bodyMedium
+              //         ?.copyWith(color: AppColors.black),
+              //   ),
+              // ]
+            ],
+          ),
         ),
       ),
     );
