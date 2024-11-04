@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:madathil/app_images.dart';
 import 'package:madathil/constants.dart';
+import 'package:madathil/model/services/api_service/api_urls.dart';
+import 'package:madathil/utils/custom_loader.dart';
 import 'package:madathil/view/screens/Referal/referal_screen.dart';
 import 'package:madathil/view/screens/attendance/attendance_history.dart';
 import 'package:madathil/view/screens/login/login_screen.dart';
@@ -17,22 +19,37 @@ class DrawerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var cdv = Provider.of<CommonDataViewmodel>(context, listen: false);
     return Drawer(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
             padding: const EdgeInsets.all(10.0),
-            child: Image.asset(AppImages.userImage, height: 150),
+            child: cdv.homeDetailData == null
+                ? const CustomLoader()
+                : CircleAvatar(
+                    radius: 60,
+                    backgroundImage: cdv.homeDetailData?.message?.image !=
+                                null &&
+                            cdv.homeDetailData!.message!.image!.isNotEmpty
+                        ? NetworkImage(
+                            "${ApiUrls.kProdBaseURL}${cdv.homeDetailData?.message?.image}")
+                        : const AssetImage(AppImages.userImage),
+                  ),
           ),
           InkWell(
             onTap: () => Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const ProfileScreen())),
-            child: const Text("User Name",
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22)),
+            child: Text(
+              cdv.homeDetailData?.message?.fullName ?? 'User Name',
+              style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 22),
+              textAlign: TextAlign.center,
+            ),
           ),
-          const Text("Designation",
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w300)),
+          Text(cdv.homeDetailData?.message?.roleProfile ?? "Designation",
+              style:
+                  const TextStyle(fontSize: 15, fontWeight: FontWeight.w300)),
           const SizedBox(height: 20),
           const Divider(indent: 20, endIndent: 20),
           const SizedBox(height: 20),
@@ -80,11 +97,11 @@ class DrawerWidget extends StatelessWidget {
           //       MaterialPageRoute(
           //           builder: (context) => const OrderTranscationList()));
           // }),
-             drawerItem("Payments", AppImages.walletImage, () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const PaymentListScreen()),
-            );
-          }),
+          //    drawerItem("Payments", AppImages.walletImage, () {
+          //   Navigator.of(context).push(
+          //     MaterialPageRoute(builder: (context) => const PaymentListScreen()),
+          //   );
+          // }),
           const SizedBox(height: 20),
           const Divider(indent: 20, endIndent: 20),
           const SizedBox(height: 20),

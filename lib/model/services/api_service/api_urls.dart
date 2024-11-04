@@ -110,4 +110,13 @@ class ApiUrls {
       '/api/method/a3sola_solar_management.api.get_monthly_summary_for_user';
   static const kMonthlySalaryDetails =
       '/api/method/a3sola_solar_management.api.get_monthly_details_for_user';
+
+      static const kQuotation = '/api/resource/Quotation';
+      static const kFiles = '/api/resource/File';
+
+      static const kEmployeeDropDown = '/api/resource/User';
+      static const kAssignEmployee = '/api/method/frappe.desk.form.assign_to.add';
+
+      static const kDownloadPaymentReciept = '/api/method/frappe.utils.print_format.download_pdf';
+
 }

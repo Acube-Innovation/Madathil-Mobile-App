@@ -138,7 +138,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                               height: 1.7),
                                     ),
                                     Text(
-                                      "\$ ${pro.amount?.toInt()}",
+                                      "\₹ ${pro.amount?.toInt()}",
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyLarge!
@@ -354,7 +354,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium!
-                                            .copyWith(color: AppColors.white),
+                                            .copyWith(color: AppColors.white,fontSize: 12),
                                       ),
                                     ],
                                   ),
@@ -452,7 +452,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                         ),
                                       )));
                             },
-                            text: "Pay Dues",
+                            text: "Pay Dues" ,
                           ),
                         ),
                       ],

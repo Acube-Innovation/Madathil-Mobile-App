@@ -251,7 +251,7 @@ class _SolarProductListState extends State<SolarProductList> {
                               ),
                               // Text placed at the bottom right
                               Text(
-                                "\$ ${item.rate?.toDouble().round() ?? 0.0}",
+                                "₹ ${item.rate?.toDouble().round() ?? 0.0}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleLarge!

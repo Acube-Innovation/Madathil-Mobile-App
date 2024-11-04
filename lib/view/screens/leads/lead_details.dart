@@ -1,11 +1,19 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/utils/color/util_functions.dart';
 import 'package:madathil/utils/custom_loader.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
+import 'package:madathil/view/screens/common_widgets/custom_dropdown.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
+import 'package:madathil/view/screens/employee/widgets/details_button_widegt.dart';
+import 'package:madathil/view/screens/leads/components/custom_button_wit_icon.dart';
+import 'package:madathil/view/screens/leads/components/employee_serachable_dropdown.dart';
 import 'package:madathil/view/screens/profile/widgets/detail_card.dart';
 import 'package:madathil/viewmodel/leads_viewmodel.dart';
+import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
 class LeadDetailScreen extends StatelessWidget {
@@ -13,6 +21,7 @@ class LeadDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String? employee;
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: CustomAppBar(
@@ -141,13 +150,216 @@ class LeadDetailScreen extends StatelessWidget {
                   value2: lvm.leadsDetails?.data?.consumerNumber ?? "N/A",
                 ),
                 const SizedBox(
+                  height: 10,
+                ),
+
+                //assigned to show only if assigned to someone and lead is not closed
+
+                if (lvm.leadsDetails?.data?.status == "Lead" &&
+                    lvm.leadsDetails?.data?.contactBy != null) ...{
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15),
+                    child: Text(
+                      "Assigned To",
+                      style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                            height: 1.7,
+                            color: AppColors.grey,
+                          ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 15),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.grey),
+                        color: AppColors.grey.withOpacity(0.1)),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              lvm.leadsDetails?.data?.contactBy ?? "",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                    height: 1.7,
+                                    color: AppColors.black,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                },
+                const SizedBox(
+                  height: 25,
+                ),
+
+                //assign button will be shown only if lead is not closed
+
+                lvm.leadsDetails?.data?.status == "Lead"
+                    ? DetailsButtonWidegt(
+                        data: "Assign Employee",
+                        onTap: () {
+                          employee = null;
+
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return Consumer<LeadsViewmodel>(
+                                    builder: (context, tvm, _) {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(30.0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          'Select Employee',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge,
+                                        ),
+                                        const SizedBox(height: 20),
+                                        EmployeeSearchableDropdown(
+                                          hintText: "Select Employee to assign",
+                                          onItemSelected: (selectedCustomer) {
+                                            employee = selectedCustomer;
+                                          },
+                                        ),
+                                        const SizedBox(height: 20),
+                                        CustomButton(
+                                          text: "UPDATE LEAD",
+                                          height: 60,
+                                          onPressed: () {
+                                            if (employee != null) {
+                                              UtilFunctions.loaderPopup(
+                                                  context);
+
+                                              Provider.of<LeadsViewmodel>(
+                                                      context,
+                                                      listen: false)
+                                                  .assignEmployeeLead(
+                                                      assignTo: employee,
+                                                      leadId: lvm.leadsDetails
+                                                          ?.data?.name)
+                                                  .then((value) {
+                                                Navigator.pop(context);
+
+                                                if (value) {
+                                                  Navigator.pop(context);
+
+                                                  Provider.of<LeadsViewmodel>(
+                                                          context,
+                                                          listen: false)
+                                                      .getLeadsDetails(
+                                                          id: lvm.leadsDetails
+                                                              ?.data?.name);
+
+                                                  if (lvm.serverMessage !=
+                                                      null) {
+                                                    toast(
+                                                        "Already in the assigned employee list",
+                                                        context,
+                                                        isError: true);
+                                                  } else {
+                                                    toast(
+                                                        "Employee assigned succesfully",
+                                                        context);
+                                                  }
+                                                } else {
+                                                  Navigator.pop(context);
+                                                  toast(
+                                                      lvm.errormsg ??
+                                                          'Something went wrong',
+                                                      context,
+                                                      isError: true);
+                                                }
+                                              });
+                                            } else {
+                                              Navigator.pop(context);
+
+                                              toast("Please select employee",
+                                                  context,
+                                                  isError: true);
+                                            }
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                });
+                              });
+                        },
+                      )
+                    : const SizedBox(),
+                const SizedBox(
                   height: 25,
                 ),
                 CustomButton(
                   text: "Order Product",
                   height: 60,
                   onPressed: () {},
-                )
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                lvm.leadsDetails?.data?.status == "Converted"
+                    ? CustomButtonWithIcon(
+                        icon: Icons.file_download_sharp,
+                        color: AppColors.orange,
+                        text: "Download Quotation",
+                        height: 60,
+                        onPressed: () async {
+                          UtilFunctions.loaderPopup(context);
+
+                          if (lvm.leadsDetails?.data?.name != null) {
+                            await lvm
+                                .getQuotationLead(
+                                    leadId: lvm.leadsDetails?.data?.name)
+                                .then((value) {
+                              Navigator.pop(context);
+                              if (value) {
+                                UtilFunctions.loaderPopup(context);
+                                lvm
+                                    .getQuotationFile(
+                                        quotationId:
+                                            lvm.quotationLead?.first.name)
+                                    .then((value) {
+                                  Navigator.pop(context);
+                                  if (value) {
+                                    UtilFunctions.loaderPopup(context);
+                                    //
+
+                                    lvm
+                                        .getQuotation(
+                                            quotationPath: lvm.quotationLeadFile
+                                                ?.first.fileUrl)
+                                        .then((value) {
+                                      Navigator.pop(context);
+                                      if (value) {
+                                        log("${lvm.file?.path.toLowerCase()}");
+
+                                        OpenFile.open(lvm.file?.path);
+                                      } else {
+                                        toast(lvm.errormsg, context);
+                                      }
+                                    });
+                                  } else {
+                                    toast(lvm.errormsg, context);
+                                  }
+                                });
+                              }
+                            });
+                          }
+                        },
+                      )
+                    : const SizedBox()
               ],
             ),
           ),

@@ -17,6 +17,7 @@ import 'package:madathil/model/model_class/api_response_model/employee_details_r
 import 'package:madathil/model/model_class/api_response_model/employee_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/home_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/list_employee_dropdown_response.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_history_response.dart';
 import 'package:madathil/model/model_class/api_response_model/point_dettails_response.dart';
 import 'package:madathil/model/model_class/api_response_model/points_list_model_response.dart';
@@ -205,6 +206,8 @@ class CommonDataViewmodel extends ChangeNotifier {
 
   Future<bool> getHomeDetails() async {
     try {
+      _isloading = true;
+      notifyListeners();
       HomeDetailResponse? response = await apiRepository.getHomeDetails();
       if (response?.message != null) {
         _homeDetailData = response;
@@ -212,14 +215,18 @@ class CommonDataViewmodel extends ChangeNotifier {
           hiveInstance?.saveData(
               DataBoxKey.kEmpId, response?.message?.employeeId);
         }
+        _isloading = false;
         notifyListeners();
         return true;
       } else {
+        _isloading = false;
         notifyListeners();
         return false;
       }
     } catch (e) {
       _errormsg = e.toString();
+         _isloading = false;
+        notifyListeners();
       return false;
     }
   }
@@ -541,7 +548,8 @@ class CommonDataViewmodel extends ChangeNotifier {
   }
 
   void resetattendanceListPagination() {
-    _attendanceListData = [];
+    _attendanceList = null;
+    _attendanceListData?.clear();
     _attendanceListCurrentPage = 0;
     _isLoadingattendanceListPagination = false;
     _reachedLastPageattendanceList = false;
@@ -587,6 +595,58 @@ class CommonDataViewmodel extends ChangeNotifier {
         _customers = response.data!
             .map((customer) => customer.customerName ?? '')
             .toList();
+        _isloading = false;
+        notifyListeners();
+        return true;
+      } else {
+        _isloading = false;
+        notifyListeners();
+        return false;
+      }
+    } catch (e) {
+      _errormsg = e.toString();
+      _isloading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  /*
+  * employee list dropdown api call
+  * */
+
+  List<String> _employees = [];
+  List<String> get employess => _employees;
+
+  Future<bool> getEmployeeDropDownList({String? searchItem}) async {
+    try {
+      _isloading = true;
+
+      Map<String, dynamic>? param = {};
+      if (searchItem != null && searchItem.isNotEmpty) {
+        param = {
+          "fields": jsonEncode(["name", "full_name"]),
+          "filters": jsonEncode({
+            "enabled": 1,
+            "name": ["like", "$searchItem%"]
+          }),
+        };
+      } else {
+        param = {
+          "fields": jsonEncode(["name", "full_name"]),
+          "filters": jsonEncode({
+            "enabled": 1,
+            "name": ["like", "%"]
+          }),
+        };
+      }
+
+      ListEmployeeDropDownResponse? response =
+          await apiRepository.getEmployeeDropDownList(param: param);
+
+      if (response != null) {
+        _employees =
+            response.employees!.map((customer) => customer.name ?? '').toList();
         _isloading = false;
         notifyListeners();
         return true;
@@ -1724,7 +1784,8 @@ class CommonDataViewmodel extends ChangeNotifier {
 
     _paginationorederTransaction = true;
 
-    await getOrderTransactionList(page: orederTransactionCurrentPage);
+    await getOrderTransactionList(
+        page: orederTransactionCurrentPage, txnid: txnid);
 
     final apiResponse = orderTransactionList;
     if (apiResponse != null) {
@@ -1751,8 +1812,4 @@ class CommonDataViewmodel extends ChangeNotifier {
     orederTransactionReachLength = false;
     notifyListeners();
   }
-
-
-
-  
 }

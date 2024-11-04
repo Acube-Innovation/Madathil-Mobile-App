@@ -42,6 +42,12 @@ class UtilFunctions {
     return value == null || value.isEmpty ? 'address is required' : null;
   }
 
+    static String? validateKw(String? value) {
+    return value == null || value.isEmpty ? 'kw is required' : null;
+  }
+
+  
+
   static String? validatepincode(String? value) {
     return value == null || value.isEmpty ? 'pincode is required' : null;
   }
@@ -243,6 +249,14 @@ class UtilFunctions {
       ),
     );
   }
+
+  String removeHtmlTags(String? htmlString) {
+  if (htmlString == null) return '';
+  // Regular expression to remove HTML tags like <br>, <p>, etc.
+  final RegExp exp = RegExp(r'<[^>]*>', multiLine: true, caseSensitive: false);
+  return htmlString.replaceAll(exp, '').trim();
+}
+
 }
 
 void toast(msg, BuildContext context, {bool? isError = false}) {

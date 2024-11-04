@@ -139,45 +139,57 @@ class TaskDetailScreen extends StatelessWidget {
                     ),
                     const Divider(),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Assignor",
+                          "Assignor : ",
                           style:
                               Theme.of(context).textTheme.bodyMedium!.copyWith(
                                     height: 1.7,
                                     color: AppColors.black,
                                   ),
                         ),
-                        const Spacer(),
-                        Text(
-                          data?.modifiedBy ?? "N/A",
-                          style:
-                              Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                    height: 1.7,
-                                    color: AppColors.black,
-                                  ),
+                        Expanded(
+                          child: Text(
+                            data?.modifiedBy ?? "N/A",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  height: 1.7,
+                                  color: AppColors.black,
+                                ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
                         ),
                       ],
                     ),
                     const Divider(),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Assignee",
+                          "Assignee : ",
                           style:
                               Theme.of(context).textTheme.bodyMedium!.copyWith(
                                     height: 1.7,
                                     color: AppColors.black,
                                   ),
                         ),
-                        const Spacer(),
-                        Text(
-                          data?.assignedUser ?? "N/A",
-                          style:
-                              Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                    height: 1.7,
-                                    color: AppColors.black,
-                                  ),
+                        Expanded(
+                          child: Text(
+                            data?.assignedUser ?? "N/A",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  height: 1.7,
+                                  color: AppColors.black,
+                                ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
                         ),
                       ],
                     ),
@@ -188,7 +200,7 @@ class TaskDetailScreen extends StatelessWidget {
                 height: 25,
               ),
               CustomButton(
-                text: "UDPDATE TASK",
+                text: "UPDATE TASK",
                 height: 60,
                 onPressed: () {
                   Provider.of<TasksViewmodel>(context, listen: false)
@@ -218,7 +230,7 @@ class TaskDetailScreen extends StatelessWidget {
                                     : const CupertinoActivityIndicator(),
                                 const SizedBox(height: 20),
                                 CustomButton(
-                                  text: "UDPDATE TASK",
+                                  text: "UPDATE TASK",
                                   height: 60,
                                   onPressed: () {
                                     UtilFunctions.loaderPopup(context);

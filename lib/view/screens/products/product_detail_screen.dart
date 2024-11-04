@@ -153,7 +153,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                     .copyWith(
                                                         color: AppColors.grey)),
                                             Text(
-                                                "\$ ${pvm.productData?.rate?.toDouble().round()}" ??
+                                                "₹ ${pvm.productData?.rate?.toDouble().round()}" ??
                                                     "150000",
                                                 style: Theme.of(context)
                                                     .textTheme

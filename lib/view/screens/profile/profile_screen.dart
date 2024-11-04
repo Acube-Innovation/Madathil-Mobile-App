@@ -69,7 +69,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           child: Center(
                             child: CircleAvatar(
-                              radius: 60,
+                              radius: 60, 
                               backgroundImage: cdv.profileData?.image != null &&
                                       cdv.profileData!.image!.isNotEmpty
                                   ? NetworkImage(
@@ -93,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       Center(
-                        child: Text(
+                        child: Text(    
                           username ?? '',
                           style:
                               Theme.of(context).textTheme.labelMedium!.copyWith(

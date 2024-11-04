@@ -92,7 +92,8 @@ class OrderViewmodel extends ChangeNotifier {
         ]),
         "filters": jsonEncode(filters),
         "limit": 10,
-        "limit_start": page! * 10
+        "limit_start": page! * 10,
+        "order_by" : 'modified desc'
       };
 
       GetOrdersResponse? response =

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -86,12 +88,14 @@ class AttendancePage extends StatelessWidget {
                               : "IN")
                       .then(
                     (value) {
+                      Navigator.pop(context);
                       if (value) {
                         cdv
-                            .employeeCheckinList()
-                            .then((value) => Navigator.pop(context));
+                            .employeeCheckinList();
+                           // .then((value) => Navigator.pop(context));
                       } else {
-                        toast("Something went wrong, Please try again", context,
+                        log("error --- ${cdv.errormsg}");
+                        toast(cdv.errormsg ?? "Something went wrong please try again", context,
                             isError: true);
                         Navigator.pop(context);
                       }

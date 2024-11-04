@@ -120,7 +120,7 @@ class InvoiceCard extends StatelessWidget {
                   ),
                   const Spacer(),
                   Text(
-                    "\$ ${invoice?.paidAmount}" ?? "",
+                    "₹ ${invoice?.paidAmount}" ?? "",
                     style: Theme.of(context)
                         .textTheme
                         .bodySmall!
@@ -139,7 +139,7 @@ class InvoiceCard extends StatelessWidget {
                   ),
                   const Spacer(),
                   Text(
-                    "\$ ${invoice?.outstandingAmount}" ?? "",
+                    "₹ ${invoice?.outstandingAmount}" ?? "",
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
                         color: AppColors.red.withOpacity(0.5), height: 1.7),
                   )

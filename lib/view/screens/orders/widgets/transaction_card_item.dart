@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -20,6 +22,8 @@ class OrderTransactionCard extends StatefulWidget {
 class _OrderTransactionCardState extends State<OrderTransactionCard> {
   @override
   void initState() {
+
+    log("id ------${widget.txnid}");
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<CommonDataViewmodel>(context, listen: false)
           .resetOrderTransactionPagination();

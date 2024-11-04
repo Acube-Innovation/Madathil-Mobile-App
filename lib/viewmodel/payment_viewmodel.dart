@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:madathil/constants.dart';
 import 'package:madathil/model/model_class/api_response_model/call_list_response.dart';
@@ -9,6 +11,7 @@ import 'package:madathil/model/model_class/api_response_model/payment_details_re
 import 'package:madathil/model/model_class/api_response_model/payment_history_response.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_modes_response.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
+import 'package:path_provider/path_provider.dart';
 
 class PaymentViewmodel extends ChangeNotifier {
   final ApiRepository apiRepository;
@@ -354,6 +357,48 @@ class PaymentViewmodel extends ChangeNotifier {
       print(
           'Error fetching payment modes: ------------------------------------------- $e');
       return [];
+    }
+  }
+
+  /* dowbload payment receipt */
+
+  File? _file;
+  File? get file => _file;
+  String? _errorMessage;
+  String? get errorMessage => _errorMessage;
+
+  Future<bool> getPaymentReceipt(String? receiptNo) async {
+   // setLoader(true);
+    try {
+      http.Response res = await apiRepository.getPaymentReciept(receiptNo);
+      dynamic getReceptData = res.bodyBytes;
+      if (getReceptData != null) {
+        final Directory? appDir = Platform.isAndroid
+            ? await getExternalStorageDirectory()
+            : await getApplicationDocumentsDirectory();
+        // await getExternalStorageDirectory();
+
+        String tempPath = appDir!.path;
+        final String fileName = '$receiptNo.pdf';
+        log(fileName);
+        File file = File('$tempPath/$fileName');
+        if (!await file.exists()) {
+          await file.create();
+        }
+        await file.writeAsBytes(getReceptData);
+        _file = file;
+        log("after api call--->${file.path.toString()}");
+     //   setLoader(false);
+        notifyListeners();
+        return true;
+      }
+    //  setLoader(false);
+      return false;
+    } catch (e) {
+      _errorMessage = e.toString();
+      print("exception: ${e.toString()}");
+      notifyListeners();
+      return false;
     }
   }
 }

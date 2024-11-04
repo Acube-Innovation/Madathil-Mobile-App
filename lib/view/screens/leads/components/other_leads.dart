@@ -32,10 +32,7 @@ class _OtherLeadsState extends State<OtherLeads> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const LeadDetailScreen()));
-      },
+      onTap: () {},
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -153,8 +150,22 @@ class _OtherLeadsState extends State<OtherLeads> {
                               }
                             }
                           } else {
-                            return LeadListItem(
-                                data: lvm.leadsListOtherList?[index]);
+                            return InkWell(
+                              onTap: () {
+
+                                 Provider.of<LeadsViewmodel>(context,
+                                        listen: false)
+                                    .getLeadsDetails(
+                                        id: lvm.leadsListOtherList?[index].name);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const LeadDetailScreen()));
+                              },
+                              child: LeadListItem(
+                                  data: lvm.leadsListOtherList?[index]),
+                            );
                           }
                           return null;
                         },

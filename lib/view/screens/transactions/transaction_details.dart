@@ -1,10 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_history_response.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/utils/color/util_functions.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
+import 'package:madathil/view/screens/leads/components/custom_button_wit_icon.dart';
 import 'package:madathil/viewmodel/payment_viewmodel.dart';
+import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
 class TransactionDetails extends StatefulWidget {
@@ -309,6 +314,39 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                 ),
                               )
                             : const SizedBox(),
+
+                        const SizedBox(
+                          height: 20,
+                        ),
+
+                        /* button to download the receipt */
+
+                        CustomButtonWithIcon(
+                          icon: Icons.file_download_sharp,
+                          color: AppColors.reefGold,
+                          text: "Download Receipt",
+                          height: 60,
+                          onPressed: () async {
+                            UtilFunctions.loaderPopup(context);
+
+                            log("${pvm.paymentDetails?.name}");
+
+                            paymentVm
+                                .getPaymentReceipt(
+                                    pvm.paymentDetails?.name ?? '')
+                                .then((value) {
+                              Navigator.pop(context);
+
+                              if (value) {
+                                log("${pvm.file?.path.toLowerCase()}");
+
+                                OpenFile.open(pvm.file?.path);
+                              } else {
+                                toast(pvm.errormsg, context);
+                              }
+                            });
+                          },
+                        )
                       ],
                     ),
                   ),

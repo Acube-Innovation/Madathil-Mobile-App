@@ -1,11 +1,13 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:madathil/constants.dart';
 import 'package:madathil/model/model_class/api_response_model/add_closing_statment_response.dart';
 import 'package:madathil/model/model_class/api_response_model/add_new_service_response.dart';
+import 'package:madathil/model/model_class/api_response_model/assign_employee_lead_response.dart';
 import 'package:madathil/model/model_class/api_response_model/attendance_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/call_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/call_list_response.dart';
@@ -29,6 +31,7 @@ import 'package:madathil/model/model_class/api_response_model/get_customer_addre
 import 'package:madathil/model/model_class/api_response_model/get_customer_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get_order_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get_order_status_response.dart';
+import 'package:madathil/model/model_class/api_response_model/get_quotation_lead_response.dart';
 import 'package:madathil/model/model_class/api_response_model/home_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/image_uploade_response.dart';
 import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
@@ -36,6 +39,7 @@ import 'package:madathil/model/model_class/api_response_model/lead_creation_resp
 import 'package:madathil/model/model_class/api_response_model/lead_list_own_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_source_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/leads_detail_response.dart';
+import 'package:madathil/model/model_class/api_response_model/list_employee_dropdown_response.dart';
 import 'package:madathil/model/model_class/api_response_model/list_users_response.dart';
 import 'package:madathil/model/model_class/api_response_model/login_response.dart';
 import 'package:madathil/model/model_class/api_response_model/monthly_payment_details_response.dart';
@@ -51,6 +55,7 @@ import 'package:madathil/model/model_class/api_response_model/points_list_model_
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
 import 'package:madathil/model/model_class/api_response_model/profile_details_response.dart';
+import 'package:madathil/model/model_class/api_response_model/quotation_filer_response.dart';
 import 'package:madathil/model/model_class/api_response_model/sales_order_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/sales_persons_list_response_addservice.dart';
 import 'package:madathil/model/model_class/api_response_model/service_history_detailsresponse.dart';
@@ -191,11 +196,11 @@ class ApiRepository {
       {String? fromdate, String? todate, String? searchTerm}) {
     String url = fromdate != null && todate != null
         ? (searchTerm ?? "").isNotEmpty
-            ? '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$username", "lead_name": ["like", "%$searchTerm%"], "date": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}'
-            : '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$username", "date": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}'
+            ? '${ApiUrls.kleadListOwn}&filters={ "lead_name": ["like", "%$searchTerm%"], "date": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}&or_filters={"lead_owner": "$username", "contact_by":  "$username"}'
+            : '${ApiUrls.kleadListOwn}&filters={"date": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}&or_filters={"lead_owner": "$username", "contact_by":  "$username"}'
         : (searchTerm ?? "").isNotEmpty
-            ? '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$username", "lead_name": ["like", "%$searchTerm%"]}&limit=10&limit_start=${page * 10}'
-            : '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$username"}&limit=10&limit_start=${page * 10}';
+            ? '${ApiUrls.kleadListOwn}&filters={"lead_name": ["like", "%$searchTerm%"]}&limit=10&limit_start=${page * 10}&or_filters={"lead_owner": "$username", "contact_by":  "$username"}'
+            : '${ApiUrls.kleadListOwn}&limit=10&limit_start=${page * 10}&or_filters={"lead_owner": "$username", "contact_by":  "$username"}';
     print('url:$url');
     return _apiViewModel!.get<LeadsListOwnResponse>(apiUrl: url);
   }
@@ -515,5 +520,86 @@ class ApiRepository {
     return _apiViewModel!.get<MonthlySalaryDetailsResponse>(
         apiUrl:
             '${ApiUrls.kMonthlySalaryDetails}?employee_id=$employeeId&month=$month');
+  }
+
+  Future<GetQuotationLeadResponse?> getQuotationLead(
+      {Map<String, dynamic>? param}) async {
+    return _apiViewModel!.get<GetQuotationLeadResponse>(
+        apiUrl: ApiUrls.kQuotation, params: param);
+  }
+
+  Future<QuotationFileResponse?> getQuotationFile(
+      {Map<String, dynamic>? param}) async {
+    return _apiViewModel!
+        .get<QuotationFileResponse>(apiUrl: ApiUrls.kFiles, params: param);
+  }
+
+  Future<http.Response> getQuotation(String? quotationPath) async {
+    final url = Uri.parse('${ApiUrls.kProdBaseURL}$quotationPath');
+    Map<String, dynamic>? savedCookies =
+        hiveInstance?.getData(DataBoxKey.cookie);
+
+    final Map<String, String> headers = {
+      'Accept': 'application/pdf',
+    };
+
+    if (savedCookies != null && savedCookies.isNotEmpty) {
+      String cookieHeader =
+          savedCookies.entries.map((e) => '${e.key}=${e.value}').join('; ');
+      headers[HttpHeaders.cookieHeader] = cookieHeader;
+    }
+
+    // Make the GET request
+    final response = await http.get(url, headers: headers);
+
+    // Check the status code for errors
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      log(response.body);
+      throw HttpException(
+          'Failed to fetch invoice. Status code: ${response.statusCode}');
+    }
+  }
+
+  Future<ListEmployeeDropDownResponse?> getEmployeeDropDownList(
+      {Map<String, dynamic>? param}) async {
+    return _apiViewModel!.get<ListEmployeeDropDownResponse>(
+        apiUrl: ApiUrls.kEmployeeDropDown, params: param);
+  }
+
+  Future<AssignEmployeeLeadResponse?> asignEmployeeLead(
+      {FormData? formData}) async {
+    return _apiViewModel!.postFormdata<AssignEmployeeLeadResponse>(
+        apiUrl: ApiUrls.kAssignEmployee, data: formData!);
+  }
+
+  Future<http.Response> getPaymentReciept(String? receiptNo) async {
+    final url = Uri.parse(
+        '${ApiUrls.kProdBaseURL}${ApiUrls.kDownloadPaymentReciept}?doctype=Payment Entry&name=$receiptNo&letterhead=Madathil Letterhead Logo Left&format=Madathil Payment Receipt');
+    Map<String, dynamic>? savedCookies =
+        hiveInstance?.getData(DataBoxKey.cookie);
+
+    final Map<String, String> headers = {
+      'Accept': 'application/pdf',
+    };
+
+    if (savedCookies != null && savedCookies.isNotEmpty) {
+      String cookieHeader =
+          savedCookies.entries.map((e) => '${e.key}=${e.value}').join('; ');
+      headers[HttpHeaders.cookieHeader] = cookieHeader;
+    }
+
+    // Make the GET request
+    final response = await http.get(url, headers: headers);
+
+    // Check the status code for errors
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      log(response.body);
+      throw HttpException(
+          'Failed to fetch invoice. Status code: ${response.statusCode}');
+    }
   }
 }
