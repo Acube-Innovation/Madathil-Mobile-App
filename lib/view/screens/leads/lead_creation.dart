@@ -31,6 +31,7 @@ class LeadCreationScreen extends StatelessWidget {
     TextEditingController adhrNoCTLR = TextEditingController();
     TextEditingController adrsCTLR = TextEditingController();
     TextEditingController cityCTLR = TextEditingController();
+    TextEditingController fdbkCTLR = TextEditingController();
 
     final authVm = Provider.of<AuthViewmodel>(context, listen: false);
 
@@ -154,7 +155,7 @@ class LeadCreationScreen extends StatelessWidget {
                     onchaged: (val) {},
                     controller: cntEmailCTLR,
                     hint: 'Enter contact email',
-                    validator: UtilFunctions.validateEmail,
+                    // validator: UtilFunctions.validateEmail,
                   ),
                   const SizedBox(height: 10),
 
@@ -171,7 +172,7 @@ class LeadCreationScreen extends StatelessWidget {
                     onchaged: (val) {},
                     controller: cnsmrNoCTLR,
                     hint: 'Enter the Consumer Number',
-                    validator: UtilFunctions.validateConsumerNumber,
+                    // validator: UtilFunctions.validateConsumerNumber,
                   ),
                   const SizedBox(height: 10),
 
@@ -185,10 +186,11 @@ class LeadCreationScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 5),
                   CustomTextField(
+                    keyboardType: TextInputType.number,
                     onchaged: (val) {},
                     controller: kwCTLR,
                     hint: 'Enter the kw',
-                    validator: UtilFunctions.validateKw,
+                    // validator: UtilFunctions.validateKw,
                   ),
                   const SizedBox(height: 10),
 
@@ -205,7 +207,7 @@ class LeadCreationScreen extends StatelessWidget {
                     onchaged: (val) {},
                     controller: adhrNoCTLR,
                     hint: 'Enter the Aadhar number',
-                    validator: UtilFunctions.validateAadhar,
+                    // validator: UtilFunctions.validateAadhar,
                   ),
                   const SizedBox(height: 10),
 
@@ -238,6 +240,23 @@ class LeadCreationScreen extends StatelessWidget {
                     controller: cityCTLR,
                     hint: 'Enter City',
                     validator: UtilFunctions.validateName,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Feedback",
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                          height: 1.7,
+                          color: AppColors.grey,
+                        ),
+                  ),
+                  const SizedBox(height: 5),
+                  CustomTextField(
+                    maxLines: 4,
+                    maxLength: 500,
+                    onchaged: (val) {},
+                    controller: fdbkCTLR,
+                    hint: 'Enter Feedback',
+                    // validator: UtilFunctions.validateName,
                   ),
                   const SizedBox(height: 10),
 
@@ -296,10 +315,30 @@ class LeadCreationScreen extends StatelessWidget {
                       height: 43,
                       width: double.maxFinite,
                       onPressed: () async {
+                        var leadtracking;
                         if (authVm.formKey1.currentState!.validate()) {
                           UtilFunctions.loaderPopup(context);
                           await UtilFunctions()
                               .checkLocationPermission(context);
+
+                          if (kwCTLR.text.isNotEmpty &&
+                              fdbkCTLR.text.isNotEmpty) {
+                           leadtracking = [
+                              {"feedback": kwCTLR.text},
+                              {'feedback': fdbkCTLR.text},
+                            ];
+                          } else if(kwCTLR.text.isNotEmpty && fdbkCTLR.text.isEmpty){
+                            leadtracking = [
+                              {"feedback": kwCTLR.text},
+                            ];
+                          } else if(kwCTLR.text.isEmpty && fdbkCTLR.text.isNotEmpty){
+                            leadtracking = [
+                              {'feedback': fdbkCTLR.text},
+                            ];
+                          }
+                          else{
+                            leadtracking = [];
+                          }
                           if (cdv.lat != null && cdv.long != null) {
                             lvm.createLead({
                               "lead_name": ldNameCTLR.text,
@@ -312,9 +351,7 @@ class LeadCreationScreen extends StatelessWidget {
                               "image": lvm.leadCreationImage,
                               "latitude": cdv.lat,
                               "longitude": cdv.long,
-                              "lead_tracking": [
-                                {"feedback": kwCTLR.text},
-                              ]
+                              "lead_tracking": leadtracking,
                             }).then(
                               (value) {
                                 if (value) {
