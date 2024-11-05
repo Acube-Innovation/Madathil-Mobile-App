@@ -12,6 +12,7 @@ import 'package:madathil/view/screens/employee/widgets/details_button_widegt.dar
 import 'package:madathil/view/screens/leads/components/custom_button_wit_icon.dart';
 import 'package:madathil/view/screens/leads/components/employee_serachable_dropdown.dart';
 import 'package:madathil/view/screens/profile/widgets/detail_card.dart';
+import 'package:madathil/view/screens/profile/widgets/detail_card_single.dart';
 import 'package:madathil/viewmodel/leads_viewmodel.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
@@ -36,8 +37,28 @@ class LeadDetailScreen extends StatelessWidget {
           ),
           title: "Lead Details"),
       body: Consumer<LeadsViewmodel>(builder: (context, lvm, _) {
+        String? feedback;
         if (lvm.leadsDetails == null) {
           return const CustomLoader();
+        }
+        if (lvm.leadsDetails!.data!.leadTracking?.isNotEmpty ?? false) {
+          if (lvm.leadsDetails!.data!.leadTracking?.length == 2) {
+            if (RegExp('[a-zA-Z]').hasMatch(
+                    lvm.leadsDetails!.data!.leadTracking![1].feedback!) &&
+                !(lvm.leadsDetails!.data!.leadTracking![1].feedback!
+                    .toLowerCase()
+                    .contains('kw'))) {
+              feedback = lvm.leadsDetails!.data!.leadTracking![1].feedback;
+            }
+          } else {
+            if (RegExp('[a-zA-Z]').hasMatch(
+                    lvm.leadsDetails!.data!.leadTracking![0].feedback!) &&
+                !(lvm.leadsDetails!.data!.leadTracking![0].feedback!
+                    .toLowerCase()
+                    .contains('kw'))) {
+              feedback = lvm.leadsDetails!.data!.leadTracking![0].feedback;
+            }
+          }
         }
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
@@ -152,6 +173,36 @@ class LeadDetailScreen extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
+                if (feedback != null)
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15),
+                          child: Text(
+                            "Feedback",
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelMedium!
+                                .copyWith(
+                                  height: 1.7,
+                                  color: AppColors.grey,
+                                ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        ProfileCardSingle(
+                          data: "Feedback",
+                          //TODO
+
+                          value: feedback
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                      ]),
 
                 //assigned to show only if assigned to someone and lead is not closed
 
