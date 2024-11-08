@@ -199,7 +199,7 @@ class CheckOutScreen extends StatelessWidget {
                                         ),
                                         // Text placed at the bottom right
                                         Text(
-                                          "\$ ${item?.rate?.toInt()}" ?? "1000",
+                                          " ₹ ${item?.rate?.toInt()}" ?? "1000",
                                           style: Theme.of(context)
                                               .textTheme
                                               .titleLarge!
@@ -330,7 +330,7 @@ class CheckOutScreen extends StatelessWidget {
                           ),
                           const Spacer(),
                           Text(
-                            "\$ ${pvm.checkOutData?.grandTotal?.toInt()}" ??
+                            " ₹ ${pvm.checkOutData?.grandTotal?.toInt()}" ??
                                 "1000.00",
                             style: Theme.of(context)
                                 .textTheme
@@ -397,7 +397,7 @@ class CheckOutScreen extends StatelessWidget {
                           ),
                           const Spacer(),
                           Text(
-                            "\$${pvm.checkOutData?.roundedTotal?.toInt()}" ??
+                            "₹ ${pvm.checkOutData?.roundedTotal?.toInt()}" ??
                                 "1000",
                             style: Theme.of(context)
                                 .textTheme
@@ -413,8 +413,8 @@ class CheckOutScreen extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            "\$${pvm.checkOutData?.roundedTotal?.toInt()}" ??
-                                "\$ 1000",
+                            "₹ ${pvm.checkOutData?.roundedTotal?.toInt()}" ??
+                                "1000",
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineMedium!
@@ -474,6 +474,20 @@ class CheckOutScreen extends StatelessWidget {
                                                         .isNotEmpty) {
                                                       Navigator.of(context)
                                                           .pop();
+
+                                                          Provider.of<CustomerViewmodel>(
+                                                              context,
+                                                              listen: false)
+                                                          .clearCustomerDetails();
+
+                                                      Provider.of<CustomerViewmodel>(
+                                                              context,
+                                                              listen: false)
+                                                          .getCustomerDetail(
+                                                              name: pvm
+                                                                      .checkOutData
+                                                                      ?.customerName ??
+                                                                  '');
 
                                                       Navigator.push(
                                                           context,

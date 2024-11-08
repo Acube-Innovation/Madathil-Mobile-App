@@ -38,6 +38,13 @@ class CustomerViewmodel extends ChangeNotifier {
     notifyListeners(); // Notify listeners when the value changes
   }
 
+  clearaddress (){
+
+    _selectedAddress = null;
+    notifyListeners();
+
+  }
+
   TextEditingController searchController = TextEditingController();
 
   /*
@@ -85,6 +92,7 @@ class CustomerViewmodel extends ChangeNotifier {
       return false;
     }
   }
+
   /*
   *  pagination--------------------
   * */
@@ -330,6 +338,11 @@ class CustomerViewmodel extends ChangeNotifier {
       setLoader(false);
       return false;
     }
+  }
+
+  clearCustomerDetails() {
+
+    customerDetails?.clear();
   }
 
   /*

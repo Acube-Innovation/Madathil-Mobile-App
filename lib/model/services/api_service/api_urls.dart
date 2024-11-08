@@ -111,12 +111,17 @@ class ApiUrls {
   static const kMonthlySalaryDetails =
       '/api/method/a3sola_solar_management.api.get_monthly_details_for_user';
 
-      static const kQuotation = '/api/resource/Quotation';
-      static const kFiles = '/api/resource/File';
+  static const kQuotation = '/api/resource/Quotation';
+  static const kFiles = '/api/resource/File';
 
-      static const kEmployeeDropDown = '/api/resource/User';
-      static const kAssignEmployee = '/api/method/frappe.desk.form.assign_to.add';
+  static const kEmployeeDropDown = '/api/resource/User';
+  static const kAssignEmployee = '/api/method/frappe.desk.form.assign_to.add';
 
-      static const kDownloadPaymentReciept = '/api/method/frappe.utils.print_format.download_pdf';
+  static const kDownloadPaymentReciept =
+      '/api/method/frappe.utils.print_format.download_pdf';
 
+  static const kGeneratePaymentLink =
+      '/api/method/a3sola_solar_management.a3sola_solar_management.doctype.razorpay_payment_link.razorpay_payment_link.create_payment_link';
+
+      static const kOngoingTransaction = '/api/resource/Razorpay Payment Link';
 }

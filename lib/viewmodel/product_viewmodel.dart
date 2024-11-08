@@ -8,9 +8,11 @@ import 'package:intl/intl.dart';
 import 'package:madathil/model/model_class/api_response_model/create_check_out_response_model.dart';
 import 'package:madathil/model/model_class/api_response_model/create_payment_response.dart';
 import 'package:madathil/model/model_class/api_response_model/general_response.dart';
+import 'package:madathil/model/model_class/api_response_model/generate_link_reponse.dart';
 import 'package:madathil/model/model_class/api_response_model/get__payment_method.dart';
 import 'package:madathil/model/model_class/api_response_model/get_brand_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get_order_response.dart';
+import 'package:madathil/model/model_class/api_response_model/ongoing_transaction_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
 import 'package:madathil/model/model_class/utility_model_class/cart_item_model.dart';
@@ -330,6 +332,77 @@ class ProductViewmodel extends ChangeNotifier {
       log(e.toString());
       return false;
     }
+  }
+
+  Future<bool> generatePaymentLink(
+      {String? customer,
+      int? contctNo,
+      String? email,
+      int? amount,
+      String? invoice}) async {
+    try {
+      setLoader(true);
+      GenerateLinkResponse? response = await apiRepository.generatePaymentLink(
+          customer: customer,
+          email: email,
+          contactNo: contctNo,
+          amount: amount,
+          invoice: invoice);
+
+      if (response?.message?.success == true) {
+        setLoader(false);
+        notifyListeners();
+
+        return true;
+      }
+      setLoader(false);
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _errormsg = e.toString();
+      setLoader(false);
+      notifyListeners();
+      return false;
+    }
+  }
+
+  List<TransactionData>? transactionData;
+
+  Future<bool> getOngoingTransaction({String? paymentId}) async {
+    try {
+      setLoader(true);
+      notifyListeners();
+
+      Map<String, dynamic> param = {};
+
+      param = {
+        "filters": jsonEncode({"sales_invoice": "$paymentId"}),
+        "fields": jsonEncode(["*"])
+      };
+
+      OnGoingTransactionDetailsResponse? response =
+          await apiRepository.getOngoingTransaction(param: param);
+
+      if (response?.data != null) {
+        transactionData = response?.data;
+        setLoader(false);
+        notifyListeners();
+        return true;
+      }
+      setLoader(false);
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _errormsg = e.toString();
+      setLoader(false);
+      notifyListeners();
+      return false;
+    }
+  }
+
+  clearOngoing() {
+    transactionData?.clear();
+    notifyListeners();
   }
 
   List<PaymentMethod>? paymentMethod = [];

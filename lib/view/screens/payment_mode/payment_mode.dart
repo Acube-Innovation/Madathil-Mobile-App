@@ -9,9 +9,11 @@ import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
 import 'package:madathil/view/screens/homepage/homepage.dart';
+import 'package:madathil/view/screens/ongoing_transaction/ongoing_transaction_screen.dart';
 import 'package:madathil/view/screens/payment_mode/payment_succes.dart';
 import 'package:madathil/view/screens/payment_mode/widget/option_card.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
+import 'package:madathil/viewmodel/customer_viewmodel.dart';
 import 'package:madathil/viewmodel/order_viewmodel.dart';
 import 'package:madathil/viewmodel/product_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -146,6 +148,7 @@ class _PaymentModeScreenState extends State<PaymentModeScreen> {
     final commonVm = Provider.of<CommonDataViewmodel>(context, listen: false);
     final productVm = Provider.of<ProductViewmodel>(context, listen: false);
     final orderVm = Provider.of<OrderViewmodel>(context, listen: false);
+    final cvm = Provider.of<CustomerViewmodel>(context, listen: false);
     return Scaffold(
       appBar: CustomAppBar(
         title: "Payment Mode",
@@ -182,20 +185,21 @@ class _PaymentModeScreenState extends State<PaymentModeScreen> {
                     height: 20,
                   );
                 },
-                itemCount: cdv.paymentMethod?.length ?? 0,
+                itemCount: 2,
                 itemBuilder: (context, index) {
                   var item = cdv.paymentMethod?[index];
+                  List<String> pay = ["Generate Payment Link", "Cash"];
                   return OptionCard(
-                    title: item?.name,
+                    title: pay[index],
                     subTitle: "Pay the amount as cash",
                     onPressed: () {
-                      productVm.selectPayment(item?.name ?? "");
+                      productVm.selectPayment(pay[index] ?? "");
                     },
                     onchaged: (val) {
                       productVm.selectPayment(val!);
                     },
                     groupValue: cdv.selectedpayment,
-                    radioValue: item?.name,
+                    radioValue: pay[index],
                   );
                 },
               );
@@ -203,48 +207,108 @@ class _PaymentModeScreenState extends State<PaymentModeScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: CustomButton(
-          text: "Pay  \$${productVm.amountController.text ?? "1000"}",
-          onPressed: () {
-            if ((productVm.selectedpayment != "Cash") &&
-                (productVm.selectedpayment != "Cheque")) {
-              openCheckout(
-                  int.tryParse(productVm.amountController.text)?.toInt());
-            } else {
-              if (widget.isfromCheckOut == true) {
+        child: Consumer<ProductViewmodel>(builder: (ctx, pvm, _) {
+          return CustomButton(
+            text: pvm.selectedpayment == "Cash"
+                ? "Pay  ₹${pvm.amountController.text ?? "1000"}"
+                : "Generate Link - ₹${pvm.amountController.text ?? "1000"}",
+            onPressed: () {
+
+              cvm.clearaddress();
+
+              
+
+              if(productVm.selectedpayment.isNotEmpty){
+
+                log("payment mode ${productVm.selectedpayment}");
+              if ((productVm.selectedpayment != "Cash") &&
+                  (productVm.selectedpayment != "Cheque")) {
+                // openCheckout(
+                //     int.tryParse(productVm.amountController.text)?.toInt());
+
                 productVm
                     .createPayment(
                         orderId: productVm.checkOutData?.name,
-                        payment: productVm.selectedpayment,
+                        payment: "Razorpay",
                         txnId: DateTime.now().toString(),
                         amount: int.tryParse(productVm.amountController.text))
                     .then((value) {
                   if (value) {
+
+                    
+                    productVm
+                        .generatePaymentLink(
+                      customer: cvm.customerDetails?.first.name ?? '',
+                      contctNo: int.tryParse(
+                          cvm.customerDetails?.first.mobileNo ?? ''),
+                      email: cvm.customerDetails?.first.emailId,
+                      amount: int.tryParse(productVm.amountController.text),
+                      invoice: productVm.paymentMessage?.salesInvoice ?? '',
+                    )
+                        .then((value) {
+                       
+                      if (value) {
+
+                         toast("The payment link is sented to the customer", context);
+
+                          Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>  OngoingTransactionScreen(paymentMessage: productVm.paymentMessage,),
+                          
+                        ));
+
+
+                      } else {
+                        toast(productVm.errormsg, context, isError: true);
+                      }
+                    });
+                  
+                  }else{
+
+                    toast(productVm.errormsg, context, isError: true);
+                  }
+                });
+              } else {
+                if (widget.isfromCheckOut == true) {
+                  productVm
+                      .createPayment(
+                          orderId: productVm.checkOutData?.name,
+                          payment: productVm.selectedpayment,
+                          txnId: DateTime.now().toString(),
+                          amount: int.tryParse(productVm.amountController.text))
+                      .then((value) {
+                    if (value) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const PaymentSuccess(),
+                          ));
+                    }
+                  });
+                } else {
+                  productVm
+                      .createPayment(
+                          orderId: orderVm.orderDetail?.name,
+                          payment: productVm.selectedpayment,
+                          txnId: DateTime.now().toString(),
+                          amount: int.tryParse(productVm.amountController.text))
+                      .then((value) {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => const PaymentSuccess(),
                         ));
-                  }
-                });
-              } else {
-                productVm
-                    .createPayment(
-                        orderId: orderVm.orderDetail?.name,
-                        payment: productVm.selectedpayment,
-                        txnId: DateTime.now().toString(),
-                        amount: int.tryParse(productVm.amountController.text))
-                    .then((value) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const PaymentSuccess(),
-                      ));
-                });
+                  });
+                }
               }
-            }
-          },
-        ),
+              } else{
+
+                toast("Please select a payment mode", context, isError: true);
+              }
+            },
+          );
+        }),
       ),
     );
   }

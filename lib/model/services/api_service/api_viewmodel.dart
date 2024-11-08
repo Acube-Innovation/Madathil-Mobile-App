@@ -27,6 +27,7 @@ import 'package:madathil/model/model_class/api_response_model/employee_details_r
 import 'package:madathil/model/model_class/api_response_model/employee_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/forgot_password_response.dart';
 import 'package:madathil/model/model_class/api_response_model/general_response.dart';
+import 'package:madathil/model/model_class/api_response_model/generate_link_reponse.dart';
 import 'package:madathil/model/model_class/api_response_model/get__payment_method.dart';
 import 'package:madathil/model/model_class/api_response_model/get_brand_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get_customer_address_response.dart';
@@ -48,6 +49,7 @@ import 'package:madathil/model/model_class/api_response_model/monthly_payment_de
 import 'package:madathil/model/model_class/api_response_model/monthly_payments_response.dart';
 import 'package:madathil/model/model_class/api_response_model/monthly_salary_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/monthly_salary_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/ongoing_transaction_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/order_transaction_list.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/payment_history_response.dart';
@@ -367,6 +369,11 @@ class ApiViewModel {
         return ListEmployeeDropDownResponse?.fromJson(json) as T;
       case AssignEmployeeLeadResponse:
         return AssignEmployeeLeadResponse?.fromJson(json) as T;
+      case GenerateLinkResponse:
+        return GenerateLinkResponse?.fromJson(json) as T;
+
+      case OnGoingTransactionDetailsResponse:
+        return OnGoingTransactionDetailsResponse?.fromJson(json) as T;
 
       default:
         throw FromJsonNotImplementedException();
