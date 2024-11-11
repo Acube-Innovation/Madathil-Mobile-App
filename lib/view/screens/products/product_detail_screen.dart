@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:madathil/app_images.dart';
+import 'package:madathil/constants.dart';
 import 'package:madathil/model/model_class/api_response_model/product_list_model.dart';
 import 'package:madathil/model/services/api_service/api_urls.dart';
 import 'package:madathil/utils/color/app_colors.dart';
@@ -161,6 +162,36 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                     .copyWith(
                                                         color:
                                                             AppColors.black)),
+                                            roleProfile == 'Dealer'
+                                                ? Row(
+                                                    children: [
+                                                      Text(
+                                                        "Dealer Rate :",
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .bodySmall!
+                                                            .copyWith(
+                                                              color: AppColors
+                                                                  .grey,
+                                                            ),
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Text(
+                                                        "₹ ${pvm.productData?.dealerRate?.toDouble().round() ?? 0.0}",
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .bodySmall!
+                                                            .copyWith(
+                                                              height: 1.7,
+                                                              color: AppColors
+                                                                  .primeryColor,
+                                                            ),
+                                                      ),
+                                                    ],
+                                                  )
+                                                : const SizedBox()
                                           ],
                                         ),
                                       ],

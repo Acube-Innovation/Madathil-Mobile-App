@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:madathil/app_images.dart';
+import 'package:madathil/constants.dart';
 import 'package:madathil/model/services/api_service/api_urls.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
@@ -145,123 +146,202 @@ class _SolarProductListState extends State<SolarProductList> {
                         children: [
                           // Image and Text Column
                           Expanded(
-                            child: Row(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Image Container
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  padding: const EdgeInsets.all(5),
-                                  child: item.image != null
-                                      ? Image.network(
-                                          height: 121,
-                                          width: 114,
-                                          "${ApiUrls.kProdBaseURL}${item.image}",
-                                          fit: BoxFit.contain,
-                                        )
-                                      : const CustomPngImage(
-                                          imageName: AppImages.placeHolder,
-                                          height: 100,
-                                          width: 114,
-                                          boxFit: BoxFit.contain,
-                                        ),
-                                ),
-                                const SizedBox(width: 10),
-                                // Text Information
-                                Flexible(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        item.brand ?? "Brand",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .copyWith(
-                                              height: 1.7,
-                                              color: AppColors.grey,
+                                Row(
+                                  children: [
+                                    // Image Container
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: AppColors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      padding: const EdgeInsets.all(5),
+                                      child: item.image != null
+                                          ? Image.network(
+                                              height: 121,
+                                              width: 114,
+                                              "${ApiUrls.kProdBaseURL}${item.image}",
+                                              fit: BoxFit.contain,
+                                            )
+                                          : const CustomPngImage(
+                                              imageName: AppImages.placeHolder,
+                                              height: 100,
+                                              width: 114,
+                                              boxFit: BoxFit.contain,
                                             ),
-                                      ),
-                                      Text(
-                                        item.itemName ?? "",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium!
-                                            .copyWith(
-                                              height: 1.7,
-                                              color: AppColors.primeryColor,
+                                    ),
+                                    const SizedBox(width: 10),
+                                    // Text Information
+                                    Flexible(
+                                      child: Row(
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                item.brand ?? "Brand",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .copyWith(
+                                                      height: 1.7,
+                                                      color: AppColors.grey,
+                                                    ),
+                                              ),
+                                              Text(
+                                                item.itemName ?? "",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleMedium!
+                                                    .copyWith(
+                                                      height: 1.7,
+                                                      color: AppColors
+                                                          .primeryColor,
+                                                    ),
+                                              ),
+                                              // Text(
+                                              //   "Size",
+                                              //   style: Theme.of(context)
+                                              //       .textTheme
+                                              //       .bodySmall!
+                                              //       .copyWith(
+                                              //         height: 1.7,
+                                              //         color: AppColors.primeryColor,
+                                              //       ),
+                                              // ),
+                                              // Text(
+                                              //   item.creation?.day.toString() ?? "",
+                                              //   // "1200*100 / 1350 *700",
+                                              //   style: Theme.of(context)
+                                              //       .textTheme
+                                              //       .labelSmall!
+                                              //       .copyWith(
+                                              //         height: 1.7,
+                                              //         color: AppColors.primeryColor,
+                                              //       ),
+                                              //   overflow: TextOverflow.ellipsis,
+                                              // ),
+                                              const SizedBox(
+                                                height: 20,
+                                              ),
+                                            ],
+                                          ),
+                                          const Spacer(),
+                                          SizedBox(
+                                            // height: 105, // Same height as the image
+                                            child: Align(
+                                              alignment: Alignment.center,
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.all(5),
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: AppColors
+                                                        .secondaryColor
+                                                        .withOpacity(0.1)),
+                                                child: const Icon(
+                                                  Icons.arrow_forward_ios,
+                                                  color:
+                                                      AppColors.secondaryColor,
+                                                ),
+                                              ),
                                             ),
+                                          )
+                                        ],
                                       ),
-                                      // Text(
-                                      //   "Size",
-                                      //   style: Theme.of(context)
-                                      //       .textTheme
-                                      //       .bodySmall!
-                                      //       .copyWith(
-                                      //         height: 1.7,
-                                      //         color: AppColors.primeryColor,
-                                      //       ),
-                                      // ),
-                                      // Text(
-                                      //   item.creation?.day.toString() ?? "",
-                                      //   // "1200*100 / 1350 *700",
-                                      //   style: Theme.of(context)
-                                      //       .textTheme
-                                      //       .labelSmall!
-                                      //       .copyWith(
-                                      //         height: 1.7,
-                                      //         color: AppColors.primeryColor,
-                                      //       ),
-                                      //   overflow: TextOverflow.ellipsis,
-                                      // ),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    roleProfile == 'Dealer'
+                                        ? Row(
+                                            children: [
+                                              Text(
+                                                "Dealer Rate :",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall!
+                                                    .copyWith(
+                                                      color: AppColors.grey,
+                                                    ),
+                                              ),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(
+                                                "₹ ${item.dealerRate?.toDouble().round() ?? 0.0}",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall!
+                                                    .copyWith(
+                                                      height: 1.7,
+                                                      color: AppColors
+                                                          .primeryColor,
+                                                    ),
+                                              ),
+                                            ],
+                                          )
+                                        : const SizedBox(
+                                            width: 100,
+                                          ),
+                                    const Spacer(),
+                                    Text(
+                                      "₹ ${item.rate?.toDouble().round() ?? 0.0}",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge!
+                                          .copyWith(
+                                            height: 1.7,
+                                            color: AppColors.primeryColor,
+                                          ),
+                                    ),
+                                  ],
+                                )
                               ],
                             ),
                           ),
 
                           // Right side with Arrow and Text
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              // Vertically centering the arrow icon
-                              SizedBox(
-                                height: 105, // Same height as the image
-                                child: Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(5),
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: AppColors.secondaryColor
-                                            .withOpacity(0.1)),
-                                    child: const Icon(
-                                      Icons.arrow_forward_ios,
-                                      color: AppColors.secondaryColor,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              // Text placed at the bottom right
-                              Text(
-                                "₹ ${item.rate?.toDouble().round() ?? 0.0}",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge!
-                                    .copyWith(
-                                      height: 1.7,
-                                      color: AppColors.primeryColor,
-                                    ),
-                              ),
-                            ],
-                          ),
+                          // Column(
+                          //   crossAxisAlignment: CrossAxisAlignment.end,
+                          //   children: [
+                          //     // Vertically centering the arrow icon
+                          //     SizedBox(
+                          //       // height: 105, // Same height as the image
+                          //       child: Align(
+                          //         alignment: Alignment.center,
+                          //         child: Container(
+                          //           padding: const EdgeInsets.all(5),
+                          //           decoration: BoxDecoration(
+                          //               shape: BoxShape.circle,
+                          //               color: AppColors.secondaryColor
+                          //                   .withOpacity(0.1)),
+                          //           child: const Icon(
+                          //             Icons.arrow_forward_ios,
+                          //             color: AppColors.secondaryColor,
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     ),
+                          //     // Text placed at the bottom right
+                          //     // Text(
+                          //     //   "₹ ${item.rate?.toDouble().round() ?? 0.0}",
+                          //     //   style: Theme.of(context)
+                          //     //       .textTheme
+                          //     //       .titleLarge!
+                          //     //       .copyWith(
+                          //     //         height: 1.7,
+                          //     //         color: AppColors.primeryColor,
+                          //     //       ),
+                          //     // ),
+                          //   ],
+                          // ),
                         ],
                       ),
                     ),
