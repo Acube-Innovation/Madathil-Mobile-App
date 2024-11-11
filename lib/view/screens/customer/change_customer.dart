@@ -373,6 +373,9 @@ class _ChangeCustomerState extends State<ChangeCustomer> {
                             name: customerVm.selectedAddress?.customerName);
                         Navigator.of(context).pop();
 
+                        Provider.of<CustomerViewmodel>(context, listen: false)
+                            .customerDetails = null;
+
                         if (value) {
                           Navigator.push(
                               context,

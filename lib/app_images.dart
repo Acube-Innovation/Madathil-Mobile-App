@@ -20,6 +20,12 @@ class AppImages {
   static const String salary = "assets/images/salary.png";
   static const String salaryItem = "assets/images/salary_.png";
   static const String paymentItem = "assets/images/ledger.png";
+  static const String pendingPayment = "assets/images/Clock.png";
+  static const String link = "assets/images/link.png";
+  static const String success = "assets/images/Checkmark.png";
+  static const String paymentExpired = "assets/images/expired.png";
+  static const String paymentCancelled = "assets/images/cancel.png";
+  static const String partiallyPaid = "assets/images/partially_paid.png";
 
   static const String profileImage = "assets/images/profile.png";
   static const String serviceHistoryImage = "assets/images/service_history.png";

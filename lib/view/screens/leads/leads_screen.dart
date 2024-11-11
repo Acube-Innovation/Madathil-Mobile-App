@@ -47,8 +47,8 @@ class LeadsScreen extends StatelessWidget {
                     onApplyClick: (DateTime startDate, DateTime endDate) {
                   Provider.of<LeadsViewmodel>(context, listen: false)
                       .addFromToTime(
-                          (DateFormat('dd MMM yyyy').format(startDate)),
-                          (DateFormat('dd MMM yyyy').format(endDate)));
+                          (DateFormat('yyyy-MM-dd').format(startDate)),
+                          (DateFormat('yyyy-MM-dd').format(endDate)));
                   //api call
                   if (isOtherTask!) {
                     Provider.of<LeadsViewmodel>(context, listen: false)

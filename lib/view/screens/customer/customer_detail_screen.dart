@@ -7,6 +7,7 @@ import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
+import 'package:madathil/view/screens/customer/change_customer.dart';
 import 'package:madathil/view/screens/payment_mode/payment_mode.dart';
 import 'package:madathil/view/screens/profile/widgets/detail_card.dart';
 import 'package:madathil/viewmodel/customer_viewmodel.dart';
@@ -185,7 +186,7 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const PaymentModeScreen(),
+                              builder: (context) => const ChangeCustomer(),
                             ));
                       },
                     )

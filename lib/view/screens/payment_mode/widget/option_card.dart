@@ -96,6 +96,8 @@ class OptionCard extends StatelessWidget {
         return "Pay the amount with UPI";
       case "Cheque":
         return "Pay the amount as  cheque";
+        case "Generate Payment Link":
+        return "Generate payment link to complete transaction";
 
       default:
         return "cash";
@@ -132,6 +134,14 @@ class OptionCard extends StatelessWidget {
           height: 40,
           width: 50,
           boxFit: BoxFit.cover,
+        );
+
+         case "Generate Payment Link":
+        return const CustomPngImage(
+          imageName: AppImages.link,
+          height: 40,
+          width: 50,
+          boxFit: BoxFit.contain,
         );
       case "UPI":
         return const CustomPngImage(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:madathil/app_images.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/utils/color/util_functions.dart';
@@ -52,12 +53,20 @@ class PaymentSuccess extends StatelessWidget {
                     const SizedBox(
                       height: 20,
                     ),
-                    Text(" \$ ${pvm.amountController.text ?? "N/A"}",
+                    Text(
+                         pvm.transactionData != null &&
+                              pvm.transactionData!.isNotEmpty &&
+                              pvm.transactionData!.first.amountPaid != null
+                            ? "₹ ${pvm.transactionData?.first.amountPaid?.toStringAsFixed(2) ?? '0.00'}"
+                            : "₹ ${pvm.amountController.text}",
                         style: Theme.of(context)
                             .textTheme
                             .titleLarge!
                             .copyWith(color: AppColors.malachit, fontSize: 30)),
-                    Text("Id:${pvm.paymentMessage?.paymentEntry ?? "****X"}",
+                    Text(
+                        pvm.paymentMessage?.paymentEntry != null
+                            ? "Id:${pvm.paymentMessage?.paymentEntry ?? "****X"}"
+                            : "Id:${pvm.paymentMessage?.salesInvoice ?? "****X"}",
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                               color: AppColors.grey,
                             )),
@@ -94,8 +103,8 @@ class PaymentSuccess extends StatelessWidget {
                                           )),
                                   const Spacer(),
                                   Text(
-                                      DateTime.now().toString() ??
-                                          "12 Sept 2024",
+                                      DateFormat('h:mm a, dd MMM yyyy')
+                                          .format(DateTime.now()),
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyMedium!
@@ -178,6 +187,8 @@ class PaymentSuccess extends StatelessWidget {
                       text: 'Done',
                       onPressed: () {
                         productVm.clearamount();
+
+                        Provider.of<ProductViewmodel>(context, listen: false).clearOngoing();
 
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                             builder: (context) => const HomePage()));
