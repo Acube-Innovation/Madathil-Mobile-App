@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:madathil/app_images.dart';
+import 'package:madathil/constants.dart';
 import 'package:madathil/model/services/api_service/api_urls.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/utils/color/util_functions.dart';
@@ -82,7 +83,7 @@ class HomePage extends StatelessWidget {
                         children: [
                           getDashboardDetails("admin", context, cdv),
                           const SizedBox(height: 10),
-                          getBody("admin", context, cdv),
+                          getBody(roleProfile ?? "admin", context, cdv),
                         ],
                       ),
               ),
@@ -180,7 +181,12 @@ class HomePage extends StatelessWidget {
   }
 
   getBody(String? login, BuildContext context, CommonDataViewmodel cdv) {
+    print(".................$roleProfile");
     switch (login) {
+      case "Dealer":
+        return const SizedBox();
+      case "Service Staff":
+        return const SizedBox();
       case "admin":
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,

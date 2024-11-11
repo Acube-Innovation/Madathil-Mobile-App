@@ -5,3 +5,4 @@ HiveLocal? hiveInstance;
 
 String? username = hiveInstance?.getData(DataBoxKey.kUserName);
 String? employeeId = hiveInstance?.getData(DataBoxKey.kEmpId);
+String? roleProfile = hiveInstance?.getData(DataBoxKey.kroleProfile);

@@ -215,6 +215,10 @@ class CommonDataViewmodel extends ChangeNotifier {
           hiveInstance?.saveData(
               DataBoxKey.kEmpId, response?.message?.employeeId);
         }
+        if (response?.message?.roleProfile != null) {
+          hiveInstance?.saveData(DataBoxKey.kroleProfile,
+              response?.message?.roleProfile.toString());
+        }
         _isloading = false;
         notifyListeners();
         return true;
@@ -225,8 +229,8 @@ class CommonDataViewmodel extends ChangeNotifier {
       }
     } catch (e) {
       _errormsg = e.toString();
-         _isloading = false;
-        notifyListeners();
+      _isloading = false;
+      notifyListeners();
       return false;
     }
   }
