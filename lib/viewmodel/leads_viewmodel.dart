@@ -168,6 +168,11 @@ class LeadsViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
+  removeImage() {
+    _leadCreationImage = null;
+    notifyListeners();
+  }
+
   String? _leadCreationDetails;
   String? get leadCreationDetails => _leadCreationDetails;
 

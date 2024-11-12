@@ -34,11 +34,15 @@ class AuthViewmodel extends ChangeNotifier {
         return true;
       } else {
         _errormsg = "Invalid login credentials";
+
+        _errormsg = response?.message;
+
         notifyListeners();
         return false;
       }
     } catch (e) {
       log(e.toString());
+      
       _errormsg = e.toString();
       return false;
     }

@@ -9,41 +9,52 @@ class EmployeeDetailsCard extends StatelessWidget {
   final String? value2;
   final String? value3;
 
-  const EmployeeDetailsCard(
-      {super.key,
-      this.data,
-      this.data2,
-      this.value,
-      this.value2,
-      this.data3,
-      this.value3});
+  const EmployeeDetailsCard({
+    super.key,
+    this.data,
+    this.data2,
+    this.value,
+    this.value2,
+    this.data3,
+    this.value3,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.grey),
-          color: AppColors.grey.withOpacity(0.1)),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.grey),
+        color: AppColors.grey.withOpacity(0.1),
+      ),
       child: Column(
         children: [
           Row(
             children: [
-              Text(
-                data ?? "",
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      height: 1.7,
-                      color: AppColors.black,
-                    ),
+              Flexible(
+                child: Text(
+                  data ?? "",
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        height: 1.7,
+                        color: AppColors.black,
+                      ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
               ),
               const Spacer(),
-              Text(
-                value ?? "",
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      height: 1.7,
-                      color: AppColors.black,
-                    ),
+              Flexible(
+                child: Text(
+                  value ?? "",
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        height: 1.7,
+                        color: AppColors.black,
+                      ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  textAlign: TextAlign.right,
+                ),
               ),
             ],
           ),
@@ -53,20 +64,29 @@ class EmployeeDetailsCard extends StatelessWidget {
           ),
           Row(
             children: [
-              Text(
-                data2 ?? "",
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      height: 1.7,
-                      color: AppColors.black,
-                    ),
+              Flexible(
+                child: Text(
+                  data2 ?? "",
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        height: 1.7,
+                        color: AppColors.black,
+                      ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
+                ),
               ),
               const Spacer(),
-              Text(
-                value2 ?? "",
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      height: 1.7,
-                      color: AppColors.black,
-                    ),
+              Flexible(
+                child: Text(
+                  value2 ?? "",
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        height: 1.7,
+                        color: AppColors.black,
+                      ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
+                  textAlign: TextAlign.right,
+                ),
               ),
             ],
           ),
@@ -76,21 +96,27 @@ class EmployeeDetailsCard extends StatelessWidget {
           ),
           Row(
             children: [
-              Text(
-                data3 ?? "",
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      height: 1.7,
-                      color: AppColors.black,
-                    ),
+              Flexible(
+                child: Text(
+                  data3 ?? "",
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        height: 1.7,
+                        color: AppColors.black,
+                      ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
+                ),
               ),
               const Spacer(),
-              Expanded(
+              Flexible(
                 child: Text(
                   value3 ?? "",
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         height: 1.7,
                         color: AppColors.black,
                       ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
                   textAlign: TextAlign.right,
                 ),
               ),

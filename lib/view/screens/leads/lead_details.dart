@@ -11,6 +11,7 @@ import 'package:madathil/view/screens/common_widgets/custom_images.dart';
 import 'package:madathil/view/screens/employee/widgets/details_button_widegt.dart';
 import 'package:madathil/view/screens/leads/components/custom_button_wit_icon.dart';
 import 'package:madathil/view/screens/leads/components/employee_serachable_dropdown.dart';
+import 'package:madathil/view/screens/products/product_list.dart';
 import 'package:madathil/view/screens/profile/widgets/detail_card.dart';
 import 'package:madathil/view/screens/profile/widgets/detail_card_single.dart';
 import 'package:madathil/viewmodel/leads_viewmodel.dart';
@@ -50,13 +51,15 @@ class LeadDetailScreen extends StatelessWidget {
                     .contains('kw'))) {
               feedback = lvm.leadsDetails!.data!.leadTracking![1].feedback;
             }
-          } else {
-            if (RegExp('[a-zA-Z]').hasMatch(
-                    lvm.leadsDetails!.data!.leadTracking![0].feedback!) &&
-                !(lvm.leadsDetails!.data!.leadTracking![0].feedback!
-                    .toLowerCase()
-                    .contains('kw'))) {
-              feedback = lvm.leadsDetails!.data!.leadTracking![0].feedback;
+          } else if (lvm.leadsDetails!.data!.leadTracking?.length == 1) {
+            if (lvm.leadsDetails!.data!.leadTracking![0].feedback != null) {
+              if (RegExp('[a-zA-Z]').hasMatch(
+                      lvm.leadsDetails!.data!.leadTracking![0].feedback!) &&
+                  !(lvm.leadsDetails!.data!.leadTracking![0].feedback!
+                      .toLowerCase()
+                      .contains('kw'))) {
+                feedback = lvm.leadsDetails!.data!.leadTracking![0].feedback;
+              }
             }
           }
         }
@@ -145,7 +148,7 @@ class LeadDetailScreen extends StatelessWidget {
                   data: "Contact Number",
                   value: lvm.leadsDetails?.data?.numberToBeContacted ?? "N/A",
                   data2: "Contact Email",
-                  value2: lvm.leadsDetails?.data?.owner ?? "N/A",
+                  value2: lvm.leadsDetails?.data?.emailId ?? "N/A",
                 ),
                 const SizedBox(
                   height: 10,
@@ -194,11 +197,10 @@ class LeadDetailScreen extends StatelessWidget {
                           height: 5,
                         ),
                         ProfileCardSingle(
-                          data: "Feedback",
-                          //TODO
+                            data: "Feedback",
+                            //TODO
 
-                          value: feedback
-                        ),
+                            value: feedback),
                         const SizedBox(
                           height: 10,
                         ),
@@ -355,7 +357,12 @@ class LeadDetailScreen extends StatelessWidget {
                 CustomButton(
                   text: "Order Product",
                   height: 60,
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => const PrdoductList()),
+                    );
+                  },
                 ),
                 const SizedBox(
                   height: 15,
