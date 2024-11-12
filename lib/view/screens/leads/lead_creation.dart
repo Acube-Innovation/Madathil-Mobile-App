@@ -370,6 +370,7 @@ class LeadCreationScreen extends StatelessWidget {
                                     (value) {
                                       toast(
                                           "Lead created successfully", context);
+                                          Provider.of<LeadsViewmodel>(context, listen: false).getLeadsListOwn();
                                       Navigator.pop(context);
                                       Navigator.pop(context);
                                     },

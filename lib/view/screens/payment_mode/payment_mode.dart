@@ -260,7 +260,7 @@ class _PaymentModeScreenState extends State<PaymentModeScreen> {
 
 
                       } else {
-                        toast(productVm.errormsg, context, isError: true);
+                        toast(productVm.errormsg ?? 'Sorry, Unable to generate link!', context, isError: true);
                       }
                     });
                   

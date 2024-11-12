@@ -143,72 +143,76 @@ class _EmployeeItemState extends State<EmployeeItem> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Row(
-                                    children: [
-                                      // Left icon container
-                                      Center(
-                                          child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: CircleAvatar(
-                                          radius: 30,
-                                          backgroundImage: 
-                                                          item.image !=
-                                                      null &&
-                                                  item.image!
-                                                      .isNotEmpty
-                                              ? NetworkImage(
-                                                  "${ApiUrls.kProdBaseURL}${item.image}")
-                                              : const AssetImage(
-                                                  AppImages.maleEmployee),
-                                        ),
-                                      )),
-
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            item.employeeName ?? '',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall!
-                                                .copyWith(
-                                                  height: 0,
-                                                  fontSize: 17,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: AppColors.black,
-                                                ),
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 2,
-                                          ),
-                                          Text(
-                                            item.designation ?? "",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall!
-                                                .copyWith(
-                                                  height: 0,
-                                                  fontSize: 13,
-                                                  color: AppColors.black
-                                                      .withOpacity(0.5),
-                                                ),
-                                          ),
-                                          Text(
-                                            item.name ?? '',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall!
-                                                .copyWith(
-                                                  height: 0,
-                                                  fontSize: 13,
-                                                  color: AppColors.black
-                                                      .withOpacity(0.5),
-                                                ),
-                                          )
-                                        ],
-                                      )
-                                    ],
+                                  // Left icon container with fixed size
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: CircleAvatar(
+                                      radius: 30,
+                                      backgroundImage: item.image != null &&
+                                              item.image!.isNotEmpty
+                                          ? NetworkImage(
+                                              "${ApiUrls.kProdBaseURL}${item.image}")
+                                          : const AssetImage(
+                                              AppImages.maleEmployee),
+                                    ),
                                   ),
+                                  const SizedBox(
+                                      width:
+                                          10), // Spacing between avatar and text column
+
+                                  // Expanded text column
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          item.employeeName ?? '',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall!
+                                              .copyWith(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.bold,
+                                                color: AppColors.black,
+                                              ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
+                                        ),
+                                        Text(
+                                          item.designation ?? "",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall!
+                                              .copyWith(
+                                                fontSize: 13,
+                                                color: AppColors.black
+                                                    .withOpacity(0.5),
+                                              ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                        Text(
+                                          item.name ?? '',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall!
+                                              .copyWith(
+                                                fontSize: 13,
+                                                color: AppColors.black
+                                                    .withOpacity(0.5),
+                                              ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                      width:
+                                          10), // Spacing between text column and arrow icon
+
+                                  // Arrow icon with fixed size
                                   Image.asset(AppImages.arrow, width: 30),
                                 ],
                               ),

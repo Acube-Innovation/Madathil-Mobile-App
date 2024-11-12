@@ -31,6 +31,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime preBackpress = DateTime.now();
+    var data = Provider.of<CommonDataViewmodel>(context, listen: false).homeDetailData?.message;
 
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
@@ -46,7 +47,7 @@ class HomePage extends StatelessWidget {
       child: Scaffold(
           drawer: const DrawerWidget(),
           appBar: AppBar(
-            title: Text("Hi, User!",
+            title: Text("Hi, ${data?.fullName ?? 'User!'}",
                 style: Theme.of(context).textTheme.titleSmall),
             actions: [
               InkWell(

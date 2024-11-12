@@ -28,6 +28,8 @@ class LeadsScreen extends StatelessWidget {
                     .getLeadsSourceList();
                 Provider.of<LeadsViewmodel>(context, listen: false)
                     .getLeadsCategoryDetails();
+                    Provider.of<LeadsViewmodel>(context, listen: false)
+                    .removeImage();
                 Navigator.push(
                     context,
                     MaterialPageRoute(

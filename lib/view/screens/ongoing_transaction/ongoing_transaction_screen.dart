@@ -42,11 +42,10 @@ class _OngoingTransactionScreenState extends State<OngoingTransactionScreen> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
+      canPop: true,
       child: Scaffold(
         appBar: const CustomAppBar(
           title: "Ongoing Transaction",
-          leading: SizedBox(),
         ),
         body: Consumer<ProductViewmodel>(builder: (ctx, pvm, _) {
           if (pvm.isLoading) {

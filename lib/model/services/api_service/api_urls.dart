@@ -1,9 +1,9 @@
 class ApiUrls {
   //dev endpoint
-  static const kStagingBaseURL = 'https://madathiltest.frappe.cloud';
+  static const kStagingBaseURL = 'https://madathila3sola.frappe.cloud';
 
   //live endpoint
-  static const kProdBaseURL = 'https://madathiltest.frappe.cloud';
+  static const kProdBaseURL = 'https://madathila3sola.frappe.cloud';
   static const klogin = '/api/method/login';
   static const kCheckinCheckoutList =
       '/api/resource/Employee Checkin?fields=["name", "time", "log_type"]';
