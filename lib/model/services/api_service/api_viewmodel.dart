@@ -146,8 +146,12 @@ class ApiViewModel {
   Future<T?> post<T>(
       {required String apiUrl, Map<String, dynamic>? data}) async {
     try {
+      // Map<String, dynamic>? savedCookies =
+      //     hiveInstance?.getData(DataBoxKey.cookie);
+      var rawCookies = hiveInstance?.getData(DataBoxKey.cookie);
+
       Map<String, dynamic>? savedCookies =
-          hiveInstance?.getData(DataBoxKey.cookie);
+          rawCookies != null ? Map<String, dynamic>.from(rawCookies) : null;
       if (savedCookies != null && savedCookies.isNotEmpty) {
         dio.options.headers[HttpHeaders.cookieHeader] =
             savedCookies.entries.map((e) => '${e.key}=${e.value}').join('; ');
@@ -169,8 +173,12 @@ class ApiViewModel {
   Future<T?> get<T>(
       {required String apiUrl, Map<String, dynamic>? params}) async {
     try {
+      // Map<String, dynamic>? savedCookies =
+      //     hiveInstance?.getData(DataBoxKey.cookie);
+      var rawCookies = hiveInstance?.getData(DataBoxKey.cookie);
+
       Map<String, dynamic>? savedCookies =
-          hiveInstance?.getData(DataBoxKey.cookie);
+          rawCookies != null ? Map<String, dynamic>.from(rawCookies) : null;
       if (savedCookies != null && savedCookies.isNotEmpty) {
         dio.options.headers[HttpHeaders.cookieHeader] =
             savedCookies.entries.map((e) => '${e.key}=${e.value}').join('; ');
@@ -192,8 +200,12 @@ class ApiViewModel {
   Future<T?> put<T>(
       {required String apiUrl, Map<String, dynamic>? data}) async {
     try {
+      // Map<String, dynamic>? savedCookies =
+      //     hiveInstance?.getData(DataBoxKey.cookie);
+      var rawCookies = hiveInstance?.getData(DataBoxKey.cookie);
+
       Map<String, dynamic>? savedCookies =
-          hiveInstance?.getData(DataBoxKey.cookie);
+          rawCookies != null ? Map<String, dynamic>.from(rawCookies) : null;
       if (savedCookies != null && savedCookies.isNotEmpty) {
         dio.options.headers[HttpHeaders.cookieHeader] =
             savedCookies.entries.map((e) => '${e.key}=${e.value}').join('; ');
@@ -215,8 +227,12 @@ class ApiViewModel {
     required FormData data,
   }) async {
     try {
+      // Map<String, dynamic>? savedCookies =
+      //     hiveInstance?.getData(DataBoxKey.cookie);
+      var rawCookies = hiveInstance?.getData(DataBoxKey.cookie);
+
       Map<String, dynamic>? savedCookies =
-          hiveInstance?.getData(DataBoxKey.cookie);
+          rawCookies != null ? Map<String, dynamic>.from(rawCookies) : null;
       if (savedCookies != null && savedCookies.isNotEmpty) {
         dio.options.headers[HttpHeaders.cookieHeader] =
             savedCookies.entries.map((e) => '${e.key}=${e.value}').join('; ');
