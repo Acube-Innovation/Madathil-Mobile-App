@@ -40,5 +40,8 @@ class HiveLocal {
     await deleteData(DataBoxKey.kUserName);
     await deleteData(DataBoxKey.kEmpId);
     await deleteData(DataBoxKey.kFcmToken);
+    await deleteData(DataBoxKey.kroleProfile);
+    await deleteData(DataBoxKey.kUserEmail);
+    await deleteData(DataBoxKey.cookie);
   }
 }

@@ -1,6 +1,7 @@
 // ignore_for_file: type_literal_in_constant_pattern
 
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
@@ -114,6 +115,7 @@ class ApiViewModel {
       if (response.headers[HttpHeaders.setCookieHeader] != null) {
         List<String>? setCookies =
             response.headers[HttpHeaders.setCookieHeader];
+
         if (setCookies != null) {
           for (var cookie in setCookies) {
             await cookieJar.saveFromResponse(Uri.parse(dio.options.baseUrl),
@@ -237,6 +239,7 @@ class ApiViewModel {
 
   // Convert response to respective model classes
   T fromJson<T>(Map<String, dynamic> json) {
+    log(json.toString());
     switch (T) {
       case GeneralResponse:
         return GeneralResponse.fromJson(json) as T;

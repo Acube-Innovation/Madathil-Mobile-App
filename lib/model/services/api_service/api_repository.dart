@@ -480,7 +480,7 @@ class ApiRepository {
 
   Future<HomeDetailResponse?> getHomeDetails() async {
     return _apiViewModel!.get<HomeDetailResponse>(
-        apiUrl: '${ApiUrls.kHomeDataUrl}?user=$username');
+        apiUrl: '${ApiUrls.kHomeDataUrl}?user=$userEmail');
   }
 
   Future<PaymentHistoryListResponse?> getOrderTransactionList(

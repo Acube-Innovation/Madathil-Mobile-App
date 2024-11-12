@@ -261,7 +261,7 @@ class LoginScreen extends StatelessWidget {
                   .then((value) {
                 if (value) {
                   hiveInstance?.saveData(
-                      DataBoxKey.kUserName, emailCtlr.text.trim());
+                      DataBoxKey.kUserEmail, emailCtlr.text.trim());
                   Provider.of<CommonDataViewmodel>(context, listen: false)
                       .getHomeDetails();
                   Navigator.of(context).pushAndRemoveUntil(

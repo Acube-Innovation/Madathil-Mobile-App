@@ -214,11 +214,14 @@ class CommonDataViewmodel extends ChangeNotifier {
         if (response?.message?.employeeId != null) {
           hiveInstance?.saveData(
               DataBoxKey.kEmpId, response?.message?.employeeId);
+          hiveInstance?.saveData(
+              DataBoxKey.kUserEmail, response?.message?.email);
         }
         if (response?.message?.roleProfile != null) {
           hiveInstance?.saveData(DataBoxKey.kroleProfile,
               response?.message?.roleProfile.toString());
         }
+        log("${_homeDetailData?.toJson()}");
         _isloading = false;
         notifyListeners();
         return true;
@@ -228,6 +231,7 @@ class CommonDataViewmodel extends ChangeNotifier {
         return false;
       }
     } catch (e) {
+      log(e.toString());
       _errormsg = e.toString();
       _isloading = false;
       notifyListeners();

@@ -1,9 +1,15 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:madathil/constants.dart';
+import 'package:madathil/model/services/local_db/hive_constants.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
+import 'package:madathil/view/screens/homepage/homepage.dart';
 import 'package:madathil/view/screens/login/login_screen.dart';
+import 'package:madathil/viewmodel/common_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 import 'package:shimmer/shimmer.dart';
 
@@ -18,11 +24,24 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     Timer(const Duration(seconds: 6), () {
-      // if (hiveInstance!.getData(DataBoxKey.cookie) != null) {
-      //   Navigator.of(context).pushReplacement(
-      //       MaterialPageRoute(builder: (context) => const HomePage()));
-      // } else
-      {
+      if (hiveInstance!.getData(DataBoxKey.cookie) != null &&
+          roleProfile != null) {
+        log(username.toString());
+        Provider.of<CommonDataViewmodel>(context, listen: false)
+            .getHomeDetails()
+            .then((value) {
+          if (value) {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const HomePage()));
+          } else {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                  builder: (context) =>
+                      const LoginScreen()), // Navigate to LoginScreen
+            );
+          }
+        });
+      } else {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
               builder: (context) =>

@@ -18,4 +18,5 @@ class DataBoxKey {
   static const String kUserName = "access-key";
   static const String kEmpId = "access-key";
   static const String kroleProfile = "role-key";
+  static const String kUserEmail = "email";
 }
