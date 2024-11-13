@@ -204,25 +204,40 @@ class CommonDataViewmodel extends ChangeNotifier {
   HomeDetailResponse? _homeDetailData;
   HomeDetailResponse? get homeDetailData => _homeDetailData;
 
-  Future<bool> getHomeDetails() async {
+  Future<bool> getHomeDetails({String? mail}) async {
     try {
       _isloading = true;
       notifyListeners();
-      HomeDetailResponse? response = await apiRepository.getHomeDetails();
+
+      // Map<String, dynamic>? param = {
+
+      //   ""
+      // };
+
+      HomeDetailResponse? response =
+          await apiRepository.getHomeDetails(param: {"user": mail});
       if (response?.message != null) {
+        _homeDetailData = null;
         _homeDetailData = response;
         if (response?.message?.employeeId != null) {
-          hiveInstance?.saveData(
+          await hiveInstance?.saveData(
               DataBoxKey.kEmpId, response?.message?.employeeId);
-          hiveInstance?.saveData(
+          await hiveInstance?.saveData(
               DataBoxKey.kUserEmail, response?.message?.email);
         }
         if (response?.message?.roleProfile != null) {
-          hiveInstance?.saveData(DataBoxKey.kroleProfile,
+          await hiveInstance?.saveData(DataBoxKey.kroleProfile,
               response?.message?.roleProfile.toString());
         }
         log("${_homeDetailData?.toJson()}");
+        log(hiveInstance!.getData(DataBoxKey.kUserName).toString());
+        log(hiveInstance!.getData(DataBoxKey.kEmpId).toString());
+        log(hiveInstance!.getData(DataBoxKey.kroleProfile).toString());
+        log(hiveInstance!.getData(DataBoxKey.kUserEmail).toString());
         _isloading = false;
+
+        updateVlaue();
+
         notifyListeners();
         return true;
       } else {
@@ -503,6 +518,7 @@ class CommonDataViewmodel extends ChangeNotifier {
           isOthersAttendance: isOthersAttendance);
       if ((response?.data ?? []).isNotEmpty) {
         _attendanceList = response;
+        log("count ----${attendanceList?.data?.length}");
         _isloading = false;
         notifyListeners();
         return true;
@@ -1063,6 +1079,7 @@ class CommonDataViewmodel extends ChangeNotifier {
             "maintenance_type"
           ]),
           "filters": jsonEncode({
+            "owner": "$userEmail",
             "mntc_date": [
               "between",
               [startDateService, endDateService]
@@ -1092,6 +1109,7 @@ class CommonDataViewmodel extends ChangeNotifier {
             "maintenance_type"
           ]),
           "filters": jsonEncode({
+            "owner": "$userEmail",
             "work_completion_status": selectedStatus,
             "mntc_date": [
               "between",
@@ -1123,6 +1141,7 @@ class CommonDataViewmodel extends ChangeNotifier {
             "maintenance_type"
           ]),
           "filters": jsonEncode({
+            "owner": "$userEmail",
             "work_completion_status": selectedStatus,
             // "customer_name": [
             //   "like",
@@ -1147,6 +1166,7 @@ class CommonDataViewmodel extends ChangeNotifier {
             "maintenance_type"
           ]),
           "filters": jsonEncode({
+            "owner": "$userEmail",
             // "customer_name": [
             //   "like",
             //   closingStatmentSearchfn != null
@@ -1420,7 +1440,7 @@ class CommonDataViewmodel extends ChangeNotifier {
       notifyListeners();
       Map<String, dynamic>? param = {};
       param = {
-        "user": username,
+        "user": userEmail,
         "limit": 10,
         "limit_start": page! * 10,
         "filters": jsonEncode({
@@ -1561,7 +1581,7 @@ class CommonDataViewmodel extends ChangeNotifier {
       Map<String, dynamic>? param = {};
 
       param = {
-        "user": username,
+        "user": userEmail,
       };
 
       ProfileDetailsResponse? response =
@@ -1634,7 +1654,7 @@ class CommonDataViewmodel extends ChangeNotifier {
 
       if (startDate != null && endDate != null) {
         param = {
-          "user": username,
+          "user": userEmail,
           "filters": jsonEncode({
             "closing_date": [
               "between",
@@ -1644,7 +1664,7 @@ class CommonDataViewmodel extends ChangeNotifier {
         };
       } else {
         param = {
-          "user": username,
+          "user": userEmail,
         };
       }
 
@@ -1694,7 +1714,7 @@ class CommonDataViewmodel extends ChangeNotifier {
       // String? email = hiveInstance!.getData(DataBoxKey.kEmpId);
       log("email ---- $username");
 
-      param = {"user": username, "name": id};
+      param = {"user": userEmail, "name": id};
 
       PointDetailsResponse? response =
           await apiRepository.getPointDetails(param: param);
@@ -1818,6 +1838,35 @@ class CommonDataViewmodel extends ChangeNotifier {
     orederTransactionCurrentPage = 0;
     _paginationorederTransaction = false;
     orederTransactionReachLength = false;
+    notifyListeners();
+  }
+
+  // update variable
+
+  updateVariable()  {
+     updateVariable();
+     log("$userEmail");
+    log("$username");
+    log("$employeeId");
+    log("$roleProfile");
+    notifyListeners();
+
+    
+  }
+
+  //logout
+
+  appLogOut() async {
+    await hiveInstance?.logout();
+    userEmail = null;
+    employeeId = null;
+    roleProfile = null;
+    username = null;
+
+    log(hiveInstance!.getData(DataBoxKey.kUserName).toString());
+    log(hiveInstance!.getData(DataBoxKey.kEmpId).toString());
+    log(hiveInstance!.getData(DataBoxKey.kroleProfile).toString());
+    log(hiveInstance!.getData(DataBoxKey.kUserEmail).toString());
     notifyListeners();
   }
 }

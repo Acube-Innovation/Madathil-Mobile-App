@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:madathil/app_images.dart';
 import 'package:madathil/constants.dart';
@@ -112,7 +114,8 @@ class DrawerWidget extends StatelessWidget {
           drawerItem("Support", AppImages.supportImage, () {}),
           const SizedBox(height: 20),
           drawerItem("Log Out", AppImages.logoutImage, () {
-            hiveInstance?.logout();
+           cdv.appLogOut();
+            log("$userEmail");
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const LoginScreen()));
           }),

@@ -208,7 +208,7 @@ class AddCallDetailsScreen extends StatelessWidget {
                                     Icons.access_time_sharp,
                                     color: AppColors.primeryColor,
                                   ),
-                                  controller: startTimeController,
+                                  controller: TextEditingController(text: callvm.fromTime),
                                   validator: (value) {
                                     UtilFunctions.validateConversationTime(
                                         value);
@@ -287,7 +287,7 @@ class AddCallDetailsScreen extends StatelessWidget {
                                   Icons.access_time_sharp,
                                   color: AppColors.primeryColor,
                                 ),
-                                controller: endTimeController,
+                                controller: TextEditingController(text: callvm.toTime),
                                 validator: (value) {
                                   UtilFunctions.validateConversationTime(value);
                                   if (value != null) {
@@ -486,6 +486,36 @@ class AddCallDetailsScreen extends StatelessWidget {
                     //   },
                     // ),
 
+                    GestureDetector(
+                      onTap: () {
+                        callvm.makeCallAndLogTime(customerVm.customerDetails?.first.mobileNo ?? '');
+                      },
+                      child: Container(
+                        width: 100,
+                        decoration: BoxDecoration(
+                            color: AppColors.primeryColor,
+                            borderRadius: BorderRadius.circular(12)),
+                        child: const Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.phone,
+                                color: AppColors.white,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "Call",
+                                style: TextStyle(color: AppColors.white),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+
                     const SizedBox(
                       height: 150,
                     ),
@@ -523,7 +553,8 @@ class AddCallDetailsScreen extends StatelessWidget {
                                 Provider.of<CallViewModel>(context,
                                         listen: false)
                                     .fetchCallList();
-                                toast("Call Details Added Successfully", context,
+                                toast(
+                                    "Call Details Added Successfully", context,
                                     isError: false);
                                 Navigator.pop(context);
                               } else {
@@ -533,7 +564,8 @@ class AddCallDetailsScreen extends StatelessWidget {
 
                             // Navigator.pop(context);
                           } else {
-                            toast("Required Field missing", context, isError: true);
+                            toast("Required Field missing", context,
+                                isError: true);
                           }
                         },
                       ),

@@ -237,6 +237,7 @@ class LeadsViewmodel extends ChangeNotifier {
               fromdate: fromdate, todate: todate, searchTerm: searchTerm);
       if ((leadsListOwnResponse?.data ?? []).isNotEmpty) {
         _leadsListOwnResponse = leadsListOwnResponse;
+        log("count--------------${leadsListOwnResponse?.data?.length}");
         notifyListeners();
         return true;
       }
@@ -314,6 +315,7 @@ class LeadsViewmodel extends ChangeNotifier {
       if ((leadsListOtherResponse?.data ?? []).isNotEmpty) {
         notifyListeners();
         _leadsListOtherResponse = leadsListOtherResponse;
+        log("lead count----------${leadsListOtherResponse?.data?.length}");
         return true;
       }
       _leadsListOtherResponse = null;

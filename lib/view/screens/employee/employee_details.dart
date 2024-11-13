@@ -134,7 +134,7 @@ class _EmployeeDetailsState extends State<EmployeeDetails> {
                               MaterialPageRoute(builder: (context) {
                             return LeadsScreen(
                                 isOtherTask: true,
-                                otherOwnerId: cdv.employeeData?.owner);
+                                otherOwnerId: cdv.employeeData?.userId);
                           }));
                         },
                       ),
@@ -151,7 +151,7 @@ class _EmployeeDetailsState extends State<EmployeeDetails> {
                               MaterialPageRoute(
                                   builder: (context) => TasksScreen(
                                       isOtherTask: true,
-                                      otherOwnerId: cdv.employeeData?.owner)));
+                                      otherOwnerId: cdv.employeeData?.userId)));
                         },
                       )
                     ],

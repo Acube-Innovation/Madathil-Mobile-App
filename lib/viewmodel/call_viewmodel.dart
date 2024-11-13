@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:call_log/call_log.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:madathil/constants.dart';
@@ -9,6 +10,7 @@ import 'package:madathil/model/model_class/api_response_model/call_list_response
 import 'package:madathil/model/model_class/api_response_model/create_call_response.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CallViewModel extends ChangeNotifier {
   final ApiRepository apiRepository;
@@ -77,7 +79,7 @@ class CallViewModel extends ChangeNotifier {
       notifyListeners();
       Map<String, dynamic> filters = {
         "customer": ["like", callSearchfn != null ? "$callSearchfn%" : "%"],
-        "user": username
+        "user": userEmail
       };
 
       // Only add "posting_date" filter if start and end dates are provided
@@ -507,8 +509,8 @@ class CallViewModel extends ChangeNotifier {
       if (points != null && points.isNotEmpty) {
         trackCall = points.map((point) {
           return {
-            "date_and_time":
-                DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()), // You can replace this with dynamic data if needed
+            "date_and_time": DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime
+                .now()), // You can replace this with dynamic data if needed
             "status": status ?? "Lead", // Default to "Lead" if status is null
             "feedback": point, // Use the feedback from the points list
             "userlink":
@@ -526,7 +528,7 @@ class CallViewModel extends ChangeNotifier {
 
       var response = await apiRepository.createCall(data: {
         "customer": customerName,
-        "user": username,
+        "user": userEmail,
         "called_number": customerNumber,
         "caller_number": "9632587410",
         "called_date": calledDate,
@@ -553,5 +555,45 @@ class CallViewModel extends ChangeNotifier {
       setLoader(false);
       return false;
     }
+  }
+
+  //make a call
+
+  String fromTime = '';
+  String toTime = '';
+
+  Future<void> makeCallAndLogTime(String number) async {
+    final url = Uri.parse('tel:$number');
+    if (await canLaunchUrl(url)) {
+      // Record start time
+      final start = DateTime.now();
+      await launchUrl(url);
+
+      // Simulate waiting until the call ends to fetch end time
+      await Future.delayed(Duration(seconds: 2));
+
+      // Get call times from logs
+      final callTimes = await _getCallTimes(number);
+      fromTime = callTimes['start']?.toString() ?? '';
+      toTime = callTimes['end']?.toString() ?? '';
+
+      log(fromTime);
+      log(toTime);
+
+      notifyListeners();
+    }
+  }
+
+  // Fetch call start and end times from logs
+  Future<Map<String, DateTime>> _getCallTimes(String number) async {
+    final Iterable<CallLogEntry> callLogs = await CallLog.get();
+    for (var log in callLogs) {
+      if (log.number == number) {
+        final start = DateTime.fromMillisecondsSinceEpoch(log.timestamp!);
+        final end = start.add(Duration(seconds: log.duration ?? 0));
+        return {'start': start, 'end': end};
+      }
+    }
+    return {};
   }
 }
