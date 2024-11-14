@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:madathil/utils/color/app_colors.dart';
@@ -117,10 +119,11 @@ class _CallItemWidgetState extends State<CallItemWidget> {
                 } else {
                   var item = callVm.callPost![index];
                   var time;
+
                   if (item.conversationDuration != null) {
                     time =
                         callVm.formatTimeFromSeconds(item.conversationDuration);
-                  } 
+                  }
                   // else {
                   //   time = item.callStatus;
                   // }
@@ -155,7 +158,12 @@ class _CallItemWidgetState extends State<CallItemWidget> {
                                       Row(
                                         children: [
                                           Text(
-                                            item.customer ?? 'N/A',
+                                            (item.leadName?.isNotEmpty ?? false)
+                                                ? item.leadName!
+                                                : (item.customer?.isNotEmpty ??
+                                                        false)
+                                                    ? item.customer!
+                                                    : 'N/A',
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .titleLarge!

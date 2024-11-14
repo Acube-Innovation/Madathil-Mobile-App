@@ -24,6 +24,8 @@ class CallListResponseModel {
 class CallListResponse {
   String? name;
   String? customer;
+  String? lead;
+  String? leadName;
   String? calledNumber;
   String? calledDate;
   String? callStatus;
@@ -32,6 +34,8 @@ class CallListResponse {
   CallListResponse(
       {this.name,
       this.customer,
+      this.lead,
+      this.leadName,
       this.calledNumber,
       this.calledDate,
       this.callStatus,
@@ -40,6 +44,8 @@ class CallListResponse {
   CallListResponse.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     customer = json['customer'];
+    lead = json['lead'];
+    leadName = json['lead_name'];
     calledNumber = json['called_number'];
     calledDate = json['called_date'];
     callStatus = json['call_status'];
@@ -50,6 +56,8 @@ class CallListResponse {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['name'] = this.name;
     data['customer'] = this.customer;
+    data['lead'] = this.lead;
+    data['lead_name'] = this.leadName;
     data['called_number'] = this.calledNumber;
     data['called_date'] = this.calledDate;
     data['call_status'] = this.callStatus;

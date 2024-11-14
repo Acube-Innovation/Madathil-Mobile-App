@@ -33,16 +33,16 @@ class _CallDetailsScreenState extends State<CallDetailsScreen> {
     final callVm = Provider.of<CallViewModel>(context, listen: false);
     var duration;
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         title: "Call Details",
         actions: [
-          Padding(
-            padding: const EdgeInsets.all(13.0),
-            child: InkWell(
-              onTap: () {},
-              child: const Icon(Icons.mode_edit_outlined),
-            ),
-          )
+          // Padding(
+          //   padding: const EdgeInsets.all(13.0),
+          //   child: InkWell(
+          //     onTap: () {},
+          //     child: const Icon(Icons.mode_edit_outlined),
+          //   ),
+          // )
         ],
       ),
       body: SingleChildScrollView(
@@ -53,9 +53,8 @@ class _CallDetailsScreenState extends State<CallDetailsScreen> {
           }
           return cvm.isLoading
               ? const Center(
-                // heightFactor: MediaQuery.of(context).size.height * 0.5,
-                  child: CustomLoader()
-                )
+                  // heightFactor: MediaQuery.of(context).size.height * 0.5,
+                  child: CustomLoader())
               : Padding(
                   padding: const EdgeInsets.all(24.0),
                   child: Column(
@@ -112,7 +111,14 @@ class _CallDetailsScreenState extends State<CallDetailsScreen> {
                                     fontWeight: FontWeight.normal),
                           ),
                           Text(
-                            cvm.callDetails?.customer ?? 'N/A',
+                            (cvm.callDetails?.leadName?.isNotEmpty ?? false)
+                                ? cvm.callDetails!.leadName!
+                                : (cvm.callDetails?.customer?.isNotEmpty ??
+                                        false)
+                                    ? cvm.callDetails!.customer!
+                                    : 'N/A',
+
+                            //cvm.callDetails?.customer ?? 'N/A',
                             style: Theme.of(context)
                                 .textTheme
                                 .titleLarge!
@@ -127,37 +133,37 @@ class _CallDetailsScreenState extends State<CallDetailsScreen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      if(cvm.callDetails?.conversationDuration != null)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Duration",
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleLarge!
-                                .copyWith(
-                                    height: 0,
-                                    color: AppColors.grey,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.normal),
-                          ),
-                          Text(
-                            duration ?? 'N/A',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleLarge!
-                                .copyWith(
-                                    height: 0,
-                                    color: AppColors.black,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w400),
-                          ),
-                          const SizedBox(
-                        height: 25,
-                      ),
-                        ],
-                      ),
+                      if (cvm.callDetails?.conversationDuration != null)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Duration",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleLarge!
+                                  .copyWith(
+                                      height: 0,
+                                      color: AppColors.grey,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.normal),
+                            ),
+                            Text(
+                              duration ?? 'N/A',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleLarge!
+                                  .copyWith(
+                                      height: 0,
+                                      color: AppColors.black,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400),
+                            ),
+                            const SizedBox(
+                              height: 25,
+                            ),
+                          ],
+                        ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -184,11 +190,10 @@ class _CallDetailsScreenState extends State<CallDetailsScreen> {
                                     fontWeight: FontWeight.w400),
                           ),
                           const SizedBox(
-                        height: 25,
-                      ),
+                            height: 25,
+                          ),
                         ],
                       ),
-                      
                       const Divider(
                         color: AppColors.black,
                       ),
@@ -196,122 +201,123 @@ class _CallDetailsScreenState extends State<CallDetailsScreen> {
                         height: 15,
                       ),
                       if (cvm.callTracking!.isNotEmpty)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Points",
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleLarge!
-                                .copyWith(
-                                    height: 0,
-                                    color: AppColors.grey,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.normal),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          if (cvm.callTracking!.isNotEmpty)
-                            ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: cvm.callTracking?.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                if (cvm.callTracking?[index]?.feedback !=
-                                        null ||
-                                    cvm.callTracking?[index]?.feedback != '') {
-                                  return Text(
-                                    '- ${cvm.callTracking?[index]?.feedback}',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleLarge!
-                                        .copyWith(
-                                            height: 0,
-                                            color: AppColors.black,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.normal),
-                                  );
-                                }
-                              },
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Points",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleLarge!
+                                  .copyWith(
+                                      height: 0,
+                                      color: AppColors.grey,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.normal),
                             ),
-                          const SizedBox(
-                            height: 25,
-                          ),
-                          if (cvm.callTracking!.isNotEmpty)
-                          const Divider(
-                            color: AppColors.black,
-                          ),
-                          // const SizedBox(
-                          //   height: 15,
-                          // ),
-                          // Text(
-                          //   "Reminders",
-                          //   style: Theme.of(context)
-                          //       .textTheme
-                          //       .titleLarge!
-                          //       .copyWith(
-                          //           height: 0,
-                          //           color: AppColors.grey,
-                          //           fontSize: 14,
-                          //           fontWeight: FontWeight.normal),
-                          // ),
-                          // const SizedBox(
-                          //   height: 10,
-                          // ),
-                          // Container(
-                          //   decoration: BoxDecoration(
-                          //       border: Border.all(color: AppColors.black),
-                          //       borderRadius: BorderRadius.circular(6)),
-                          //   child: Padding(
-                          //     padding: const EdgeInsets.all(15.0),
-                          //     child: Row(
-                          //       mainAxisAlignment:
-                          //           MainAxisAlignment.spaceBetween,
-                          //       children: [
-                          //         Text("24 Mar 2022 03:30 PM",
-                          //             style: Theme.of(context)
-                          //                 .textTheme
-                          //                 .titleLarge!
-                          //                 .copyWith(
-                          //                     height: 0,
-                          //                     color: AppColors.black,
-                          //                     fontSize: 18,
-                          //                     fontWeight: FontWeight.w400)),
-                          //         const Icon(Icons.notifications_outlined)
-                          //       ],
-                          //     ),
-                          //   ),
-                          // ),
-                          // const SizedBox(
-                          //   height: 15,
-                          // ),
-                          // Container(
-                          //   decoration: BoxDecoration(
-                          //       border: Border.all(color: AppColors.black),
-                          //       borderRadius: BorderRadius.circular(6)),
-                          //   child: Padding(
-                          //     padding: const EdgeInsets.all(15.0),
-                          //     child: Row(
-                          //       mainAxisAlignment:
-                          //           MainAxisAlignment.spaceBetween,
-                          //       children: [
-                          //         Text("25 Mar 2022 09:30 AM ",
-                          //             style: Theme.of(context)
-                          //                 .textTheme
-                          //                 .titleLarge!
-                          //                 .copyWith(
-                          //                     height: 0,
-                          //                     color: AppColors.black,
-                          //                     fontSize: 18,
-                          //                     fontWeight: FontWeight.w400)),
-                          //         const Icon(Icons.notifications_outlined)
-                          //       ],
-                          //     ),
-                          //   ),
-                          // )
-                        ],
-                      ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            if (cvm.callTracking!.isNotEmpty)
+                              ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: cvm.callTracking?.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  if (cvm.callTracking?[index]?.feedback !=
+                                          null ||
+                                      cvm.callTracking?[index]?.feedback !=
+                                          '') {
+                                    return Text(
+                                      '- ${cvm.callTracking?[index]?.feedback}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge!
+                                          .copyWith(
+                                              height: 0,
+                                              color: AppColors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.normal),
+                                    );
+                                  }
+                                },
+                              ),
+                            const SizedBox(
+                              height: 25,
+                            ),
+                            if (cvm.callTracking!.isNotEmpty)
+                              const Divider(
+                                color: AppColors.black,
+                              ),
+                            // const SizedBox(
+                            //   height: 15,
+                            // ),
+                            // Text(
+                            //   "Reminders",
+                            //   style: Theme.of(context)
+                            //       .textTheme
+                            //       .titleLarge!
+                            //       .copyWith(
+                            //           height: 0,
+                            //           color: AppColors.grey,
+                            //           fontSize: 14,
+                            //           fontWeight: FontWeight.normal),
+                            // ),
+                            // const SizedBox(
+                            //   height: 10,
+                            // ),
+                            // Container(
+                            //   decoration: BoxDecoration(
+                            //       border: Border.all(color: AppColors.black),
+                            //       borderRadius: BorderRadius.circular(6)),
+                            //   child: Padding(
+                            //     padding: const EdgeInsets.all(15.0),
+                            //     child: Row(
+                            //       mainAxisAlignment:
+                            //           MainAxisAlignment.spaceBetween,
+                            //       children: [
+                            //         Text("24 Mar 2022 03:30 PM",
+                            //             style: Theme.of(context)
+                            //                 .textTheme
+                            //                 .titleLarge!
+                            //                 .copyWith(
+                            //                     height: 0,
+                            //                     color: AppColors.black,
+                            //                     fontSize: 18,
+                            //                     fontWeight: FontWeight.w400)),
+                            //         const Icon(Icons.notifications_outlined)
+                            //       ],
+                            //     ),
+                            //   ),
+                            // ),
+                            // const SizedBox(
+                            //   height: 15,
+                            // ),
+                            // Container(
+                            //   decoration: BoxDecoration(
+                            //       border: Border.all(color: AppColors.black),
+                            //       borderRadius: BorderRadius.circular(6)),
+                            //   child: Padding(
+                            //     padding: const EdgeInsets.all(15.0),
+                            //     child: Row(
+                            //       mainAxisAlignment:
+                            //           MainAxisAlignment.spaceBetween,
+                            //       children: [
+                            //         Text("25 Mar 2022 09:30 AM ",
+                            //             style: Theme.of(context)
+                            //                 .textTheme
+                            //                 .titleLarge!
+                            //                 .copyWith(
+                            //                     height: 0,
+                            //                     color: AppColors.black,
+                            //                     fontSize: 18,
+                            //                     fontWeight: FontWeight.w400)),
+                            //         const Icon(Icons.notifications_outlined)
+                            //       ],
+                            //     ),
+                            //   ),
+                            // )
+                          ],
+                        ),
                     ],
                   ),
                 );
