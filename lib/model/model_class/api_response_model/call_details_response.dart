@@ -26,6 +26,7 @@ class CallDetails {
   int? docstatus;
   String? calledNumber;
   String? calledDate;
+  String? leadName;
   String? callDateTime;
   String? callStatus;
   String? status;
@@ -45,6 +46,7 @@ class CallDetails {
       this.idx,
       this.docstatus,
       this.calledNumber,
+      this.leadName,
       this.calledDate,
       this.callDateTime,
       this.callStatus,
@@ -61,6 +63,7 @@ class CallDetails {
     owner = json['owner'];
     creation = json['creation'];
     modified = json['modified'];
+    leadName = json['lead_name'];
     modifiedBy = json['modified_by'];
     idx = json['idx'];
     docstatus = json['docstatus'];
@@ -90,6 +93,7 @@ class CallDetails {
     data['modified'] = this.modified;
     data['modified_by'] = this.modifiedBy;
     data['idx'] = this.idx;
+    data['lead_name'] = this.leadName;
     data['docstatus'] = this.docstatus;
     data['called_number'] = this.calledNumber;
     data['called_date'] = this.calledDate;

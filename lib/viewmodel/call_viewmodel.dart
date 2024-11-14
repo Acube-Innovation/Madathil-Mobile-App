@@ -77,8 +77,12 @@ class CallViewModel extends ChangeNotifier {
     try {
       isLoading = true;
       notifyListeners();
-      Map<String, dynamic> filters = {
+      Map<String, dynamic> orfilters = {
         "customer": ["like", callSearchfn != null ? "$callSearchfn%" : "%"],
+        "lead": ["like", callSearchfn != null ? "$callSearchfn%" : "%"]
+      };
+      Map<String, dynamic> filters = {
+        // "customer": ["like", callSearchfn != null ? "$callSearchfn%" : "%"],
         "user": userEmail
       };
 
@@ -97,12 +101,15 @@ class CallViewModel extends ChangeNotifier {
         "fields": jsonEncode([
           "name",
           "customer",
+          "lead",
           "called_number",
           "called_date",
+          "lead_name",
           "call_status",
           "conversation_duration"
         ]),
         "filters": jsonEncode(filters),
+        "or_filters": jsonEncode(orfilters),
         "order_by": "modified desc",
         "limit": 10,
         "limit_start": page! * 10
@@ -115,6 +122,7 @@ class CallViewModel extends ChangeNotifier {
       if (response?.data != null) {
         callList?.clear;
         callList = response?.data;
+        log("lead name--------------- ${callList?.first.leadName}");
 
         log("call List ------------ > ${callList?.first.toJson() ?? []}");
 
@@ -209,6 +217,7 @@ class CallViewModel extends ChangeNotifier {
           "called_number",
           "caller_number",
           "called_date",
+          "lead_name"
           "call_status",
           "conversation_duration",
           "track_calls"
@@ -543,7 +552,8 @@ class CallViewModel extends ChangeNotifier {
                   "user": userEmail,
                   "called_number": customerNumber,
                   "caller_number": "",
-                  "called_date": calledDate,
+                  "called_date":
+                      DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
                   "call_date_time": fromTime,
                   "call_start_time": fromTime,
                   "call_end_time": toTime,
@@ -556,7 +566,8 @@ class CallViewModel extends ChangeNotifier {
                   "user": userEmail,
                   "called_number": customerNumber,
                   "caller_number": "",
-                  "called_date": calledDate,
+                  "called_date":
+                      DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
                   "call_date_time": fromTime,
                   "call_start_time": fromTime,
                   "call_end_time": toTime,
