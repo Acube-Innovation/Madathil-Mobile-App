@@ -123,6 +123,7 @@ class LeadDetailScreen extends StatelessWidget {
                   height: 5,
                 ),
                 ProfileCards(
+                  leadName: lvm.leadsDetails?.data?.leadName ?? "N/A",
                   data: "Lead Source",
                   value: lvm.leadsDetails?.data?.ldSource ?? "N/A",
                   data2: "Lead Category",
@@ -141,18 +142,16 @@ class LeadDetailScreen extends StatelessWidget {
                         ),
                   ),
                 ),
-                const SizedBox(
-                  height: 5,
-                ),
+                const SizedBox(height: 5),
                 ProfileCards(
+                  leadid: lvm.leadsDetails?.data?.name ?? "",
+                  leadName: lvm.leadsDetails?.data?.leadName ?? "N/A",
                   data: "Contact Number",
                   value: lvm.leadsDetails?.data?.numberToBeContacted ?? "N/A",
                   data2: "Contact Email",
                   value2: lvm.leadsDetails?.data?.emailId ?? "N/A",
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.only(left: 15),
                   child: Text(
@@ -163,10 +162,9 @@ class LeadDetailScreen extends StatelessWidget {
                         ),
                   ),
                 ),
-                const SizedBox(
-                  height: 5,
-                ),
+                const SizedBox(height: 5),
                 ProfileCards(
+                  leadName: lvm.leadsDetails?.data?.leadName ?? "N/A",
                   data: "Aadhar Number",
                   //TODO:
                   value: lvm.leadsDetails?.data?.consumerNumber ?? "N/A",

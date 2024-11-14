@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:madathil/utils/color/app_colors.dart';
+import 'package:madathil/view/screens/call_management/add_call_details_screen.dart';
+import 'package:madathil/viewmodel/call_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 class ProfileCards extends StatelessWidget {
+  final String? leadName;
+  final String? leadid;
   final String? data;
   final String? data2;
   final String? value;
@@ -9,6 +14,8 @@ class ProfileCards extends StatelessWidget {
 
   const ProfileCards({
     super.key,
+    required this.leadName,
+    this.leadid,
     this.data,
     this.data2,
     this.value,
@@ -45,14 +52,46 @@ class ProfileCards extends StatelessWidget {
               // Value 1
               Flexible(
                 flex: 3, // Allow more space for longer text
-                child: Text(
-                  value ?? "",
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        height: 1.7,
-                        color: AppColors.black,
-                      ),
-                  maxLines: null, // Allow text to wrap if it exceeds one line
-                  overflow: TextOverflow.visible, // Handle overflow
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      value ?? "",
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            height: 1.7,
+                            color: AppColors.black,
+                          ),
+                      maxLines:
+                          null, // Allow text to wrap if it exceeds one line
+                      overflow: TextOverflow.visible, // Handle overflow
+                    ),
+                    if (data == "Contact Number") ...{
+                      const SizedBox(width: 15),
+                      InkWell(
+                        onTap: () {
+                          Provider.of<CallViewModel>(context, listen: false)
+                              .disposeControllers();
+                          Provider.of<CallViewModel>(context, listen: false)
+                              .clearTime();
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AddCallDetailsScreen(
+                                      name: leadName,
+                                      id: leadid,
+                                      number: value)));
+                        },
+                        child: Container(
+                            decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColors.malachit),
+                            child: const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Icon(Icons.call, color: AppColors.white),
+                            )),
+                      )
+                    }
+                  ],
                 ),
               ),
             ],

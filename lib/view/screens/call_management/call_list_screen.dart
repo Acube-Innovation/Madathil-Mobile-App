@@ -33,36 +33,37 @@ class _CallListScreenState extends State<CallListScreen> {
             child: Consumer<CallViewModel>(builder: (ctx, cvm, _) {
               return (cvm.startFormattedCall == null)
                   ? InkWell(
-                onTap: () {
-                  showCustomDateRangePicker(context,
-                      dismissible: true,
-                      minimumDate:
-                          DateTime.now().subtract(const Duration(days: 365)),
-                      maximumDate:
-                          DateTime.now().add(const Duration(days: 365)),
-                      startDate: cvm.startDateCall,
-                      endDate: cvm.endDateCall,
-                      onApplyClick: (DateTime startDate, DateTime endDate) {
-                    callVm.setCallDateRange(startDate, endDate);
-                    if (callVm.startFormattedCall != null &&
-                        callVm.endFormattedCall != null) {
-                      callVm.resetCallPagination();
-                      callVm.fetchCallList();
-                    }
-                  }, onCancelClick: () {
-                    callVm.clearCallDateRange();
-                    callVm.resetCallPagination();
-                    callVm.fetchCallList();
-                  },
-                      backgroundColor: AppColors.white,
-                      primaryColor: AppColors.secondaryColor);
-                },
-                child: const CustomPngImage(
-                  imageName: "assets/images/calendar.png",
-                  boxFit: BoxFit.contain,
-                  height: 10,
-                ),
-              ): GestureDetector(
+                      onTap: () {
+                        showCustomDateRangePicker(context,
+                            dismissible: true,
+                            minimumDate: DateTime.now()
+                                .subtract(const Duration(days: 365)),
+                            maximumDate:
+                                DateTime.now().add(const Duration(days: 365)),
+                            startDate: cvm.startDateCall,
+                            endDate: cvm.endDateCall, onApplyClick:
+                                (DateTime startDate, DateTime endDate) {
+                          callVm.setCallDateRange(startDate, endDate);
+                          if (callVm.startFormattedCall != null &&
+                              callVm.endFormattedCall != null) {
+                            callVm.resetCallPagination();
+                            callVm.fetchCallList();
+                          }
+                        }, onCancelClick: () {
+                          callVm.clearCallDateRange();
+                          callVm.resetCallPagination();
+                          callVm.fetchCallList();
+                        },
+                            backgroundColor: AppColors.white,
+                            primaryColor: AppColors.secondaryColor);
+                      },
+                      child: const CustomPngImage(
+                        imageName: "assets/images/calendar.png",
+                        boxFit: BoxFit.contain,
+                        height: 10,
+                      ),
+                    )
+                  : GestureDetector(
                       onTap: () {
                         if (callVm.startFormattedCall != null &&
                             callVm.endFormattedCall != null) {
@@ -87,7 +88,7 @@ class _CallListScreenState extends State<CallListScreen> {
           //     .clearReminder();
           Provider.of<CallViewModel>(context, listen: false)
               .disposeControllers();
-
+          Provider.of<CallViewModel>(context, listen: false).clearTime();
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -189,5 +190,3 @@ class _CallListScreenState extends State<CallListScreen> {
     );
   }
 }
-
-

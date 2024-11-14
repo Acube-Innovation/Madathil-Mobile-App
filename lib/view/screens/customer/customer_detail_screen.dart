@@ -86,14 +86,13 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                                   imageName: 'assets/images/user_account.png',
                                   height: 50,
                                   width: 50,
-                                  boxFit: BoxFit.contain,
-                                ),
+                                  boxFit: BoxFit.contain),
                         ),
                       ),
                     ),
                     Center(
                       child: Text(
-                        csv.customerDetails?.first.customerName ?? "test",
+                        csv.customerDetails?.first.customerName ?? "N/A",
                         style: Theme.of(context).textTheme.titleLarge!.copyWith(
                               height: 1.7,
                               color: AppColors.black,
@@ -171,6 +170,8 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                       height: 5,
                     ),
                     ProfileCards(
+                      leadName:
+                          csv.customerDetails?.first.customerName ?? "N/A",
                       data: "Contact Number",
                       value: csv.customerDetails?.first.mobileNo ?? "",
                       data2: "Contact email",

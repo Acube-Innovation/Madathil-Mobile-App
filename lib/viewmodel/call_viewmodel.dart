@@ -132,7 +132,7 @@ class CallViewModel extends ChangeNotifier {
     } catch (e) {
       _errormsg = e.toString();
       print(
-          'error message ---------------------------------------------- ${_errormsg}');
+          'error message ---------------------------------------------- $_errormsg');
       isLoading = false;
       notifyListeners();
       return false;
@@ -154,8 +154,8 @@ class CallViewModel extends ChangeNotifier {
 
     await getCallList(page: callCurrentPage);
     final apiResponse = callList;
-    print('call list ------------------------------ ${callList}');
-    print('api response ------------------------------ ${apiResponse}');
+    print('call list ------------------------------ $callList');
+    print('api response ------------------------------ $apiResponse');
 
     if (apiResponse != null) {
       final apiPosts = apiResponse;
@@ -164,9 +164,9 @@ class CallViewModel extends ChangeNotifier {
       }
       callPost?.addAll(apiPosts);
       callCurrentPage++;
-      print('call post ------------------------------ ${callPost}');
+      print('call post ------------------------------ $callPost');
       print(
-          'call current page ------------------------------ ${callCurrentPage}');
+          'call current page ------------------------------ $callCurrentPage');
     }
     _callPaginationclosing = false;
     if ((callPost ?? []).isNotEmpty) {
@@ -237,7 +237,7 @@ class CallViewModel extends ChangeNotifier {
       return false;
     } catch (e) {
       _errormsg = e.toString();
-      log('error message ---------------------------------------------- ${_errormsg}');
+      log('error message ---------------------------------------------- $_errormsg');
       isLoading = false;
       notifyListeners();
       return false;
@@ -266,10 +266,19 @@ class CallViewModel extends ChangeNotifier {
 
   var formattedDate1;
   var formattedDate2;
-
-  int calculateDuration(String date1, String date2) {
-    formattedDate1 = DateFormat('dd/MM/yyyy, hh:mm a').parse(date1);
-    formattedDate2 = DateFormat('dd/MM/yyyy, hh:mm a').parse(date2);
+  int? _durationSec;
+  int? get durationSec => _durationSec;
+  int calculateDuration(String date1Str, String date2Str) {
+    //
+    DateTime date1 = DateTime.parse(date1Str);
+    DateTime date2 = DateTime.parse(date2Str);
+    Duration difference = date2.difference(date1);
+    print('Difference in seconds: ${difference.inSeconds}');
+    _durationSec = difference.inSeconds;
+    return difference.inSeconds;
+    //
+    formattedDate1 = DateFormat('dd/MM/yyyy, hh:mm a').parse(date1Str);
+    formattedDate2 = DateFormat('dd/MM/yyyy, hh:mm a').parse(date2Str);
     print('the formatted date1 is $formattedDate1');
     String dateTime1 = DateFormat('yyyy-MM-dd HH:mm:ss').format(formattedDate1);
     String dateTime2 = DateFormat('yyyy-MM-dd HH:mm:ss').format(formattedDate2);
@@ -494,6 +503,7 @@ class CallViewModel extends ChangeNotifier {
 
   Future<bool> createCall(
       {String? customerName,
+      String? leadname,
       String? customerNumber,
       int? conversationDuration,
       String? status,
@@ -526,20 +536,35 @@ class CallViewModel extends ChangeNotifier {
         endTime = formattedDate2.toString();
       }
 
-      var response = await apiRepository.createCall(data: {
-        "customer": customerName,
-        "user": userEmail,
-        "called_number": customerNumber,
-        "caller_number": "9632587410",
-        "called_date": calledDate,
-        "call_date_time": startTime,
-        "call_start_time": startTime,
-        "call_end_time": endTime,
-        "call_status": status,
-        "conversation_duration": conversationDuration,
-        "track_calls":
-            trackCall // Always send an empty list if there are no points
-      });
+      var response = await apiRepository.createCall(
+          data: leadname != null
+              ? {
+                  "lead": leadname,
+                  "user": userEmail,
+                  "called_number": customerNumber,
+                  "caller_number": "",
+                  "called_date": calledDate,
+                  "call_date_time": fromTime,
+                  "call_start_time": fromTime,
+                  "call_end_time": toTime,
+                  "call_status": status,
+                  "conversation_duration": durationSec,
+                  "track_calls": trackCall
+                }
+              : {
+                  "customer": customerName,
+                  "user": userEmail,
+                  "called_number": customerNumber,
+                  "caller_number": "",
+                  "called_date": calledDate,
+                  "call_date_time": fromTime,
+                  "call_start_time": fromTime,
+                  "call_end_time": toTime,
+                  "call_status": status,
+                  "conversation_duration": durationSec,
+                  "track_calls":
+                      trackCall // Always send an empty list if there are no points
+                });
 
       if (response?.data?.doctype == "Customer Call Records") {
         createCallData = response?.data;
@@ -565,35 +590,62 @@ class CallViewModel extends ChangeNotifier {
   Future<void> makeCallAndLogTime(String number) async {
     final url = Uri.parse('tel:$number');
     if (await canLaunchUrl(url)) {
-      // Record start time
+      // Record the start time of the call initiation
       final start = DateTime.now();
       await launchUrl(url);
 
-      // Simulate waiting until the call ends to fetch end time
-      await Future.delayed(Duration(seconds: 2));
+      // Poll the call log until the call entry is logged with an end time
+      await _pollForCallEnd(number, start);
 
-      // Get call times from logs
-      final callTimes = await _getCallTimes(number);
-      fromTime = callTimes['start']?.toString() ?? '';
-      toTime = callTimes['end']?.toString() ?? '';
-
-      log(fromTime);
-      log(toTime);
-
+      // Notify listeners if needed
       notifyListeners();
     }
   }
 
-  // Fetch call start and end times from logs
-  Future<Map<String, DateTime>> _getCallTimes(String number) async {
+  // Poll call logs for an entry with the specified start time for the given number
+  Future<void> _pollForCallEnd(String number, DateTime start) async {
+    const pollingInterval = Duration(seconds: 2);
+    bool callEnded = false;
+
+    while (!callEnded) {
+      final callTimes = await _getCallTimes(number, start);
+      if (callTimes.isNotEmpty) {
+        // Update the fromTime and toTime
+        fromTime = callTimes['start']?.toString() ?? '';
+        toTime = callTimes['end']?.toString() ?? '';
+
+        print('Call start time: $fromTime');
+        print('Call end time: $toTime');
+        calculateDuration(fromTime, toTime);
+        callEnded = true;
+      } else {
+        // Wait for the next poll interval
+        await Future.delayed(pollingInterval);
+      }
+    }
+  }
+
+  // Fetches the call log details with a timestamp matching or close to the start time
+  Future<Map<String, DateTime>> _getCallTimes(
+      String number, DateTime start) async {
     final Iterable<CallLogEntry> callLogs = await CallLog.get();
     for (var log in callLogs) {
       if (log.number == number) {
-        final start = DateTime.fromMillisecondsSinceEpoch(log.timestamp!);
-        final end = start.add(Duration(seconds: log.duration ?? 0));
-        return {'start': start, 'end': end};
+        final logStart = DateTime.fromMillisecondsSinceEpoch(log.timestamp!);
+        final logEnd = logStart.add(Duration(seconds: log.duration ?? 0));
+
+        // Check if the start time is close to the log start time (within a reasonable margin)
+        if (logStart.difference(start).inSeconds.abs() < 10) {
+          return {'start': logStart, 'end': logEnd};
+        }
       }
     }
     return {};
+  }
+
+  clearTime() {
+    fromTime = '';
+    toTime = '';
+    notifyListeners();
   }
 }

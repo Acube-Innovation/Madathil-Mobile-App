@@ -5,7 +5,6 @@ import 'package:madathil/constants.dart';
 import 'package:madathil/model/services/api_service/api_urls.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
-import 'package:madathil/view/screens/common_widgets/custom_images.dart';
 import 'package:madathil/view/screens/profile/widgets/detail_card.dart';
 import 'package:madathil/viewmodel/common_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +22,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<CommonDataViewmodel>(context, listen: false)
           .clearprofileDate();
-
       Provider.of<CommonDataViewmodel>(context, listen: false)
           .getProfileDetails();
     });
@@ -69,7 +67,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           child: Center(
                             child: CircleAvatar(
-                              radius: 60, 
+                              radius: 60,
                               backgroundImage: cdv.profileData?.image != null &&
                                       cdv.profileData!.image!.isNotEmpty
                                   ? NetworkImage(
@@ -93,7 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       Center(
-                        child: Text(    
+                        child: Text(
                           userEmail ?? '',
                           style:
                               Theme.of(context).textTheme.labelMedium!.copyWith(
@@ -120,6 +118,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         height: 5,
                       ),
                       ProfileCards(
+                        leadName: cdv.profileData?.fullName ?? 'N/A',
                         data: "Phone Number",
                         value: cdv.profileData?.mobileNo ?? 'N/A',
                         data2: "Address",
@@ -143,6 +142,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         height: 5,
                       ),
                       ProfileCards(
+                        leadName: cdv.profileData?.fullName ?? 'N/A',
                         data: "PAN Number",
                         value: cdv.profileData?.pan ?? 'N/A',
                         data2: "Aadhar Number",
@@ -166,6 +166,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         height: 5,
                       ),
                       ProfileCards(
+                        leadName: cdv.profileData?.fullName ?? 'N/A',
                         data: "Date of Birth",
                         value: cdv.profileData?.dateOfBirth != null
                             ? DateFormat('dd MMM yyyy').format(DateTime.parse(
