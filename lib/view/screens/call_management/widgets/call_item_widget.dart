@@ -8,7 +8,6 @@ import 'package:madathil/utils/no_data_found.dart';
 import 'package:madathil/view/screens/call_management/call_details_screen.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
 import 'package:madathil/viewmodel/call_viewmodel.dart';
-import 'package:madathil/viewmodel/payment_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class CallItemWidget extends StatefulWidget {
@@ -37,7 +36,7 @@ class _CallItemWidgetState extends State<CallItemWidget> {
       if ((cvm.callPost ?? []).isEmpty) {
         print(
             'call post ---------------------------------------- ${cvm.callPost}');
-        if (cvm.isLoading!) {
+        if (cvm.isLoading) {
           return const Center(child: CustomLoader());
         } else {
           return Center(child: NoDataFOund(
@@ -118,8 +117,7 @@ class _CallItemWidgetState extends State<CallItemWidget> {
                   }
                 } else {
                   var item = callVm.callPost![index];
-                  var time;
-
+                  String? time;
                   if (item.conversationDuration != null) {
                     time =
                         callVm.formatTimeFromSeconds(item.conversationDuration);
@@ -181,21 +179,19 @@ class _CallItemWidgetState extends State<CallItemWidget> {
                                           // )
                                         ],
                                       ),
-                                      if (time != null)
-                                        Text(
-                                          time ?? 'N/A',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleLarge!
-                                              .copyWith(
-                                                  height: 0,
-                                                  color: AppColors.primeryColor,
-                                                  fontSize: 14,
-                                                  fontWeight:
-                                                      FontWeight.normal),
-                                        ),
                                       Text(
-                                        item.calledDate ?? 'N/A',
+                                        time ?? '',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge!
+                                            .copyWith(
+                                                height: 0,
+                                                color: AppColors.primeryColor,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.normal),
+                                      ),
+                                      Text(
+                                        item.calledDate ?? '',
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleLarge!
@@ -216,12 +212,12 @@ class _CallItemWidgetState extends State<CallItemWidget> {
                                         boxFit: BoxFit.contain,
                                         height: 23,
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 20,
                                       ),
                                       if (item.callStatus != null)
                                         Text(
-                                          item.callStatus ?? 'N/A',
+                                          item.callStatus ?? '',
                                           style: Theme.of(context)
                                               .textTheme
                                               .titleLarge!
@@ -243,6 +239,7 @@ class _CallItemWidgetState extends State<CallItemWidget> {
                     ),
                   );
                 }
+                return null;
               }),
         );
       }

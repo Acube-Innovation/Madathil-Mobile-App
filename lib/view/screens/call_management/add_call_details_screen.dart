@@ -25,10 +25,14 @@ class _AddCallDetailsScreenState extends State<AddCallDetailsScreen> {
     if ((widget.number ?? "").isNotEmpty) {
       customerNumberController.text = widget.number ?? '';
     }
+    if ((widget.name ?? "").isNotEmpty) {
+      customerNameController.text = widget.name ?? '';
+    }
     super.initState();
   }
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  TextEditingController customerNameController = TextEditingController();
   TextEditingController customerNumberController = TextEditingController();
   TextEditingController startTimeController = TextEditingController();
   TextEditingController endTimeController = TextEditingController();
@@ -63,31 +67,41 @@ class _AddCallDetailsScreenState extends State<AddCallDetailsScreen> {
                           ),
                     ),
                     const SizedBox(height: 10),
-                    SearchableDropdown(
-                      validator: (value) {
-                        if ((value == null || value.isEmpty) &&
-                            (widget.name ?? '').isEmpty) {
-                          return 'Please select a customer';
-                        }
-                        return null;
-                      },
-                      hintText: widget.name ?? "Select Customer",
-                      onItemSelected: (selectedCustomer) {
-                        customer = selectedCustomer;
-                        Provider.of<CustomerViewmodel>(context, listen: false)
-                            .getCustomerDetail(name: customer!)
-                            .then(
-                          (value) {
-                            customerNumber =
-                                customerVm.customerDetails?.first.mobileNo;
-                            if (customerNumber != null) {
-                              customerNumberController.text =
-                                  customerNumber ?? "";
-                            }
-                          },
-                        );
-                      },
-                    ),
+                    (widget.name ?? "").isNotEmpty
+                        ? CustomTextField(
+                            enabled: false,
+                            controller: customerNameController,
+                            keyboardType: TextInputType.number,
+                            validator: (value) =>
+                                UtilFunctions.validateCustomerNumber(value),
+                            hint: widget.name,
+                          )
+                        : SearchableDropdown(
+                            validator: (value) {
+                              if ((value == null || value.isEmpty) &&
+                                  (widget.name ?? '').isEmpty) {
+                                return 'Please select a customer';
+                              }
+                              return null;
+                            },
+                            hintText: widget.name ?? "Select Customer",
+                            onItemSelected: (selectedCustomer) {
+                              customer = selectedCustomer;
+                              Provider.of<CustomerViewmodel>(context,
+                                      listen: false)
+                                  .getCustomerDetail(name: customer!)
+                                  .then(
+                                (value) {
+                                  customerNumber = customerVm
+                                      .customerDetails?.first.mobileNo;
+                                  if (customerNumber != null) {
+                                    customerNumberController.text =
+                                        customerNumber ?? "";
+                                  }
+                                },
+                              );
+                            },
+                          ),
                     const SizedBox(height: 18),
                     Text(
                       "Customer Number",

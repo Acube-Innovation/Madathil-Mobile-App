@@ -117,30 +117,19 @@ class CallViewModel extends ChangeNotifier {
 
       CallListResponseModel? response =
           await apiRepository.getCallList(param: param);
-      log('response ------------------------------------ ${response?.toJson()}');
-
       if (response?.data != null) {
         callList?.clear;
         callList = response?.data;
-        log("lead name--------------- ${callList?.first.leadName}");
-
-        log("call List ------------ > ${callList?.first.toJson() ?? []}");
-
         isLoading = false;
         notifyListeners();
-
         return true;
       }
-
-      log("Empty list");
       isLoading = false;
       notifyListeners();
 
       return false;
     } catch (e) {
       _errormsg = e.toString();
-      print(
-          'error message ---------------------------------------------- $_errormsg');
       isLoading = false;
       notifyListeners();
       return false;
@@ -162,8 +151,6 @@ class CallViewModel extends ChangeNotifier {
 
     await getCallList(page: callCurrentPage);
     final apiResponse = callList;
-    print('call list ------------------------------ $callList');
-    print('api response ------------------------------ $apiResponse');
 
     if (apiResponse != null) {
       final apiPosts = apiResponse;
@@ -172,9 +159,6 @@ class CallViewModel extends ChangeNotifier {
       }
       callPost?.addAll(apiPosts);
       callCurrentPage++;
-      print('call post ------------------------------ $callPost');
-      print(
-          'call current page ------------------------------ $callCurrentPage');
     }
     _callPaginationclosing = false;
     if ((callPost ?? []).isNotEmpty) {
@@ -218,7 +202,7 @@ class CallViewModel extends ChangeNotifier {
           "caller_number",
           "called_date",
           "lead_name"
-          "call_status",
+              "call_status",
           "conversation_duration",
           "track_calls"
         ]),
@@ -553,7 +537,7 @@ class CallViewModel extends ChangeNotifier {
                   "called_number": customerNumber,
                   "caller_number": "",
                   "called_date":
-                      DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
+                      DateFormat('yyyy-MM-dd').format(DateTime.now()),
                   "call_date_time": fromTime,
                   "call_start_time": fromTime,
                   "call_end_time": toTime,
@@ -573,8 +557,7 @@ class CallViewModel extends ChangeNotifier {
                   "call_end_time": toTime,
                   "call_status": status,
                   "conversation_duration": durationSec,
-                  "track_calls":
-                      trackCall // Always send an empty list if there are no points
+                  "track_calls": trackCall
                 });
 
       if (response?.data?.doctype == "Customer Call Records") {
