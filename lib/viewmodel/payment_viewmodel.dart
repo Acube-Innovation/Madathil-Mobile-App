@@ -90,7 +90,7 @@ class PaymentViewmodel extends ChangeNotifier {
       notifyListeners();
       Map<String, dynamic> filters = {
         "party": ["like", paymentSearchfn != null ? "%$paymentSearchfn%" : "%"],
-        "owner": username
+        "owner": userEmail
       };
 
       // Only add "posting_date" filter if start and end dates are provided
@@ -370,7 +370,7 @@ class PaymentViewmodel extends ChangeNotifier {
   Future<bool> getPaymentReceipt(String? receiptNo) async {
    // setLoader(true);
     try {
-      http.Response res = await apiRepository.getPaymentReciept(receiptNo);
+      http.Response res = await apiRepository.getPaymentReceipt(receiptNo);
       dynamic getReceptData = res.bodyBytes;
       if (getReceptData != null) {
         final Directory? appDir = Platform.isAndroid

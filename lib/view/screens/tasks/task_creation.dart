@@ -111,7 +111,9 @@ class TaskCreationScreen extends StatelessWidget {
                       hint: 'Select type',
                       items: tvm.listTaskTypeDetails ?? [],
                       onChanged: (value) {
-                        typeCTLR.text = value ?? "";
+                      //  typeCTLR.text = value ?? "";
+
+                        tvm.addSelectedTaskType(value);
                       },
                       validator: (value) {
                         if (value == null || value.isEmpty) {

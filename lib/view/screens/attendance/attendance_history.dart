@@ -92,10 +92,10 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
                 )
               : ListView.builder(
                   shrinkWrap: true,
-                  itemCount: (cdv.attendanceListData ?? []).length,
+                  itemCount: (cdv.attendanceListData ?? []).length +1,
                   itemBuilder: (context, index) {
-                    var data = cdv.attendanceListData?[index];
-                    if (index == (cdv.attendanceListData ?? []).length + 1) {
+                   
+                    if (index == (cdv.attendanceListData ?? []).length) {
                       if (cdv.isLoadingattendanceListPagination) {
                         return const CustomLoader();
                       } else {
@@ -126,7 +126,9 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
                         }
                       }
                     } else {
-                      return AttendanceHistoryItem(data: data);
+
+
+                      return AttendanceHistoryItem(data: cdv.attendanceListData?[index]);
                     }
                     return null;
                   },

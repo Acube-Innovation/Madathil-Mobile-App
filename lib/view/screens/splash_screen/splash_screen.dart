@@ -27,8 +27,11 @@ class _SplashScreenState extends State<SplashScreen> {
       if (hiveInstance!.getData(DataBoxKey.cookie) != null &&
           roleProfile != null) {
         log(username.toString());
+
+        String? mail = hiveInstance?.getData(DataBoxKey.kUserEmail);
+        log("$mail");
         Provider.of<CommonDataViewmodel>(context, listen: false)
-            .getHomeDetails()
+            .getHomeDetails(mail: mail)
             .then((value) {
           if (value) {
             Navigator.of(context).pushReplacement(

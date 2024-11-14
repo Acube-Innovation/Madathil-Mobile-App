@@ -50,8 +50,12 @@ class HomePage extends StatelessWidget {
       child: Scaffold(
           drawer: const DrawerWidget(),
           appBar: AppBar(
-            title: Text("Hi, ${data?.fullName ?? 'User!'}",
-                style: Theme.of(context).textTheme.titleSmall),
+            title: Consumer<CommonDataViewmodel>(
+              builder: (ctx, cdv, _) {
+                return Text("Hi, ${cdv.homeDetailData?.message?.fullName ?? 'User!'}",
+                    style: Theme.of(context).textTheme.titleSmall);
+              }
+            ),
             actions: [
               InkWell(
                 onTap: () => Navigator.push(

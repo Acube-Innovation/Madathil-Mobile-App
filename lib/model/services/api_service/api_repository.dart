@@ -198,11 +198,11 @@ class ApiRepository {
       {String? fromdate, String? todate, String? searchTerm}) {
     String url = fromdate != null && todate != null
         ? (searchTerm ?? "").isNotEmpty
-            ? '${ApiUrls.kleadListOwn}&filters={ "lead_name": ["like", "%$searchTerm%"], "date": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}&or_filters={"lead_owner": "$username", "contact_by":  "$username"}'
-            : '${ApiUrls.kleadListOwn}&filters={"date": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}&or_filters={"lead_owner": "$username", "contact_by":  "$username"}'
+            ? '${ApiUrls.kleadListOwn}&filters={ "lead_name": ["like", "%$searchTerm%"], "date": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}&or_filters={"lead_owner": "$userEmail", "contact_by":  "$userEmail"}'
+            : '${ApiUrls.kleadListOwn}&filters={"date": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}&or_filters={"lead_owner": "$userEmail", "contact_by":  "$userEmail"}'
         : (searchTerm ?? "").isNotEmpty
-            ? '${ApiUrls.kleadListOwn}&filters={"lead_name": ["like", "%$searchTerm%"]}&limit=10&limit_start=${page * 10}&or_filters={"lead_owner": "$username", "contact_by":  "$username"}'
-            : '${ApiUrls.kleadListOwn}&limit=10&limit_start=${page * 10}&or_filters={"lead_owner": "$username", "contact_by":  "$username"}';
+            ? '${ApiUrls.kleadListOwn}&filters={"lead_name": ["like", "%$searchTerm%"]}&limit=10&limit_start=${page * 10}&or_filters={"lead_owner": "$userEmail", "contact_by":  "$userEmail"}'
+            : '${ApiUrls.kleadListOwn}&limit=10&limit_start=${page * 10}&or_filters={"lead_owner": "$userEmail", "contact_by":  "$userEmail"}';
     print('url:$url');
     return _apiViewModel!.get<LeadsListOwnResponse>(apiUrl: url);
   }
@@ -326,7 +326,7 @@ class ApiRepository {
   Future<TasksListOwnResponse?> getTaskListOwn(int page,
       {String? fromdate, String? todate, String? status, String? searchTerm}) {
     String baseUrl =
-        '${ApiUrls.ktaskListOthers}&filters={"assigned_user": "$username"';
+        '${ApiUrls.ktaskListOthers}&filters={"assigned_user": "$userEmail"';
     List<String> filters = [];
 
     if (status != null && status.isNotEmpty) {
@@ -452,15 +452,20 @@ class ApiRepository {
   Future<http.Response> getInvoice(String? orderID) async {
     final url = Uri.parse(
         '${ApiUrls.kProdBaseURL}${ApiUrls.kgetInvoice}?doctype=Sales Invoice&name=$orderID');
-    Map<String, dynamic>? savedCookies =
-        hiveInstance?.getData(DataBoxKey.cookie);
+    // Map<String, dynamic>? savedCookies =
+    //     hiveInstance?.getData(DataBoxKey.cookie);
+
+    // Retrieve cookies from Hive
+    final rawCookies = hiveInstance?.getData(DataBoxKey.cookie);
+    final Map<String, dynamic>? savedCookies =
+        rawCookies != null ? Map<String, dynamic>.from(rawCookies) : null;
 
     final Map<String, String> headers = {
       'Accept': 'application/pdf',
     };
 
     if (savedCookies != null && savedCookies.isNotEmpty) {
-      String cookieHeader =
+      final cookieHeader =
           savedCookies.entries.map((e) => '${e.key}=${e.value}').join('; ');
       headers[HttpHeaders.cookieHeader] = cookieHeader;
     }
@@ -478,9 +483,9 @@ class ApiRepository {
     }
   }
 
-  Future<HomeDetailResponse?> getHomeDetails() async {
+  Future<HomeDetailResponse?> getHomeDetails({Map<String, dynamic>? param}) async {
     return _apiViewModel!.get<HomeDetailResponse>(
-        apiUrl: '${ApiUrls.kHomeDataUrl}?user=$userEmail');
+        apiUrl: ApiUrls.kHomeDataUrl, params: param);
   }
 
   Future<PaymentHistoryListResponse?> getOrderTransactionList(
@@ -538,15 +543,20 @@ class ApiRepository {
 
   Future<http.Response> getQuotation(String? quotationPath) async {
     final url = Uri.parse('${ApiUrls.kProdBaseURL}$quotationPath');
-    Map<String, dynamic>? savedCookies =
-        hiveInstance?.getData(DataBoxKey.cookie);
+    // Map<String, dynamic>? savedCookies =
+    //     hiveInstance?.getData(DataBoxKey.cookie);
+
+    // Retrieve cookies from Hive
+    final rawCookies = hiveInstance?.getData(DataBoxKey.cookie);
+    final Map<String, dynamic>? savedCookies =
+        rawCookies != null ? Map<String, dynamic>.from(rawCookies) : null;
 
     final Map<String, String> headers = {
       'Accept': 'application/pdf',
     };
 
     if (savedCookies != null && savedCookies.isNotEmpty) {
-      String cookieHeader =
+      final cookieHeader =
           savedCookies.entries.map((e) => '${e.key}=${e.value}').join('; ');
       headers[HttpHeaders.cookieHeader] = cookieHeader;
     }
@@ -576,23 +586,27 @@ class ApiRepository {
         apiUrl: ApiUrls.kAssignEmployee, data: formData!);
   }
 
-  Future<http.Response> getPaymentReciept(String? receiptNo) async {
+  Future<http.Response> getPaymentReceipt(String? receiptNo) async {
     final url = Uri.parse(
-        '${ApiUrls.kProdBaseURL}${ApiUrls.kDownloadPaymentReciept}?doctype=Payment Entry&name=$receiptNo&letterhead=Madathil Letterhead Logo Left&format=Madathil Payment Receipt');
-    Map<String, dynamic>? savedCookies =
-        hiveInstance?.getData(DataBoxKey.cookie);
+        '${ApiUrls.kProdBaseURL}${ApiUrls.kDownloadPaymentReciept}?doctype=Payment Entry&name=$receiptNo&letterhead=Madathil Letterhead Logo Left&format=Madathil Payment Receipt 1');
 
+    // Retrieve cookies from Hive
+    final rawCookies = hiveInstance?.getData(DataBoxKey.cookie);
+    final Map<String, dynamic>? savedCookies =
+        rawCookies != null ? Map<String, dynamic>.from(rawCookies) : null;
+
+    // Define headers and add cookies if they exist
     final Map<String, String> headers = {
       'Accept': 'application/pdf',
     };
 
     if (savedCookies != null && savedCookies.isNotEmpty) {
-      String cookieHeader =
+      final cookieHeader =
           savedCookies.entries.map((e) => '${e.key}=${e.value}').join('; ');
       headers[HttpHeaders.cookieHeader] = cookieHeader;
     }
 
-    // Make the GET request
+    // Make the GET request with http
     final response = await http.get(url, headers: headers);
 
     // Check the status code for errors

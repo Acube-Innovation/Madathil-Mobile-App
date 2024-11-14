@@ -262,8 +262,23 @@ class LoginScreen extends StatelessWidget {
                 if (value) {
                   hiveInstance?.saveData(
                       DataBoxKey.kUserEmail, emailCtlr.text.trim());
+                      log("$userEmail");
+                      log("$username");
+                      log("$employeeId");
+                      log("$roleProfile");
+
+                      String? mail = hiveInstance?.getData(DataBoxKey.kUserEmail);
+                      log("$mail");
                   Provider.of<CommonDataViewmodel>(context, listen: false)
-                      .getHomeDetails();
+                      .getHomeDetails(mail: mail).then((value){
+
+                        if(value){
+
+                       //  Provider.of<CommonDataViewmodel>(context, listen: false).updateVariable();
+
+                          
+                        }
+                      });
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(builder: (context) => const HomePage()),
                       (route) => false);

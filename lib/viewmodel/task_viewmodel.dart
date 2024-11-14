@@ -204,6 +204,15 @@ class TasksViewmodel extends ChangeNotifier {
     }
   }
 
+
+    String? _selectedTaskType;
+  String? get selectedTaskType => _selectedTaskType;
+
+  addSelectedTaskType(String? val) {
+    _selectedTaskType = val;
+    notifyListeners();
+  }
+
   /*
   * get  task status list details api call
   * */

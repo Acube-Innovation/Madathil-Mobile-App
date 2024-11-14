@@ -94,7 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       Center(
                         child: Text(    
-                          username ?? '',
+                          userEmail ?? '',
                           style:
                               Theme.of(context).textTheme.labelMedium!.copyWith(
                                     height: 1.7,

@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:madathil/constants.dart';
 import 'package:madathil/model/model_class/api_response_model/get_order_response.dart';
 import 'package:madathil/model/model_class/api_response_model/get_order_status_response.dart';
 import 'package:madathil/model/model_class/api_response_model/sales_order_detail_response.dart';
@@ -60,7 +61,7 @@ class OrderViewmodel extends ChangeNotifier {
     try {
       setLoader(true);
 
-      Map<String, dynamic> filters = {};
+      Map<String, dynamic> filters = {'owner' : "$userEmail"};
 
       // Only add "posting_date" filter if start and end dates are provided
       if (startFormatted != null && endFormatted != null) {
@@ -69,6 +70,7 @@ class OrderViewmodel extends ChangeNotifier {
           [startFormatted, endFormatted]
         ];
       }
+     
       if (selectedCustomer != null && selectedCustomer!.isNotEmpty) {
         filters["customer_name"] = selectedCustomer;
       }
