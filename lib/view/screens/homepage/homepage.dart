@@ -50,12 +50,11 @@ class HomePage extends StatelessWidget {
       child: Scaffold(
           drawer: const DrawerWidget(),
           appBar: AppBar(
-            title: Consumer<CommonDataViewmodel>(
-              builder: (ctx, cdv, _) {
-                return Text("Hi, ${cdv.homeDetailData?.message?.fullName ?? 'User!'}",
-                    style: Theme.of(context).textTheme.titleSmall);
-              }
-            ),
+            title: Consumer<CommonDataViewmodel>(builder: (ctx, cdv, _) {
+              return Text(
+                  "Hi, ${cdv.homeDetailData?.message?.fullName ?? 'User!'}",
+                  style: Theme.of(context).textTheme.titleSmall);
+            }),
             actions: [
               InkWell(
                 onTap: () => Navigator.push(
@@ -259,6 +258,197 @@ class HomePage extends StatelessWidget {
           ),
         ],
       );
+    } else if (login == "Dealer") {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Row(
+          //   children: [
+          //     HomeItemWidget(
+          //       image: AppImages.attendaneImage,
+          //       title: "Attendance",
+          //       onTap: () {
+          //         Provider.of<CommonDataViewmodel>(context, listen: false)
+          //             .employeeCheckinList();
+          //         Navigator.push(
+          //             context,
+          //             MaterialPageRoute(
+          //                 builder: (context) => const AttendancePage()));
+          //       },
+          //     ),
+          //     const SizedBox(width: 8),
+          //     HomeItemWidget(
+          //       image: AppImages.leadsImage,
+          //       title: "Leads",
+          //       onTap: () {
+          //         Provider.of<LeadsViewmodel>(context, listen: false)
+          //             .clearDates();
+          //         Navigator.push(
+          //             context,
+          //             MaterialPageRoute(
+          //                 builder: (context) => const LeadsScreen()));
+          //       },
+          //     ),
+          //   ],
+          // ),
+          //  const SizedBox(height: 8),
+          Row(
+            children: [
+              HomeItemWidget(
+                image: AppImages.productsImage,
+                title: "Products",
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => const PrdoductList()),
+                  );
+                },
+              ),
+              const SizedBox(width: 8),
+              HomeItemWidget(
+                image: AppImages.ordersImage,
+                title: "Orders",
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const OrderHistory(),
+                      ));
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              HomeItemWidget(
+                image: AppImages.transactionsImage,
+                title: "Transactions",
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TransactionList(),
+                      ));
+                },
+              ),
+              const SizedBox(width: 8),
+              // HomeItemWidget(
+              //   image: AppImages.callListImage,
+              //   title: "Call List",
+              //   onTap: () {
+              //     Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //             builder: (context) => const CallListScreen()
+              //             // const PaymentModeScreen()
+              //             ));
+              //   },
+              // ),
+              HomeItemWidget(
+                image: AppImages.tasksImage,
+                title: "Tasks",
+                onTap: () {
+                  Provider.of<TasksViewmodel>(context, listen: false)
+                      .clearFilter();
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const TasksScreen()));
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              // HomeItemWidget(
+              //   image: AppImages.tasksImage,
+              //   title: "Tasks",
+              //   onTap: () {
+              //     Provider.of<TasksViewmodel>(context, listen: false)
+              //         .clearFilter();
+              //     Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //             builder: (context) => const TasksScreen()));
+              //   },
+              // ),
+              HomeItemWidget(
+                image: AppImages.statementsImage,
+                title: "Statements",
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const ClosingStatmentsListScreen()));
+                },
+              ),
+              const SizedBox(width: 8),
+              HomeItemWidget(
+                image: AppImages.serviceListImage,
+                title: "Service List",
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ServiceHistoryScreen()));
+                },
+              ),
+            ],
+          ),
+          // const SizedBox(height: 8),
+          // Row(
+          //   children: [
+          //     HomeItemWidget(
+          //       image: AppImages.statementsImage,
+          //       title: "Statements",
+          //       onTap: () {
+          //         Navigator.push(
+          //             context,
+          //             MaterialPageRoute(
+          //                 builder: (context) =>
+          //                     const ClosingStatmentsListScreen()));
+          //       },
+          //     ),
+          //     const SizedBox(width: 8),
+          //     HomeItemWidget(
+          //       image: AppImages.employeesImage,
+          //       title: "Employee List",
+          //       onTap: () {
+          //         Navigator.push(
+          //             context,
+          //             MaterialPageRoute(
+          //                 builder: (context) => const EmployeeListScreen()));
+          //       },
+          //     ),
+          //   ],
+          // ),
+          // const SizedBox(height: 8),
+          // Row(
+          //   children: [
+          //     HomeItemWidget(
+          //       image: AppImages.salary,
+          //       title: "Salary",
+          //       onTap: () {
+          //         Provider.of<CommonDataViewmodel>(context, listen: false)
+          //             .clearDates();
+          //         Navigator.push(
+          //             context,
+          //             MaterialPageRoute(
+          //                 builder: (context) => const SalaryScreen()));
+          //       },
+          //     ),
+          //     const SizedBox(width: 8),
+          //     const Expanded(child: SizedBox())
+          //   ],
+          // ),
+        ],
+      );
+      // default:
+      //   return const SizedBox();
+      // }
     } else {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -424,9 +614,6 @@ class HomePage extends StatelessWidget {
           ),
         ],
       );
-      // default:
-      //   return const SizedBox();
-      // }
     }
   }
 
