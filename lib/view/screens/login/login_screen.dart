@@ -98,9 +98,13 @@ class LoginScreen extends StatelessWidget {
                           onTap: () {
                             authVm.setObscure(avm.obscureText!);
                           },
-                          child: const Icon(
-                            Icons.remove_red_eye,
-                          )),
+                          child: avm.obscureText!
+                              ? const Icon(
+                                  Icons.visibility_off,
+                                )
+                              : const Icon(
+                                  Icons.visibility,
+                                )),
                     );
                   }),
                   const SizedBox(
@@ -253,6 +257,7 @@ class LoginScreen extends StatelessWidget {
           width: double.maxFinite,
           onPressed: () {
             if (authVm.formKey.currentState!.validate()) {
+              authVm.obscureText;
               UtilFunctions.loaderPopup(context);
               authVm
                   .login(
@@ -262,23 +267,20 @@ class LoginScreen extends StatelessWidget {
                 if (value) {
                   hiveInstance?.saveData(
                       DataBoxKey.kUserEmail, emailCtlr.text.trim());
-                      log("$userEmail");
-                      log("$username");
-                      log("$employeeId");
-                      log("$roleProfile");
+                  log("$userEmail");
+                  log("$username");
+                  log("$employeeId");
+                  log("$roleProfile");
 
-                      String? mail = hiveInstance?.getData(DataBoxKey.kUserEmail);
-                      log("$mail");
+                  String? mail = hiveInstance?.getData(DataBoxKey.kUserEmail);
+                  log("$mail");
                   Provider.of<CommonDataViewmodel>(context, listen: false)
-                      .getHomeDetails(mail: mail).then((value){
-
-                        if(value){
-
-                       //  Provider.of<CommonDataViewmodel>(context, listen: false).updateVariable();
-
-                          
-                        }
-                      });
+                      .getHomeDetails(mail: mail)
+                      .then((value) {
+                    if (value) {
+                      //  Provider.of<CommonDataViewmodel>(context, listen: false).updateVariable();
+                    }
+                  });
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(builder: (context) => const HomePage()),
                       (route) => false);

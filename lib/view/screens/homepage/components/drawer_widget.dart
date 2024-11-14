@@ -70,18 +70,18 @@ class DrawerWidget extends StatelessWidget {
                     builder: (context) => const ServiceHistoryScreen()));
           }),
           const SizedBox(height: 20),
-          drawerItem("Attendance History", AppImages.attendancehistoryImage,
-              () async {
-            var cdv = Provider.of<CommonDataViewmodel>(context, listen: false);
-            await cdv.clearAttendanceData();
-            cdv.resetattendanceListPagination();
-            cdv.getattendanceListOwn();
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const AttendanceHistoryScreen()));
-          }),
-          const SizedBox(height: 20),
+          // drawerItem("Attendance History", AppImages.attendancehistoryImage,
+          //     () async {
+          //   var cdv = Provider.of<CommonDataViewmodel>(context, listen: false);
+          //   await cdv.clearAttendanceData();
+          //   cdv.resetattendanceListPagination();
+          //   cdv.getattendanceListOwn();
+          //   Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //           builder: (context) => const AttendanceHistoryScreen()));
+          // }),
+          // const SizedBox(height: 20),
           drawerItem("Points", AppImages.pointsImage, () {
             Navigator.of(context).push(
               MaterialPageRoute(
@@ -90,9 +90,11 @@ class DrawerWidget extends StatelessWidget {
           }),
           const SizedBox(height: 20),
           drawerItem("Referal", AppImages.referalImage, () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const ReferalScreen()),
-            );
+            // Navigator.of(context).push(
+            //   MaterialPageRoute(builder: (context) => const ReferalScreen()),
+            // );
+
+            toast("In progress, we will update you soon!", context);
           }),
           const SizedBox(height: 20),
           // drawerItem("Settings", AppImages.settingsImage, () {
@@ -109,12 +111,16 @@ class DrawerWidget extends StatelessWidget {
           const SizedBox(height: 20),
           const Divider(indent: 20, endIndent: 20),
           const SizedBox(height: 20),
-          drawerItem("Terms and Conditions", AppImages.termsImage, () {}),
+          drawerItem("Terms and Conditions", AppImages.termsImage, () {
+            toast("In progress, we will update you soon!", context);
+          }),
           const SizedBox(height: 20),
-          drawerItem("Support", AppImages.supportImage, () {}),
+          drawerItem("Support", AppImages.supportImage, () {
+            toast("In progress, we will update you soon!", context);
+          }),
           const SizedBox(height: 20),
           drawerItem("Log Out", AppImages.logoutImage, () {
-           cdv.appLogOut();
+            cdv.appLogOut();
             log("$userEmail");
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const LoginScreen()));
