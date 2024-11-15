@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:madathil/app_images.dart';
 import 'package:madathil/model/model_class/api_response_model/get_order_response.dart';
 import 'package:madathil/model/services/api_service/api_urls.dart';
@@ -290,7 +291,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     Row(
                       children: [
                         Text(
-                          "Order Date",
+                          "Delivery Date",
                           style: Theme.of(context)
                               .textTheme
                               .bodySmall!
@@ -298,7 +299,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         ),
                         const Spacer(),
                         Text(
-                          "17 jul 2023",
+
+                           ovm.orderDetail?.deliveryDate != null
+                                      ? DateFormat('dd MMM yyyy').format(
+                                          DateTime.parse(
+                                              ovm.orderDetail!.deliveryDate.toString()))
+                                      : '',
+                        //  ovm.orderDetail?.deliveryDate ?? 'N/A',
                           style: Theme.of(context)
                               .textTheme
                               .bodySmall!

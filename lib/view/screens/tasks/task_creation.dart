@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:madathil/constants.dart';
 import 'package:madathil/utils/util_functions.dart';
 import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
 import 'package:madathil/view/screens/common_widgets/custom_dropdown.dart';
 import 'package:madathil/view/screens/common_widgets/custom_text_field.dart';
+import 'package:madathil/view/screens/tasks/components/user_search.dart';
 import 'package:madathil/viewmodel/task_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +24,7 @@ class TaskCreationScreen extends StatelessWidget {
     TextEditingController typeCTLR = TextEditingController();
     TextEditingController assigneeCTLR = TextEditingController();
     final taskVm = Provider.of<TasksViewmodel>(context, listen: false);
+    String? customer;
 
     return Scaffold(
       appBar: const CustomAppBar(title: "Add Task"),
@@ -111,7 +114,7 @@ class TaskCreationScreen extends StatelessWidget {
                       hint: 'Select type',
                       items: tvm.listTaskTypeDetails ?? [],
                       onChanged: (value) {
-                      //  typeCTLR.text = value ?? "";
+                        //  typeCTLR.text = value ?? "";
 
                         tvm.addSelectedTaskType(value);
                       },
@@ -134,7 +137,7 @@ class TaskCreationScreen extends StatelessWidget {
                   const SizedBox(height: 5),
                   InkWell(
                     onTap: () => UtilFunctions.selectDate(context, (val) {
-                      dateCTLR.text = DateFormat('dd MMM yyyy')
+                      dateCTLR.text = DateFormat('yyyy-MM-dd')
                           .format(DateTime.parse(val.toString()));
                     }),
                     child: CustomTextField(
@@ -167,6 +170,19 @@ class TaskCreationScreen extends StatelessWidget {
                                     ),
                           ),
                           const SizedBox(height: 5),
+
+                //            UserSearchableDropdown(
+                //   hintText: "Select Customer",
+                //   onItemSelected: (selectedCustomer) {
+                //     customer = selectedCustomer;
+                //   },
+                //   validator: (selectedCustomer) {
+                //     if (selectedCustomer == null || selectedCustomer.isEmpty) {
+                //       return 'Please select a customer';
+                //     }
+                //     return null;
+                //   },
+                // ),
                           if ((tvm.listUsersDetails ?? []).isEmpty) ...{
                             const Center(
                                 child: CupertinoActivityIndicator(radius: 10)),
@@ -201,26 +217,36 @@ class TaskCreationScreen extends StatelessWidget {
                           if (taskVm.formKey.currentState!.validate()) {
                             // Proceed with task creation if form is valid
                             UtilFunctions.loaderPopup(context);
+
                             taskVm.createTask({
                               "subject": titleCTLR.text,
                               "description": descCTLR.text,
-                              "type": typeCTLR.text,
-                              "exp_start_date": DateFormat('dd MMM yyyy')
+                              "type": tvm.selectedTaskType,
+                              "exp_start_date": DateFormat('yyyy-MM-dd')
                                   .format(DateTime.now()),
                               "exp_end_date": dateCTLR.text,
-                              "assigned_user": tvm.selectedAssignee,
+                              "assigned_user": userEmail,
                               "task_users": [
                                 {
-                                  "user_name": tvm.listUsersResponse?.data
-                                      ?.firstWhere((e) =>
-                                          e.fullName == tvm.selectedAssignee)
-                                      .name
+                                  "user_name": tvm.isMyself ?? false
+                                      ? userEmail
+                                      : tvm.listUsersResponse?.data
+                                          ?.firstWhere((e) =>
+                                              e.fullName ==
+                                              tvm.selectedAssignee)
+                                          .name
                                 }
                               ]
                             }).then((value) {
-                              toast("Task created successfully", context);
                               Navigator.pop(context);
                               Navigator.pop(context);
+                              if (value) {
+                                toast("Task created successfully", context);
+                              } else {
+                                toast(tvm.errormsg ?? "Task creation failed",
+                                    context,
+                                    isError: true);
+                              }
                             });
                           }
                         },

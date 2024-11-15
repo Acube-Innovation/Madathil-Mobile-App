@@ -198,10 +198,10 @@ class ApiRepository {
       {String? fromdate, String? todate, String? searchTerm}) {
     String url = fromdate != null && todate != null
         ? (searchTerm ?? "").isNotEmpty
-            ? '${ApiUrls.kleadListOwn}&filters={ "lead_name": ["like", "%$searchTerm%"], "date": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}&or_filters={"lead_owner": "$userEmail", "contact_by":  "$userEmail"}'
-            : '${ApiUrls.kleadListOwn}&filters={"date": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}&or_filters={"lead_owner": "$userEmail", "contact_by":  "$userEmail"}'
+            ? '${ApiUrls.kleadListOwn}&filters={ "lead_name": ["like", "%25$searchTerm%25"], "creation": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}&or_filters={"lead_owner": "$userEmail", "contact_by":  "$userEmail"}'
+            : '${ApiUrls.kleadListOwn}&filters={"creation": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}&or_filters={"lead_owner": "$userEmail", "contact_by":  "$userEmail"}'
         : (searchTerm ?? "").isNotEmpty
-            ? '${ApiUrls.kleadListOwn}&filters={"lead_name": ["like", "%$searchTerm%"]}&limit=10&limit_start=${page * 10}&or_filters={"lead_owner": "$userEmail", "contact_by":  "$userEmail"}'
+            ? '${ApiUrls.kleadListOwn}&filters={"lead_name": ["like", "%25$searchTerm%25"]}&limit=10&limit_start=${page * 10}&or_filters={"lead_owner": "$userEmail", "contact_by":  "$userEmail"}'
             : '${ApiUrls.kleadListOwn}&limit=10&limit_start=${page * 10}&or_filters={"lead_owner": "$userEmail", "contact_by":  "$userEmail"}';
     print('url:$url');
     return _apiViewModel!.get<LeadsListOwnResponse>(apiUrl: url);
@@ -212,10 +212,10 @@ class ApiRepository {
     return _apiViewModel!.get<LeadsListOwnResponse>(
         apiUrl: fromdate != null && todate != null
             ? (searchTerm ?? "").isNotEmpty
-                ? '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$userID", "lead_name": ["like", "%$searchTerm%"], "date": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}'
-                : '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$userID", "date": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}'
+                ? '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$userID", "lead_name": ["like", "%25$searchTerm%25"], "creation": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}'
+                : '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$userID", "creation": ["between", ["$fromdate", "$todate"]]}&limit=10&limit_start=${page * 10}'
             : (searchTerm ?? "").isNotEmpty
-                ? '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$userID", "lead_name": ["like", "%$searchTerm%"]}&limit=10&limit_start=${page * 10}}'
+                ? '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$userID", "lead_name": ["like", "%25$searchTerm%25"]}&limit=10&limit_start=${page * 10}}'
                 : '${ApiUrls.kleadListOwn}&filters={"lead_owner": "$userID"}&limit=10&limit_start=${page * 10}');
   }
 
@@ -348,8 +348,8 @@ class ApiRepository {
     return _apiViewModel!.get<TasksListOwnResponse>(apiUrl: finalUrl);
   }
 
-  Future<ListUsersResponse?> getListUsers() async {
-    return _apiViewModel!.get<ListUsersResponse>(apiUrl: ApiUrls.kListUsers);
+  Future<ListUsersResponse?> getListUsers({Map<String, dynamic>? param}) async {
+    return _apiViewModel!.get<ListUsersResponse>(apiUrl: ApiUrls.kListUsers, params: param);
   }
 
   Future<LeadsSourceListResponse?> getListTaskType() async {

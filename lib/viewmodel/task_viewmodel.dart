@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:madathil/model/model_class/api_response_model/create_address_response_model.dart';
@@ -149,10 +151,21 @@ class TasksViewmodel extends ChangeNotifier {
   ListUsersResponse? _listUsersResponse;
   ListUsersResponse? get listUsersResponse => _listUsersResponse;
 
-  Future<bool> getListUsers() async {
+  Future<bool> getListUsers({String? searchItem}) async {
     try {
+      Map<String, dynamic>? param = {};
+
+      param = {
+        "fields": jsonEncode(["name", "full_name"]),
+        "filters": jsonEncode(
+          {
+            "full_name": ["like", searchItem != null ? "$searchItem%" : "%"]
+          },
+        ),
+        "order_by": "modified desc"
+      };
       ListUsersResponse? listUsersDetailsResponse =
-          await apiRepository.getListUsers();
+          await apiRepository.getListUsers(param: param);
       if (listUsersDetailsResponse != null &&
           listUsersDetailsResponse.data != null) {
         _listUsersResponse = listUsersDetailsResponse;
@@ -204,8 +217,7 @@ class TasksViewmodel extends ChangeNotifier {
     }
   }
 
-
-    String? _selectedTaskType;
+  String? _selectedTaskType;
   String? get selectedTaskType => _selectedTaskType;
 
   addSelectedTaskType(String? val) {
