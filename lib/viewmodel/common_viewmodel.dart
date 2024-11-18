@@ -551,7 +551,7 @@ class CommonDataViewmodel extends ChangeNotifier {
       return;
     }
     _isLoadingattendanceListPagination = true;
-    notifyListeners();
+    // notifyListeners();
     await getAttendanceList(_attendanceListCurrentPage,
         fromdate: fromdate,
         todate: todate,
@@ -1843,15 +1843,13 @@ class CommonDataViewmodel extends ChangeNotifier {
 
   // update variable
 
-  updateVariable()  {
-     updateVariable();
-     log("$userEmail");
+  updateVariable() {
+    updateVariable();
+    log("$userEmail");
     log("$username");
     log("$employeeId");
     log("$roleProfile");
     notifyListeners();
-
-    
   }
 
   //logout

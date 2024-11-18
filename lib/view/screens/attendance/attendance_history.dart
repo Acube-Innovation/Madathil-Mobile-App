@@ -92,19 +92,21 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
                 )
               : ListView.builder(
                   shrinkWrap: true,
-                  itemCount: (cdv.attendanceListData ?? []).length +1,
+                  itemCount: (cdv.attendanceListData ?? []).length + 1,
                   itemBuilder: (context, index) {
-                   
                     if (index == (cdv.attendanceListData ?? []).length) {
                       if (cdv.isLoadingattendanceListPagination) {
                         return const CustomLoader();
                       } else {
                         if (!cdv.reachedLastPageattendanceList) {
                           if (!cdv.isLoadingattendanceListPagination) {
-                            cdv.getattendanceListOwn(
-                                isOthersAttendance: widget.isOthersAttendance!
-                                    ? widget.employeeID
-                                    : null);
+                            WidgetsBinding.instance
+                                .addPostFrameCallback((_) async {
+                              cdv.getattendanceListOwn(
+                                  isOthersAttendance: widget.isOthersAttendance!
+                                      ? widget.employeeID
+                                      : null);
+                            });
                           }
                           return const CustomLoader();
                         } else {
@@ -126,9 +128,8 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
                         }
                       }
                     } else {
-
-
-                      return AttendanceHistoryItem(data: cdv.attendanceListData?[index]);
+                      return AttendanceHistoryItem(
+                          data: cdv.attendanceListData?[index]);
                     }
                     return null;
                   },

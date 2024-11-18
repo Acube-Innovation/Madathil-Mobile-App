@@ -20,16 +20,18 @@ class SalaryDetailScreen extends StatefulWidget {
 }
 
 class _SalaryDetailScreenState extends State<SalaryDetailScreen> {
-  bool _isInitialized = false;
+  final bool _isInitialized = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (!_isInitialized) {
+    // if (!_isInitialized) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       Provider.of<SalaryViewmodel>(context, listen: false)
           .fetchMonthlySalaryDetails(widget.month);
-      _isInitialized = true;
-    }
+    });
+    // _isInitialized = true;
+    // }
   }
 
   @override
@@ -233,12 +235,14 @@ class _SalaeyDetailsListItemState extends State<SalaeyDetailsListItem> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-
       onTap: () {
-        
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>  SalesDetails(data: widget.data,)));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SalesDetails(
+                      data: widget.data,
+                    )));
       },
-
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         elevation: 5,
@@ -325,7 +329,7 @@ class _SalaeyDetailsListItemState extends State<SalaeyDetailsListItem> {
                   //       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   //           color: AppColors.primaryLightColor, fontSize: 20),
                   //     ),
-      
+
                   //     // const SizedBox(height: 10),
                   //     // Icon(
                   //     //   _isExpanded

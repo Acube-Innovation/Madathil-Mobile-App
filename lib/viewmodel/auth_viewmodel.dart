@@ -42,7 +42,7 @@ class AuthViewmodel extends ChangeNotifier {
       }
     } catch (e) {
       log(e.toString());
-      
+
       _errormsg = e.toString();
       return false;
     }

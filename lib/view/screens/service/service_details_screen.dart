@@ -46,7 +46,8 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(cdv.servicePurpose?.purposes?.first.description ?? '',
+                      Text(
+                          cdv.servicePurpose?.purposes?.first.description ?? '',
                           style:
                               Theme.of(context).textTheme.bodySmall!.copyWith(
                                     height: 0,
@@ -90,7 +91,7 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                           const SizedBox(
                             width: 60,
                           ),
-                          Text(cdv.servicePurpose!.name ?? '',
+                          Text(cdv.servicePurpose?.name ?? '',
                               style: Theme.of(context)
                                   .textTheme
                                   .bodySmall!
@@ -121,7 +122,7 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                           const SizedBox(
                             width: 60,
                           ),
-                          Text(cdv.servicePurpose!.customer ?? '',
+                          Text(cdv.servicePurpose?.customer ?? '',
                               style: Theme.of(context)
                                   .textTheme
                                   .bodySmall!
