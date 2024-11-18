@@ -20,6 +20,7 @@ class Data {
   String? name;
   String? owner;
   String? creation;
+  String? type;
   String? modified;
   String? modifiedBy;
   int? idx;
@@ -43,6 +44,7 @@ class Data {
   double? expectedTime;
   int? start;
   double? progress;
+  String? description;
   int? duration;
   int? isMilestone;
   String? dependsOnTasks;
@@ -67,7 +69,9 @@ class Data {
     this.creation,
     this.modified,
     this.modifiedBy,
+    this.description,
     this.idx,
+    this.type,
     this.docstatus,
     this.subject,
     this.showToCustomer,
@@ -114,6 +118,8 @@ class Data {
     modified = json['modified'];
     modifiedBy = json['modified_by'];
     idx = json['idx'];
+    type = json['type'];
+    description = json['description'];
     docstatus = json['docstatus'];
     subject = json['subject'];
     showToCustomer = json['show_to_customer'];
@@ -166,8 +172,10 @@ class Data {
     data['modified'] = modified;
     data['modified_by'] = modifiedBy;
     data['idx'] = idx;
+    data['type'] = type;
     data['docstatus'] = docstatus;
     data['subject'] = subject;
+    data['description'] = description;
     data['show_to_customer'] = showToCustomer;
     data['assigned_user'] = assignedUser;
     data['is_completed'] = isCompleted;

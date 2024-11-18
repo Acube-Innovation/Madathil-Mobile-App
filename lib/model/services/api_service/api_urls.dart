@@ -64,8 +64,7 @@ class ApiUrls {
   static const kAddCall = '/api/resource/Customer Call Records';
   static const kCallStatusList =
       '/api/method/a3sola_solar_management.api.get_select_field_options?doctype=Voxbay Call Track&fieldname=status';
-  static const kListUsers =
-      '/api/resource/User?fields=["name", "full_name"]&filters={"full_name": ["like", "aj%"]}&order_by=modified desc';
+  static const kListUsers = '/api/resource/User';
   static const kListTaskType =
       '/api/resource/Task Type?fields=["name"]&filters={"name": ["like", "%"]}&order_by=modified desc';
 
@@ -123,5 +122,5 @@ class ApiUrls {
   static const kGeneratePaymentLink =
       '/api/method/a3sola_solar_management.a3sola_solar_management.doctype.razorpay_payment_link.razorpay_payment_link.create_payment_link';
 
-      static const kOngoingTransaction = '/api/resource/Razorpay Payment Link';
+  static const kOngoingTransaction = '/api/resource/Razorpay Payment Link';
 }

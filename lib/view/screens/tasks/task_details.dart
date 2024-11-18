@@ -51,14 +51,14 @@ class TaskDetailScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    "Customer: N/A",
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: AppColors.black,
-                        ),
-                  ),
+                  // Text(
+                  //   "Customer: N/A",
+                  //   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  //         color: AppColors.black,
+                  //       ),
+                  // ),
                   Text(
                     "${data?.expectedTime ?? ""} hr left",
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(
@@ -77,9 +77,9 @@ class TaskDetailScreen extends StatelessWidget {
                 // decoration: BoxDecoration(
                 //     borderRadius: BorderRadius.circular(20),
                 //     color: AppColors.white.withOpacity(0.1)),
-                child: const Padding(
+                child:  Padding(
                   padding: EdgeInsets.all(15),
-                  child: Text("task description given here"),
+                  child: Text(UtilFunctions.removeHtmlTags(data?.description ?? "N/A") ),
                 ),
               ),
               const SizedBox(height: 25),
@@ -103,7 +103,7 @@ class TaskDetailScreen extends StatelessWidget {
                         ),
                         const Spacer(),
                         Text(
-                          "Task",
+                          data?.type ?? "N/A",
                           style:
                               Theme.of(context).textTheme.bodyMedium!.copyWith(
                                     height: 1.7,

@@ -597,7 +597,7 @@ class CommonDataViewmodel extends ChangeNotifier {
           "fields": jsonEncode(["name", "customer_name"]),
           "filters": jsonEncode({
             "disabled": "false",
-            "customer_name": ["like", "$searchItem%"]
+            "customer_name": ["like", "%25$searchItem%25"]
           }),
           "order_by": "modified desc",
         };
