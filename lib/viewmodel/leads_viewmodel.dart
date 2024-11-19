@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:madathil/model/model_class/api_response_model/assign_employee_lead_response.dart';
+import 'package:madathil/model/model_class/api_response_model/ksebbill_uploade_response.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/foundation.dart';
 import 'package:madathil/model/model_class/api_response_model/create_address_response_model.dart';
@@ -551,8 +552,33 @@ class LeadsViewmodel extends ChangeNotifier {
 
   // Helper function to log FormData content
   void logFormData(FormData formData) {
-    formData.fields.forEach((element) {
+    for (var element in formData.fields) {
       log("Field: ${element.key} = ${element.value}");
+    }
+  }
+
+  KsebBillUploadResponse? billResponse;
+  Future<KsebBillUploadResponse?> ksebBillupload(
+    File file,
+    String docname,
+    String doctype,
+  ) async {
+    var data = FormData.fromMap({
+      'file': await MultipartFile.fromFile(
+        file.path,
+        filename: file.path.split('/').last,
+      ),
+      'docname': docname, // Adding docname
+      'doctype': doctype, // Adding doctype
     });
+    log(data.toString());
+
+    return await apiRepository.billUpload(data);
+  }
+
+  String? billPicked;
+  billpicked(value) {
+    billPicked = value;
+    notifyListeners();
   }
 }

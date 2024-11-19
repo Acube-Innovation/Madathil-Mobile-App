@@ -36,6 +36,7 @@ import 'package:madathil/model/model_class/api_response_model/get_quotation_lead
 import 'package:madathil/model/model_class/api_response_model/home_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/image_uploade_response.dart';
 import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/ksebbill_uploade_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_creation_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_list_own_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_source_list_response.dart';
@@ -349,7 +350,8 @@ class ApiRepository {
   }
 
   Future<ListUsersResponse?> getListUsers({Map<String, dynamic>? param}) async {
-    return _apiViewModel!.get<ListUsersResponse>(apiUrl: ApiUrls.kListUsers, params: param);
+    return _apiViewModel!
+        .get<ListUsersResponse>(apiUrl: ApiUrls.kListUsers, params: param);
   }
 
   Future<LeadsSourceListResponse?> getListTaskType() async {
@@ -483,9 +485,10 @@ class ApiRepository {
     }
   }
 
-  Future<HomeDetailResponse?> getHomeDetails({Map<String, dynamic>? param}) async {
-    return _apiViewModel!.get<HomeDetailResponse>(
-        apiUrl: ApiUrls.kHomeDataUrl, params: param);
+  Future<HomeDetailResponse?> getHomeDetails(
+      {Map<String, dynamic>? param}) async {
+    return _apiViewModel!
+        .get<HomeDetailResponse>(apiUrl: ApiUrls.kHomeDataUrl, params: param);
   }
 
   Future<PaymentHistoryListResponse?> getOrderTransactionList(
@@ -635,5 +638,14 @@ class ApiRepository {
       {Map<String, dynamic>? param}) async {
     return _apiViewModel!.get<OnGoingTransactionDetailsResponse>(
         apiUrl: ApiUrls.kOngoingTransaction, params: param);
+  }
+
+  Future<KsebBillUploadResponse?> billUpload(
+    dio.FormData data,
+  ) {
+    return _apiViewModel!.postFormdata<KsebBillUploadResponse>(
+      apiUrl: ApiUrls.kFileUploade,
+      data: data,
+    );
   }
 }

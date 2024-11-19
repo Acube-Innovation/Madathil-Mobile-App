@@ -39,6 +39,7 @@ import 'package:madathil/model/model_class/api_response_model/get_quotation_lead
 import 'package:madathil/model/model_class/api_response_model/home_detail_response.dart';
 import 'package:madathil/model/model_class/api_response_model/image_uploade_response.dart';
 import 'package:madathil/model/model_class/api_response_model/item_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/ksebbill_uploade_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_creation_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_list_own_response.dart';
 import 'package:madathil/model/model_class/api_response_model/lead_source_list_response.dart';
@@ -393,6 +394,8 @@ class ApiViewModel {
 
       case OnGoingTransactionDetailsResponse:
         return OnGoingTransactionDetailsResponse?.fromJson(json) as T;
+      case KsebBillUploadResponse:
+        return KsebBillUploadResponse?.fromJson(json) as T;
 
       default:
         throw FromJsonNotImplementedException();

@@ -1,6 +1,8 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:madathil/utils/color/app_colors.dart';
 import 'package:madathil/utils/color/util_functions.dart';
 import 'package:madathil/utils/custom_loader.dart';
@@ -8,6 +10,7 @@ import 'package:madathil/view/screens/common_widgets/custom_appbarnew.dart';
 import 'package:madathil/view/screens/common_widgets/custom_buttons.dart';
 import 'package:madathil/view/screens/common_widgets/custom_dropdown.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
+import 'package:madathil/view/screens/common_widgets/image_picker_bottom_sheet.dart';
 import 'package:madathil/view/screens/employee/widgets/details_button_widegt.dart';
 import 'package:madathil/view/screens/leads/components/custom_button_wit_icon.dart';
 import 'package:madathil/view/screens/leads/components/employee_serachable_dropdown.dart';
@@ -17,6 +20,7 @@ import 'package:madathil/view/screens/profile/widgets/detail_card_single.dart';
 import 'package:madathil/viewmodel/leads_viewmodel.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LeadDetailScreen extends StatelessWidget {
   const LeadDetailScreen({super.key});
@@ -173,6 +177,94 @@ class LeadDetailScreen extends StatelessWidget {
                 ),
                 const SizedBox(
                   height: 10,
+                ),
+
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.grey),
+                      color: AppColors.grey.withOpacity(0.1)),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            "KSEB bill ",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  height: 1.7,
+                                  color: AppColors.black,
+                                ),
+                          ),
+                          const Spacer(),
+                          GestureDetector(
+                            onTap: () {
+                              log(lvm.billPicked.toString());
+
+                              showModalBottomSheet(
+                                  isDismissible: true,
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.white,
+                                  context: context,
+                                  builder: (BuildContext ctx) {
+                                    return ImagePickerBottomSheet1(
+                                      onImagePicked: (XFile? image) {
+                                        lvm
+                                            .ksebBillupload(
+                                                File(image?.path ?? ""),
+                                                lvm.leadsDetails?.data?.name ??
+                                                    "",
+                                                lvm.leadsDetails?.data
+                                                        ?.doctype ??
+                                                    "")
+                                            .then((val) {
+                                          if (val != null) {
+                                            Fluttertoast.showToast(
+                                                gravity: ToastGravity.TOP,
+                                                backgroundColor:
+                                                    AppColors.green,
+                                                msg: "uploaded success",
+                                                toastLength: Toast.LENGTH_LONG);
+
+                                            log("${val.toJson()}");
+                                          } else {
+                                            Fluttertoast.showToast(
+                                                gravity: ToastGravity.TOP,
+                                                backgroundColor: AppColors.red,
+                                                msg:
+                                                    "failed to  upload document ",
+                                                toastLength: Toast.LENGTH_LONG);
+                                            // toast("failed to  upload document ",
+                                            //     context);
+                                          }
+                                        });
+                                      },
+                                    );
+                                  });
+                            },
+                            child: SizedBox(
+                              width: 50,
+                              child: Text(
+                                "Upload",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                      height: 1.7,
+                                      color: AppColors.blue,
+                                    ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 if (feedback != null)
                   Column(
