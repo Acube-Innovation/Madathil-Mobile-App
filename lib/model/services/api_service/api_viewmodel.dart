@@ -8,8 +8,11 @@ import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:madathil/constants.dart';
+import 'package:madathil/model/model_class/api_response_model/add_address_response.dart';
 import 'package:madathil/model/model_class/api_response_model/add_closing_statment_response.dart';
+import 'package:madathil/model/model_class/api_response_model/add_follow_up_respons.dart';
 import 'package:madathil/model/model_class/api_response_model/add_new_service_response.dart';
+import 'package:madathil/model/model_class/api_response_model/address_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/assign_employee_lead_response.dart';
 import 'package:madathil/model/model_class/api_response_model/attendance_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/call_details_response.dart';
@@ -26,6 +29,7 @@ import 'package:madathil/model/model_class/api_response_model/create_payment_res
 import 'package:madathil/model/model_class/api_response_model/customer_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/employee_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/employee_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/followup_status_lits.dart';
 import 'package:madathil/model/model_class/api_response_model/forgot_password_response.dart';
 import 'package:madathil/model/model_class/api_response_model/general_response.dart';
 import 'package:madathil/model/model_class/api_response_model/generate_link_reponse.dart';
@@ -396,6 +400,24 @@ class ApiViewModel {
         return OnGoingTransactionDetailsResponse?.fromJson(json) as T;
       case KsebBillUploadResponse:
         return KsebBillUploadResponse?.fromJson(json) as T;
+
+        case AddAddressResponse:
+        return AddAddressResponse?.fromJson(json) as T;
+         case AddressListResponse:
+        return AddressListResponse?.fromJson(json) as T;
+         case AddFollowUpResponse:
+        return AddFollowUpResponse?.fromJson(json) as T;
+         case StatusFollowUpResponse:
+        return StatusFollowUpResponse?.fromJson(json) as T;
+
+
+        
+
+        
+
+        
+
+        
 
       default:
         throw FromJsonNotImplementedException();

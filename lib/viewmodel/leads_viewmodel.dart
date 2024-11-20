@@ -3,8 +3,14 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:madathil/model/model_class/api_response_model/add_follow_up_respons.dart';
+import 'package:madathil/model/model_class/api_response_model/address_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/assign_employee_lead_response.dart';
+import 'package:madathil/model/model_class/api_response_model/followup_status_lits.dart';
 import 'package:madathil/model/model_class/api_response_model/ksebbill_uploade_response.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/foundation.dart';
@@ -18,6 +24,8 @@ import 'package:madathil/model/model_class/api_response_model/leads_detail_respo
 import 'package:madathil/model/model_class/api_response_model/quotation_filer_response.dart';
 import 'package:madathil/model/services/api_service/api_repository.dart';
 import 'package:path_provider/path_provider.dart';
+
+import '../model/model_class/api_response_model/add_address_response.dart';
 
 class LeadsViewmodel extends ChangeNotifier {
   final ApiRepository apiRepository;
@@ -50,6 +58,8 @@ class LeadsViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
+  final GlobalKey<FormState> formKey1 = GlobalKey<FormState>();
+
   /*
   * get lead details api call
   * */
@@ -62,6 +72,7 @@ class LeadsViewmodel extends ChangeNotifier {
       LeadsDetailsResponse? leadsDetailsResponse =
           await apiRepository.getLeadsDetails(id);
       if ((leadsDetailsResponse?.data) != null) {
+        _leadsDetails = null;
         _leadsDetails = leadsDetailsResponse;
         notifyListeners();
         return true;
@@ -579,6 +590,236 @@ class LeadsViewmodel extends ChangeNotifier {
   String? billPicked;
   billpicked(value) {
     billPicked = value;
+    notifyListeners();
+  }
+
+  //add addredd api call
+
+  Future<bool> addAdress({
+    String? id,
+    String? addrline1,
+    String? addrline2,
+    String? city,
+    String? state,
+    String? country,
+    String? pin,
+    String? leadId,
+    bool? isEdit,
+  }) async {
+    try {
+      // Initialize the data map
+      final Map<String, dynamic> data = {
+        "address_line1": addrline1,
+        "address_line2": addrline2,
+        "city": city,
+        "state": state,
+        "country": country,
+        "pincode": pin,
+      };
+
+      // Add links conditionally based on isEdit
+      if (isEdit == false) {
+        data["links"] = [
+          {"link_doctype": "Lead", "link_name": leadId}
+        ];
+      }
+
+      // Send the API request
+      AddAddressResponse? response =
+          await apiRepository.addaddress(data: data, isEdit: isEdit, id: id);
+
+      if (response?.data != null) {
+        notifyListeners();
+        return true;
+      }
+
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _errormsg = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
+  //list address api call
+
+  List<AddressDetails>? addressDetails;
+
+  Future<bool> getAddressList({String? leadId}) async {
+    try {
+      setLoader(true);
+      notifyListeners();
+      Map<String, dynamic> param = {};
+      param = {
+        "doctype": "Address",
+        "fields": jsonEncode([
+          "name",
+          "address_line1",
+          "address_line2",
+          "city",
+          "state",
+          "country",
+          "pincode"
+        ]),
+        "filters": jsonEncode(
+            {"link_doctype": "Lead", "link_name": leadId, "disabled": false})
+      };
+      AddressListResponse? response =
+          await apiRepository.getAddressList(param: param);
+      if (response?.message != null) {
+        addressDetails = null;
+        addressDetails = response?.message;
+        log(addressDetails.toString());
+        setLoader(false);
+        notifyListeners();
+        return true;
+      }
+
+      setLoader(false);
+      notifyListeners();
+      return false;
+    } catch (e) {
+      setLoader(false);
+      notifyListeners();
+      _errormsg = e.toString();
+      return false;
+    }
+  }
+
+  DateTime? _selectedDateTime;
+
+  // Getter for formatted date
+  String get formattedDate {
+    if (_selectedDateTime == null) return "Select Date";
+    return DateFormat('d MMM yyyy').format(_selectedDateTime!);
+  }
+
+  // Getter for formatted time
+  String get formattedTime {
+    if (_selectedDateTime == null) return "Select Time";
+    return DateFormat('h:mm a').format(_selectedDateTime!);
+  }
+
+  // Getter for API formatted date and time
+  String? get apiFormattedDateTime {
+    if (_selectedDateTime == null) return null;
+    return DateFormat('yyyy-MM-dd HH:mm:ss').format(_selectedDateTime!);
+  }
+
+  // Method to select a date and automatically open the time picker
+  Future<void> selectDate(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _selectedDateTime ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (pickedDate != null) {
+      final time = _selectedDateTime != null
+          ? TimeOfDay.fromDateTime(_selectedDateTime!)
+          : TimeOfDay.now();
+      _selectedDateTime = DateTime(
+        pickedDate.year,
+        pickedDate.month,
+        pickedDate.day,
+        time.hour,
+        time.minute,
+      );
+      notifyListeners();
+
+      // Automatically open the time picker after selecting the date
+      await selectTime(context);
+    }
+  }
+
+  // Method to select a time
+  Future<void> selectTime(BuildContext context) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: _selectedDateTime != null
+          ? TimeOfDay.fromDateTime(_selectedDateTime!)
+          : TimeOfDay.now(),
+    );
+
+    if (pickedTime != null) {
+      final date = _selectedDateTime ?? DateTime.now();
+      _selectedDateTime = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        pickedTime.hour,
+        pickedTime.minute,
+      );
+      notifyListeners();
+    }
+  }
+
+  //add follow up api call
+
+  Future<bool> addFollowUp(
+      {String? leadId, int? intx, String? datetime, String? feedback,String? status}) async {
+    try {
+      AddFollowUpResponse? response = await apiRepository.addFollowUp(data: {
+        "parenttype": "Lead",
+        "parentfield": "lead_tracking",
+        "parent": leadId,
+        "idx": intx,
+        "date_and_time": datetime,
+        "feedback": feedback,
+        "status" : status
+      });
+      if (response?.data != null) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      _errormsg = e.toString();
+      return false;
+    }
+  }
+
+  List<String>? _statuses; // Holds the status list
+  String? _selectedStatus;
+
+  List<String>? get statuses => _statuses;
+
+  // Getter for selected status
+  String? get selectedStatus => _selectedStatus;
+
+  Future<bool> getFollowupstatusList() async {
+    try {
+      setLoader(true);
+      notifyListeners();
+
+      Map<String, dynamic> param = {};
+
+      param = {"doctype": "Lead Tracking", "fieldname": "status"};
+
+      StatusFollowUpResponse? response =
+          await apiRepository.followUpStatusLits(param: param);
+      if (response?.statuses != null) {
+        _statuses = response!.statuses!;
+        setLoader(false);
+        notifyListeners();
+
+        return true;
+      }
+      setLoader(false);
+      notifyListeners();
+
+      return false;
+    } catch (e) {
+      _errormsg = e.toString();
+      setLoader(false);
+      notifyListeners();
+      return false;
+    }
+  }
+
+    void setSelectedStatus(String? status) {
+    _selectedStatus = status;
     notifyListeners();
   }
 }

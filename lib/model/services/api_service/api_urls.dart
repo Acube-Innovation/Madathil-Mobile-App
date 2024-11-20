@@ -123,4 +123,9 @@ class ApiUrls {
       '/api/method/a3sola_solar_management.a3sola_solar_management.doctype.razorpay_payment_link.razorpay_payment_link.create_payment_link';
 
   static const kOngoingTransaction = '/api/resource/Razorpay Payment Link';
+  static const kAddaddress = '/api/resource/Address';
+  static const kAddressList =
+      "/api/method/a3sola_solar_management.api.get_doctype_data";
+  static const kAddfollowUp = '/api/resource/Lead Tracking';
+  static const kFollowupStatusList = '/api/method/a3sola_solar_management.api.get_select_field_options';
 }

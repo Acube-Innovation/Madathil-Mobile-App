@@ -22,6 +22,10 @@ class UtilFunctions {
     return value == null || value.isEmpty ? 'address is required' : null;
   }
 
+   static String? validateFeedback(String? value) {
+    return value == null || value.isEmpty ? 'feedback is required' : null;
+  }
+
   static String? validatepincode(String? value) {
     return value == null || value.isEmpty ? 'pincode is required' : null;
   }
@@ -45,6 +49,18 @@ class UtilFunctions {
     } else {
       return false;
     }
+  }
+
+    static String? validateCity(String? value) {
+    return value == null || value.isEmpty ? 'City is required' : null;
+  }
+
+      static String? validateState(String? value) {
+    return value == null || value.isEmpty ? 'State is required' : null;
+  }
+
+       static String? validateCountry(String? value) {
+    return value == null || value.isEmpty ? 'country is required' : null;
   }
 
   static String? validateItemName(String? value) {
