@@ -12,6 +12,7 @@ import 'package:madathil/model/model_class/api_response_model/address_list_respo
 import 'package:madathil/model/model_class/api_response_model/assign_employee_lead_response.dart';
 import 'package:madathil/model/model_class/api_response_model/followup_status_lits.dart';
 import 'package:madathil/model/model_class/api_response_model/ksebbill_uploade_response.dart';
+import 'package:madathil/utils/color/app_colors.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/foundation.dart';
 import 'package:madathil/model/model_class/api_response_model/create_address_response_model.dart';
@@ -69,17 +70,23 @@ class LeadsViewmodel extends ChangeNotifier {
 
   Future<bool> getLeadsDetails({String? id}) async {
     try {
+      setLoader(true);
+      notifyListeners();
       LeadsDetailsResponse? leadsDetailsResponse =
           await apiRepository.getLeadsDetails(id);
       if ((leadsDetailsResponse?.data) != null) {
         _leadsDetails = null;
         _leadsDetails = leadsDetailsResponse;
+        setLoader(false);
         notifyListeners();
         return true;
       }
+      setLoader(false);
+      notifyListeners();
       return false;
     } catch (e) {
       _errormsg = e.toString();
+      setLoader(false);
       if (kDebugMode) {
         print("error: ${e.toString()}");
       }
@@ -714,6 +721,23 @@ class LeadsViewmodel extends ChangeNotifier {
       initialDate: _selectedDateTime ?? DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: AppColors.primeryColor, // Header background color
+              onPrimary: Colors.white, // Header text color
+              onSurface: AppColors.primeryColor, // Text color on the surface
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.primeryColor, // Button text color
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
 
     if (pickedDate != null) {
@@ -741,6 +765,23 @@ class LeadsViewmodel extends ChangeNotifier {
       initialTime: _selectedDateTime != null
           ? TimeOfDay.fromDateTime(_selectedDateTime!)
           : TimeOfDay.now(),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: AppColors.primeryColor, // Header background color
+              onPrimary: Colors.white, // Header text color
+              onSurface: AppColors.primeryColor, // Text color on the surface
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.primeryColor, // Button text color
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
 
     if (pickedTime != null) {
@@ -759,7 +800,11 @@ class LeadsViewmodel extends ChangeNotifier {
   //add follow up api call
 
   Future<bool> addFollowUp(
-      {String? leadId, int? intx, String? datetime, String? feedback,String? status}) async {
+      {String? leadId,
+      int? intx,
+      String? datetime,
+      String? feedback,
+      String? status}) async {
     try {
       AddFollowUpResponse? response = await apiRepository.addFollowUp(data: {
         "parenttype": "Lead",
@@ -768,7 +813,7 @@ class LeadsViewmodel extends ChangeNotifier {
         "idx": intx,
         "date_and_time": datetime,
         "feedback": feedback,
-        "status" : status
+        "status": status
       });
       if (response?.data != null) {
         return true;
@@ -818,7 +863,7 @@ class LeadsViewmodel extends ChangeNotifier {
     }
   }
 
-    void setSelectedStatus(String? status) {
+  void setSelectedStatus(String? status) {
     _selectedStatus = status;
     notifyListeners();
   }

@@ -356,8 +356,6 @@ class ApiRepository {
   Future<ListUsersResponse?> getListUsers({Map<String, dynamic>? param}) async {
     return _apiViewModel!
         .get<ListUsersResponse>(apiUrl: ApiUrls.kListUsers, params: param);
-    return _apiViewModel!
-        .get<ListUsersResponse>(apiUrl: ApiUrls.kListUsers, params: param);
   }
 
   Future<LeadsSourceListResponse?> getListTaskType() async {
@@ -491,10 +489,6 @@ class ApiRepository {
     }
   }
 
-  Future<HomeDetailResponse?> getHomeDetails(
-      {Map<String, dynamic>? param}) async {
-    return _apiViewModel!
-        .get<HomeDetailResponse>(apiUrl: ApiUrls.kHomeDataUrl, params: param);
   Future<HomeDetailResponse?> getHomeDetails(
       {Map<String, dynamic>? param}) async {
     return _apiViewModel!

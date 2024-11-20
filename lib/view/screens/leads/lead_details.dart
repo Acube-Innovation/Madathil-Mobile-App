@@ -13,6 +13,7 @@ import 'package:madathil/view/screens/common_widgets/custom_images.dart';
 import 'package:madathil/view/screens/common_widgets/image_picker_bottom_sheet.dart';
 import 'package:madathil/view/screens/employee/widgets/details_button_widegt.dart';
 import 'package:madathil/view/screens/leads/addres_contact_screen.dart';
+import 'package:madathil/view/screens/leads/components/assign_employee_widget.dart';
 import 'package:madathil/view/screens/leads/components/custom_button_wit_icon.dart';
 import 'package:madathil/view/screens/leads/components/employee_serachable_dropdown.dart';
 import 'package:madathil/view/screens/leads/follow_up_list_screen.dart';
@@ -237,21 +238,6 @@ class LeadDetailScreen extends StatelessWidget {
                   height: 5,
                 ),
 
-                Padding(
-                  padding: const EdgeInsets.only(left: 15.0),
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: Text(
-                      "Upload KSEB Bill",
-                      style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                          height: 1.7,
-                          color: AppColors.blue,
-                          fontSize: 14,
-                          fontWeight: FontWeight.normal),
-                    ),
-                  ),
-                ),
-
                 const SizedBox(
                   height: 10,
                 ),
@@ -290,6 +276,9 @@ class LeadDetailScreen extends StatelessWidget {
                                   builder: (BuildContext ctx) {
                                     return ImagePickerBottomSheet1(
                                       onImagePicked: (XFile? image) {
+
+                                        UtilFunctions.loaderPopup(context);
+                                        
                                         lvm
                                             .ksebBillupload(
                                                 File(image?.path ?? ""),
@@ -299,6 +288,7 @@ class LeadDetailScreen extends StatelessWidget {
                                                         ?.doctype ??
                                                     "")
                                             .then((val) {
+                                              Navigator.pop(context);
                                           if (val != null) {
                                             Fluttertoast.showToast(
                                                 gravity: ToastGravity.TOP,
@@ -324,7 +314,7 @@ class LeadDetailScreen extends StatelessWidget {
                                   });
                             },
                             child: SizedBox(
-                              width: 50,
+                              width: 60,
                               child: Text(
                                 "Upload",
                                 style: Theme.of(context)
@@ -342,6 +332,9 @@ class LeadDetailScreen extends StatelessWidget {
                       ),
                     ],
                   ),
+                ),
+                SizedBox(
+                  height: 15,
                 ),
                 if (feedback != null)
                   Column(
@@ -457,7 +450,7 @@ class LeadDetailScreen extends StatelessWidget {
                 //assign button will be shown only if lead is not closed
 
                 lvm.leadsDetails?.data?.status == "Lead"
-                    ? DetailsButtonWidegt(
+                    ? AssignEmployeeWidget(
                         data: "Assign Employee",
                         onTap: () {
                           employee = null;

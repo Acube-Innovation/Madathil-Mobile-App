@@ -224,7 +224,7 @@ class LeadCreationScreen extends StatelessWidget {
                     onchaged: (val) {},
                     controller: adrsCTLR,
                     hint: 'Enter Address',
-                    validator: UtilFunctions.validateName,
+                  //  validator: UtilFunctions.validateName,
                   ),
                   const SizedBox(height: 10),
                   Text(
@@ -239,7 +239,7 @@ class LeadCreationScreen extends StatelessWidget {
                     onchaged: (val) {},
                     controller: cityCTLR,
                     hint: 'Enter City',
-                    validator: UtilFunctions.validateName,
+                  //  validator: UtilFunctions.validateName,
                   ),
                   const SizedBox(height: 10),
                   Text(
