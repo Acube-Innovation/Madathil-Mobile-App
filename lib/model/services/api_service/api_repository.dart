@@ -196,7 +196,7 @@ class ApiRepository {
   Future<LeadsDetailsResponse?> getLeadsDetails(String? id) async {
     return _apiViewModel!.get<LeadsDetailsResponse>(
         apiUrl:
-            '${ApiUrls.kLeadDetails}$id?fields=["name", "lead_name", "address_line1", "address_line2", "city", "state", "country", "pincode", "ld_source", "lead_category", "number_to_be_contacted", "email_id", "aadhaar_number", "consumer_number", "status", "lead_owner", "creation"]');
+            '${ApiUrls.kLeadDetails}$id?fields=["name", "lead_name", "address_line1","company_name","address_line2", "city", "state", "country", "pincode", "ld_source", "lead_category", "number_to_be_contacted", "email_id", "aadhaar_number", "consumer_number", "status", "lead_owner", "creation"]');
   }
 
   Future<LeadsListOwnResponse?> getLeadsListOwn(int page,

@@ -29,6 +29,7 @@ class LeadsListOwnList {
   String? city;
   String? state;
   String? country;
+  String? companyName;
   dynamic pincode;
   String? ldSource;
   String? leadCategory;
@@ -47,6 +48,7 @@ class LeadsListOwnList {
       this.addressLine2,
       this.city,
       this.state,
+      this.companyName,
       this.country,
       this.pincode,
       this.ldSource,
@@ -65,6 +67,7 @@ class LeadsListOwnList {
     addressLine1 = json['address_line1'];
     addressLine2 = json['address_line2'];
     city = json['city'];
+    companyName = json['company_name'];
     state = json['state'];
     country = json['country'];
     pincode = json['pincode'];
@@ -86,6 +89,7 @@ class LeadsListOwnList {
     data['address_line1'] = addressLine1;
     data['address_line2'] = addressLine2;
     data['city'] = city;
+    data['company_name'] = companyName;
     data['state'] = state;
     data['country'] = country;
     data['pincode'] = pincode;

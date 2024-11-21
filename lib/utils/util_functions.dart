@@ -20,6 +20,18 @@ class UtilFunctions {
     return null;
   }
 
+  
+
+  static String? validateLandlineNumber(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Landline number is required';
+  } else if (!RegExp(r'^\d{3,5}-?\d{6,8}$').hasMatch(value)) {
+    return 'Enter a valid landline number (e.g., 0123-4567890)';
+  }
+  return null;
+}
+
+
   static String? validateConsumerNumber(String? value) {
     if (value == null || value.isEmpty) {
       return 'Consumer number is required';

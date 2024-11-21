@@ -87,7 +87,7 @@ class ProfileCards extends StatelessWidget {
                                 color: AppColors.malachit),
                             child: const Padding(
                               padding: EdgeInsets.all(8.0),
-                              child: Icon(Icons.call, color: AppColors.white),
+                              child: Icon(Icons.call, color: AppColors.white,size: 15,),
                             )),
                       )
                     }

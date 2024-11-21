@@ -32,6 +32,7 @@ class LeadCreationScreen extends StatelessWidget {
     TextEditingController adrsCTLR = TextEditingController();
     TextEditingController cityCTLR = TextEditingController();
     TextEditingController fdbkCTLR = TextEditingController();
+    TextEditingController lndlineCTLR = TextEditingController();
 
     final authVm = Provider.of<AuthViewmodel>(context, listen: false);
 
@@ -135,11 +136,53 @@ class LeadCreationScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 5),
                   CustomTextField(
-                    onchaged: (val) {},
+                    keyboardType: TextInputType.number,
+                    onchaged: (val) {
+                      // Trigger revalidation when the value changes
+                      authVm.formKey1.currentState?.validate();
+                    },
                     controller: cntNoCTLR,
                     hint: 'Enter contact number',
-                    validator: UtilFunctions.validateMobileNumber,
+                    validator: (value) {
+                      if (lndlineCTLR.text.isEmpty &&
+                          (value == null || value.isEmpty)) {
+                        return 'Either mobile number or landline number is required';
+                      }
+                      if (value != null && value.isNotEmpty) {
+                        return UtilFunctions.validateMobileNumber(value);
+                      }
+                      return null;
+                    },
                   ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Landline Number",
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                          height: 1.7,
+                          color: AppColors.grey,
+                        ),
+                  ),
+                  const SizedBox(height: 5),
+                  CustomTextField(
+                    keyboardType: TextInputType.number,
+                    onchaged: (val) {
+                      // Trigger revalidation when the value changes
+                      authVm.formKey1.currentState?.validate();
+                    },
+                    controller: lndlineCTLR,
+                    hint: 'Enter landline number',
+                    validator: (value) {
+                      if (cntNoCTLR.text.isEmpty &&
+                          (value == null || value.isEmpty)) {
+                        return 'Either mobile number or landline number is required';
+                      }
+                      if (value != null && value.isNotEmpty) {
+                        return UtilFunctions.validateLandlineNumber(value);
+                      }
+                      return null;
+                    },
+                  ),
+
                   const SizedBox(height: 10),
 
                   // Contact Email
@@ -224,7 +267,7 @@ class LeadCreationScreen extends StatelessWidget {
                     onchaged: (val) {},
                     controller: adrsCTLR,
                     hint: 'Enter Address',
-                  //  validator: UtilFunctions.validateName,
+                    //  validator: UtilFunctions.validateName,
                   ),
                   const SizedBox(height: 10),
                   Text(
@@ -239,7 +282,7 @@ class LeadCreationScreen extends StatelessWidget {
                     onchaged: (val) {},
                     controller: cityCTLR,
                     hint: 'Enter City',
-                  //  validator: UtilFunctions.validateName,
+                    //  validator: UtilFunctions.validateName,
                   ),
                   const SizedBox(height: 10),
                   Text(
@@ -323,20 +366,21 @@ class LeadCreationScreen extends StatelessWidget {
 
                           if (kwCTLR.text.isNotEmpty &&
                               fdbkCTLR.text.isNotEmpty) {
-                           leadtracking = [
+                            leadtracking = [
                               {"feedback": kwCTLR.text},
                               {'feedback': fdbkCTLR.text},
                             ];
-                          } else if(kwCTLR.text.isNotEmpty && fdbkCTLR.text.isEmpty){
+                          } else if (kwCTLR.text.isNotEmpty &&
+                              fdbkCTLR.text.isEmpty) {
                             leadtracking = [
                               {"feedback": kwCTLR.text},
                             ];
-                          } else if(kwCTLR.text.isEmpty && fdbkCTLR.text.isNotEmpty){
+                          } else if (kwCTLR.text.isEmpty &&
+                              fdbkCTLR.text.isNotEmpty) {
                             leadtracking = [
                               {'feedback': fdbkCTLR.text},
                             ];
-                          }
-                          else{
+                          } else {
                             leadtracking = [];
                           }
                           if (cdv.lat != null && cdv.long != null) {
@@ -344,7 +388,9 @@ class LeadCreationScreen extends StatelessWidget {
                               "lead_name": ldNameCTLR.text,
                               "ld_source": ldSourceCTLR.text,
                               "lead_category": ldCtgryCTLR.text,
-                              "number_to_be_contacted": cntNoCTLR.text,
+                              "number_to_be_contacted": cntNoCTLR.text.isEmpty
+                                  ? lndlineCTLR.text
+                                  : cntNoCTLR.text,
                               "email_id": cntEmailCTLR.text,
                               "consumer_number": cnsmrNoCTLR.text,
                               "aadhaar_number": adhrNoCTLR.text,
@@ -370,7 +416,9 @@ class LeadCreationScreen extends StatelessWidget {
                                     (value) {
                                       toast(
                                           "Lead created successfully", context);
-                                          Provider.of<LeadsViewmodel>(context, listen: false).getLeadsListOwn();
+                                      Provider.of<LeadsViewmodel>(context,
+                                              listen: false)
+                                          .getLeadsListOwn();
                                       Navigator.pop(context);
                                       Navigator.pop(context);
                                     },

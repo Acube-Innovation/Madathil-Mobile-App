@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:madathil/utils/color/app_colors.dart';
@@ -113,6 +112,19 @@ class LeadDetailScreen extends StatelessWidget {
                         ),
                   ),
                 ),
+                lvm.leadsDetails?.data?.comapnyName != null &&
+                        lvm.leadsDetails!.data!.comapnyName!.isNotEmpty
+                    ? Center(
+                        child: Text(
+                          lvm.leadsDetails?.data?.comapnyName ?? "N/A",
+                          style:
+                              Theme.of(context).textTheme.labelMedium!.copyWith(
+                                    height: 1.7,
+                                    color: AppColors.black,
+                                  ),
+                        ),
+                      )
+                    : const SizedBox(),
                 const SizedBox(
                   height: 50,
                 ),
@@ -276,9 +288,8 @@ class LeadDetailScreen extends StatelessWidget {
                                   builder: (BuildContext ctx) {
                                     return ImagePickerBottomSheet1(
                                       onImagePicked: (XFile? image) {
-
                                         UtilFunctions.loaderPopup(context);
-                                        
+
                                         lvm
                                             .ksebBillupload(
                                                 File(image?.path ?? ""),
@@ -288,7 +299,7 @@ class LeadDetailScreen extends StatelessWidget {
                                                         ?.doctype ??
                                                     "")
                                             .then((val) {
-                                              Navigator.pop(context);
+                                          Navigator.pop(context);
                                           if (val != null) {
                                             Fluttertoast.showToast(
                                                 gravity: ToastGravity.TOP,
