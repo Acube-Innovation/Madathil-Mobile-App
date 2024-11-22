@@ -23,6 +23,7 @@ class CustomerAddress {
   String? state;
   String? country;
   String? pincode;
+  String? phone;
 
   CustomerAddress({
     this.addressLine1,
@@ -31,6 +32,7 @@ class CustomerAddress {
     this.state,
     this.country,
     this.pincode,
+    this.phone,
   });
 
   factory CustomerAddress.fromJson(Map<String, dynamic> json) =>
@@ -41,6 +43,7 @@ class CustomerAddress {
         state: json["state"],
         country: json["country"],
         pincode: json["pincode"],
+        phone: json['phone'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -50,5 +53,6 @@ class CustomerAddress {
         "state": state,
         "country": country,
         "pincode": pincode,
+        "phone" : phone,
       };
 }

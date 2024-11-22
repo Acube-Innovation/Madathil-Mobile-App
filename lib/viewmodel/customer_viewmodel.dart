@@ -361,7 +361,8 @@ class CustomerViewmodel extends ChangeNotifier {
           "city",
           "state",
           "country",
-          "pincode"
+          "pincode",
+          "phone"
         ]),
         "filters": jsonEncode(
             {"link_doctype": "Customer", "link_name": name, "disabled": false})
