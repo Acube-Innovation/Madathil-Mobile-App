@@ -251,7 +251,7 @@ class _AddCallDetailsScreenState extends State<AddCallDetailsScreen> {
                           const SizedBox(height: 10),
                           GestureDetector(
                             onTap: () async {
-                              // await cvm.selectDateR(context, isEndDate: true);
+                               await cvm.selectDateR(context, isEndDate: true);
                               // if (cvm.selectedStartDate != null) {
                               //   await cvm.selectTime(context, isEndDate: true);
                               // }

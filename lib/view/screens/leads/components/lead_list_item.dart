@@ -39,13 +39,18 @@ class LeadListItem extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 5),
-                      Text(
-                        "Address: ${data?.addressLine1 ?? "N/A"}  ${data?.addressLine2 ?? "N/A"}",
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppColors.primeryColor,
-                            fontWeight: FontWeight.w400),
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      data?.companyName != null && data!.companyName!.isNotEmpty
+                          ? Text(
+                              "Organization: ${data?.companyName ?? ""}  ",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(
+                                      color: AppColors.primeryColor,
+                                      fontWeight: FontWeight.w400),
+                              overflow: TextOverflow.ellipsis,
+                            )
+                          : const SizedBox(),
                       const SizedBox(height: 5),
                       Text(
                         "Phone:  ${data?.numberToBeContacted ?? "N/A"}",

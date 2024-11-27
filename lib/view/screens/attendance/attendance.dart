@@ -90,12 +90,14 @@ class AttendancePage extends StatelessWidget {
                     (value) {
                       Navigator.pop(context);
                       if (value) {
-                        cdv
-                            .employeeCheckinList();
-                           // .then((value) => Navigator.pop(context));
+                        cdv.employeeCheckinList();
+                        // .then((value) => Navigator.pop(context));
                       } else {
                         log("error --- ${cdv.errormsg}");
-                        toast(cdv.errormsg ?? "Something went wrong please try again", context,
+                        toast(
+                            cdv.errormsg ??
+                                "Something went wrong please try again",
+                            context,
                             isError: true);
                         Navigator.pop(context);
                       }

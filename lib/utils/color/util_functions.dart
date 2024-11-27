@@ -22,9 +22,28 @@ class UtilFunctions {
     return value == null || value.isEmpty ? 'address is required' : null;
   }
 
+   static String? validateFeedback(String? value) {
+    return value == null || value.isEmpty ? 'feedback is required' : null;
+  }
+
   static String? validatepincode(String? value) {
     return value == null || value.isEmpty ? 'pincode is required' : null;
   }
+  static String? validatepincodePR(String? value) {
+  // Check if value is null or empty
+  if (value == null || value.isEmpty) {
+    return 'Pincode is required';
+  }
+
+  // Check if the value contains only digits and is of proper length
+  final regex = RegExp(r'^\d{6}$');
+  if (!regex.hasMatch(value)) {
+    return 'Please enter a valid 6-digit pincode';
+  }
+
+  return null; // No validation errors
+}
+
 
   static String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
@@ -45,6 +64,18 @@ class UtilFunctions {
     } else {
       return false;
     }
+  }
+
+    static String? validateCity(String? value) {
+    return value == null || value.isEmpty ? 'City is required' : null;
+  }
+
+      static String? validateState(String? value) {
+    return value == null || value.isEmpty ? 'State is required' : null;
+  }
+
+       static String? validateCountry(String? value) {
+    return value == null || value.isEmpty ? 'country is required' : null;
   }
 
   static String? validateItemName(String? value) {

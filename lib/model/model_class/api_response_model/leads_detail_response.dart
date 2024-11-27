@@ -30,6 +30,7 @@ class LeadsDetailsData {
   String? emailId;
   String? namingSeries;
   String? leadName;
+  String? comapnyName;
   String? leadCategory;
   String? districtName;
   String? ldSource;
@@ -98,6 +99,7 @@ class LeadsDetailsData {
     this.organizationLead,
     this.emiCustomer,
     this.namingSeries,
+    this.comapnyName,
     this.leadName,
     this.emailId,
     this.leadCategory,
@@ -168,6 +170,7 @@ class LeadsDetailsData {
     docstatus = json['docstatus'];
     organizationLead = json['organization_lead'];
     emiCustomer = json['emi_customer'];
+    comapnyName = json['company_name'];
     namingSeries = json['naming_series'];
     leadName = json['lead_name'];
     leadCategory = json['lead_category'];
@@ -262,6 +265,7 @@ class LeadsDetailsData {
     data['emi_customer'] = emiCustomer;
     data['naming_series'] = namingSeries;
     data['lead_name'] = leadName;
+    data['company_name'] = comapnyName;
     data['lead_category'] = leadCategory;
     data['district_name'] = districtName;
     data['ld_source'] = ldSource;

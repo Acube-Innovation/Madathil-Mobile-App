@@ -286,23 +286,23 @@ class CheckOutScreen extends StatelessWidget {
                                   ],
                                 ),
                                 const SizedBox(height: 16),
-                                Row(
-                                  children: [
-                                    const CustomPngImage(
-                                      imageName: 'assets/images/phone-call.png',
-                                      height: 20,
-                                      width: 35,
-                                    ),
-                                    const SizedBox(width: 9),
-                                    Text(
-                                      "+91 9638527410",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .copyWith(color: AppColors.black),
-                                    ),
-                                  ],
-                                ),
+                                // Row(
+                                //   children: [
+                                //     const CustomPngImage(
+                                //       imageName: 'assets/images/phone-call.png',
+                                //       height: 20,
+                                //       width: 35,
+                                //     ),
+                                //     const SizedBox(width: 9),
+                                //     Text(
+                                //       cvm.customerAddress?.first.phone ?? "",
+                                //       style: Theme.of(context)
+                                //           .textTheme
+                                //           .bodyMedium!
+                                //           .copyWith(color: AppColors.black),
+                                //     ),
+                                //   ],
+                                // ),
                               ],
                             ),
                       const Padding(

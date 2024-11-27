@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:madathil/utils/color/app_colors.dart';
@@ -12,8 +11,12 @@ import 'package:madathil/view/screens/common_widgets/custom_dropdown.dart';
 import 'package:madathil/view/screens/common_widgets/custom_images.dart';
 import 'package:madathil/view/screens/common_widgets/image_picker_bottom_sheet.dart';
 import 'package:madathil/view/screens/employee/widgets/details_button_widegt.dart';
+import 'package:madathil/view/screens/leads/addres_contact_screen.dart';
+import 'package:madathil/view/screens/leads/components/assign_employee_widget.dart';
 import 'package:madathil/view/screens/leads/components/custom_button_wit_icon.dart';
 import 'package:madathil/view/screens/leads/components/employee_serachable_dropdown.dart';
+import 'package:madathil/view/screens/leads/components/quotation_lst.dart';
+import 'package:madathil/view/screens/leads/follow_up_list_screen.dart';
 import 'package:madathil/view/screens/products/product_list.dart';
 import 'package:madathil/view/screens/profile/widgets/detail_card.dart';
 import 'package:madathil/view/screens/profile/widgets/detail_card_single.dart';
@@ -110,17 +113,57 @@ class LeadDetailScreen extends StatelessWidget {
                         ),
                   ),
                 ),
+                lvm.leadsDetails?.data?.comapnyName != null &&
+                        lvm.leadsDetails!.data!.comapnyName!.isNotEmpty
+                    ? Center(
+                        child: Text(
+                          lvm.leadsDetails?.data?.comapnyName ?? "N/A",
+                          style:
+                              Theme.of(context).textTheme.labelMedium!.copyWith(
+                                    height: 1.7,
+                                    color: AppColors.black,
+                                  ),
+                        ),
+                      )
+                    : const SizedBox(),
                 const SizedBox(
                   height: 50,
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 15),
-                  child: Text(
-                    "Lead Details",
-                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                          height: 1.7,
-                          color: AppColors.grey,
+                  padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Lead Details",
+                        style:
+                            Theme.of(context).textTheme.labelMedium!.copyWith(
+                                  height: 1.7,
+                                  color: AppColors.grey,
+                                ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AddresContactScreen(
+                                        data: lvm.leadsDetails?.data,
+                                      )));
+                        },
+                        child: Text(
+                          "Address and conatcts",
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelMedium!
+                              .copyWith(
+                                  height: 1.7,
+                                  color: AppColors.blue,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.normal),
                         ),
+                      )
+                    ],
                   ),
                 ),
                 const SizedBox(
@@ -128,31 +171,58 @@ class LeadDetailScreen extends StatelessWidget {
                 ),
                 ProfileCards(
                   leadName: lvm.leadsDetails?.data?.leadName ?? "N/A",
-                  data: "Lead Source",
+                  data: "Source",
                   value: lvm.leadsDetails?.data?.ldSource ?? "N/A",
-                  data2: "Lead Category",
+                  data2: "Category",
                   value2: lvm.leadsDetails?.data?.leadCategory ?? "N/A",
                 ),
                 const SizedBox(
                   height: 10,
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 15),
-                  child: Text(
-                    "Contact Details",
-                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                          height: 1.7,
-                          color: AppColors.grey,
+                  padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Contact Details",
+                        style:
+                            Theme.of(context).textTheme.labelMedium!.copyWith(
+                                  height: 1.7,
+                                  color: AppColors.grey,
+                                ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => FollowUpListScreen(
+                                        data: lvm.leadsDetails?.data,
+                                      )));
+                        },
+                        child: Text(
+                          "Follow up",
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelMedium!
+                              .copyWith(
+                                  height: 1.7,
+                                  color: AppColors.blue,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.normal),
                         ),
+                      )
+                    ],
                   ),
                 ),
                 const SizedBox(height: 5),
                 ProfileCards(
                   leadid: lvm.leadsDetails?.data?.name ?? "",
                   leadName: lvm.leadsDetails?.data?.leadName ?? "N/A",
-                  data: "Contact Number",
+                  data: "Number",
                   value: lvm.leadsDetails?.data?.numberToBeContacted ?? "N/A",
-                  data2: "Contact Email",
+                  data2: "Email",
                   value2: lvm.leadsDetails?.data?.emailId ?? "N/A",
                 ),
                 const SizedBox(height: 10),
@@ -166,6 +236,7 @@ class LeadDetailScreen extends StatelessWidget {
                         ),
                   ),
                 ),
+
                 const SizedBox(height: 5),
                 ProfileCards(
                   leadName: lvm.leadsDetails?.data?.leadName ?? "N/A",
@@ -175,6 +246,11 @@ class LeadDetailScreen extends StatelessWidget {
                   data2: "Consumer Number",
                   value2: lvm.leadsDetails?.data?.consumerNumber ?? "N/A",
                 ),
+
+                const SizedBox(
+                  height: 5,
+                ),
+
                 const SizedBox(
                   height: 10,
                 ),
@@ -213,6 +289,8 @@ class LeadDetailScreen extends StatelessWidget {
                                   builder: (BuildContext ctx) {
                                     return ImagePickerBottomSheet1(
                                       onImagePicked: (XFile? image) {
+                                        UtilFunctions.loaderPopup(context);
+
                                         lvm
                                             .ksebBillupload(
                                                 File(image?.path ?? ""),
@@ -222,6 +300,7 @@ class LeadDetailScreen extends StatelessWidget {
                                                         ?.doctype ??
                                                     "")
                                             .then((val) {
+                                          Navigator.pop(context);
                                           if (val != null) {
                                             Fluttertoast.showToast(
                                                 gravity: ToastGravity.TOP,
@@ -247,7 +326,7 @@ class LeadDetailScreen extends StatelessWidget {
                                   });
                             },
                             child: SizedBox(
-                              width: 50,
+                              width: 60,
                               child: Text(
                                 "Upload",
                                 style: Theme.of(context)
@@ -265,6 +344,9 @@ class LeadDetailScreen extends StatelessWidget {
                       ),
                     ],
                   ),
+                ),
+                SizedBox(
+                  height: 15,
                 ),
                 if (feedback != null)
                   Column(
@@ -313,32 +395,65 @@ class LeadDetailScreen extends StatelessWidget {
                   const SizedBox(
                     height: 5,
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 15),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.grey),
-                        color: AppColors.grey.withOpacity(0.1)),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              lvm.leadsDetails?.data?.contactBy ?? "",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                    height: 1.7,
-                                    color: AppColors.black,
-                                  ),
-                            ),
-                          ],
+
+                  Row(
+                    children: [
+                      Container(
+                        height: 40,
+                        width: 40,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.secondaryColor,
                         ),
-                      ],
-                    ),
+                        child: const Center(
+                          child: CustomPngImage(
+                            //TODO:
+                            imageName: 'assets/images/user_account.png',
+                            height: 50,
+                            width: 50,
+                            boxFit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        lvm.leadsDetails?.data?.contactBy ?? "",
+                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                              height: 1.7,
+                              color: AppColors.black,
+                            ),
+                      ),
+                    ],
                   ),
+
+                  // Container(
+                  //   padding: const EdgeInsets.symmetric(
+                  //       horizontal: 15, vertical: 15),
+                  //   decoration: BoxDecoration(
+                  //       borderRadius: BorderRadius.circular(20),
+                  //       border: Border.all(color: Colors.grey),
+                  //       color: AppColors.grey.withOpacity(0.1)),
+                  //   child: Column(
+                  //     children: [
+                  //       Row(
+                  //         children: [
+                  //           Text(
+                  //             lvm.leadsDetails?.data?.contactBy ?? "",
+                  //             style: Theme.of(context)
+                  //                 .textTheme
+                  //                 .bodyMedium!
+                  //                 .copyWith(
+                  //                   height: 1.7,
+                  //                   color: AppColors.black,
+                  //                 ),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                 },
                 const SizedBox(
                   height: 25,
@@ -347,7 +462,7 @@ class LeadDetailScreen extends StatelessWidget {
                 //assign button will be shown only if lead is not closed
 
                 lvm.leadsDetails?.data?.status == "Lead"
-                    ? DetailsButtonWidegt(
+                    ? AssignEmployeeWidget(
                         data: "Assign Employee",
                         onTap: () {
                           employee = null;
@@ -461,50 +576,56 @@ class LeadDetailScreen extends StatelessWidget {
                     ? CustomButtonWithIcon(
                         icon: Icons.file_download_sharp,
                         color: AppColors.orange,
-                        text: "Download Quotation",
+                        text: "Download Quotations",
                         height: 60,
                         onPressed: () async {
-                          UtilFunctions.loaderPopup(context);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => QuotationLst(
+                                        data: lvm.leadsDetails?.data,
+                                      )));
+                          // UtilFunctions.loaderPopup(context);
 
-                          if (lvm.leadsDetails?.data?.name != null) {
-                            await lvm
-                                .getQuotationLead(
-                                    leadId: lvm.leadsDetails?.data?.name)
-                                .then((value) {
-                              Navigator.pop(context);
-                              if (value) {
-                                UtilFunctions.loaderPopup(context);
-                                lvm
-                                    .getQuotationFile(
-                                        quotationId:
-                                            lvm.quotationLead?.first.name)
-                                    .then((value) {
-                                  Navigator.pop(context);
-                                  if (value) {
-                                    UtilFunctions.loaderPopup(context);
-                                    //
+                          // if (lvm.leadsDetails?.data?.name != null) {
+                          //   await lvm
+                          //       .getQuotationLead(
+                          //           leadId: lvm.leadsDetails?.data?.name)
+                          //       .then((value) {
+                          //     Navigator.pop(context);
+                          //     if (value) {
+                          //       UtilFunctions.loaderPopup(context);
+                          //       lvm
+                          //           .getQuotationFile(
+                          //               quotationId:
+                          //                   lvm.quotationLead?.first.name)
+                          //           .then((value) {
+                          //         Navigator.pop(context);
+                          //         if (value) {
+                          //           UtilFunctions.loaderPopup(context);
+                          //           //
 
-                                    lvm
-                                        .getQuotation(
-                                            quotationPath: lvm.quotationLeadFile
-                                                ?.first.fileUrl)
-                                        .then((value) {
-                                      Navigator.pop(context);
-                                      if (value) {
-                                        log("${lvm.file?.path.toLowerCase()}");
+                          //           lvm
+                          //               .getQuotation(
+                          //                   quotationPath: lvm.quotationLeadFile
+                          //                       ?.first.fileUrl)
+                          //               .then((value) {
+                          //             Navigator.pop(context);
+                          //             if (value) {
+                          //               log("${lvm.file?.path.toLowerCase()}");
 
-                                        OpenFile.open(lvm.file?.path);
-                                      } else {
-                                        toast(lvm.errormsg, context);
-                                      }
-                                    });
-                                  } else {
-                                    toast(lvm.errormsg, context);
-                                  }
-                                });
-                              }
-                            });
-                          }
+                          //               OpenFile.open(lvm.file?.path);
+                          //             } else {
+                          //               toast(lvm.errormsg, context);
+                          //             }
+                          //           });
+                          //         } else {
+                          //           toast(lvm.errormsg, context);
+                          //         }
+                          //       });
+                          //     }
+                          //   });
+                          // }
                         },
                       )
                     : const SizedBox()

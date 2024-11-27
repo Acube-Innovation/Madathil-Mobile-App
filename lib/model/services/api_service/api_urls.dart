@@ -30,7 +30,7 @@ class ApiUrls {
 
   //leads section
   static const kleadListOwn =
-      '/api/resource/Lead?fields=["name", "lead_name", "address_line1", "address_line2", "city", "state", "country", "pincode", "ld_source", "lead_category", "number_to_be_contacted", "email_id", "aadhaar_number", "consumer_number", "status", "lead_owner", "creation"]&order_by=modified desc';
+      '/api/resource/Lead?fields=["name", "lead_name","company_name","address_line1", "address_line2", "city", "state", "country", "pincode", "ld_source", "lead_category", "number_to_be_contacted", "email_id", "aadhaar_number", "consumer_number", "status", "lead_owner", "creation"]&order_by=modified desc';
   static const kLeadDetails = '/api/resource/Lead/';
   static const kLeadSourceList = '/api/resource/Lead Source';
   static const kLeadCategoryList = '/api/resource/Lead Category';
@@ -123,4 +123,9 @@ class ApiUrls {
       '/api/method/a3sola_solar_management.a3sola_solar_management.doctype.razorpay_payment_link.razorpay_payment_link.create_payment_link';
 
   static const kOngoingTransaction = '/api/resource/Razorpay Payment Link';
+  static const kAddaddress = '/api/resource/Address';
+  static const kAddressList =
+      "/api/method/a3sola_solar_management.api.get_doctype_data";
+  static const kAddfollowUp = '/api/resource/Lead Tracking';
+  static const kFollowupStatusList = '/api/method/a3sola_solar_management.api.get_select_field_options';
 }

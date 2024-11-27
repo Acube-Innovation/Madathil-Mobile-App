@@ -39,7 +39,7 @@ class ProfileCards extends StatelessWidget {
             children: [
               // Label 1
               Flexible(
-                flex: 2, // Adjust flex value as needed
+                flex: 4, // Adjust flex value as needed
                 child: Text(
                   data ?? "",
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -51,7 +51,7 @@ class ProfileCards extends StatelessWidget {
               const Spacer(),
               // Value 1
               Flexible(
-                flex: 3, // Allow more space for longer text
+                flex: 5, // Allow more space for longer text
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -65,8 +65,8 @@ class ProfileCards extends StatelessWidget {
                           null, // Allow text to wrap if it exceeds one line
                       overflow: TextOverflow.visible, // Handle overflow
                     ),
-                    if (data == "Contact Number") ...{
-                      const SizedBox(width: 15),
+                    if (data == "Number") ...{
+                      const SizedBox(width: 10),
                       InkWell(
                         onTap: () {
                           Provider.of<CallViewModel>(context, listen: false)
@@ -87,7 +87,7 @@ class ProfileCards extends StatelessWidget {
                                 color: AppColors.malachit),
                             child: const Padding(
                               padding: EdgeInsets.all(8.0),
-                              child: Icon(Icons.call, color: AppColors.white),
+                              child: Icon(Icons.call, color: AppColors.white,size: 15,),
                             )),
                       )
                     }
@@ -107,7 +107,7 @@ class ProfileCards extends StatelessWidget {
             children: [
               // Label 2
               Flexible(
-                flex: 2,
+                flex: 4,
                 child: Text(
                   data2 ?? "",
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -119,7 +119,7 @@ class ProfileCards extends StatelessWidget {
               const Spacer(),
               // Value 2
               Flexible(
-                flex: 3,
+                flex: 6,
                 child: Text(
                   value2 ?? "",
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(

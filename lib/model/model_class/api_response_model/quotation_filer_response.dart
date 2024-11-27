@@ -22,18 +22,25 @@ class QuotationFileResponse {
 
 class QuotationLeadFile {
   String? fileUrl;
+  String? fileName;
+  String? creation;
 
-  QuotationLeadFile({this.fileUrl});
+  QuotationLeadFile({this.fileUrl, this.fileName, this.creation});
 
   factory QuotationLeadFile.fromJson(Map<String, dynamic> json) {
     return QuotationLeadFile(
       fileUrl: json['file_url'],
+      fileName: json['file_name'],
+      creation: json['creation']
+      
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'file_url': fileUrl,
+      'file_name': fileName,
+      'creation': creation
     };
   }
 }

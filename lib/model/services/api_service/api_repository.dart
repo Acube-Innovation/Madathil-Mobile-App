@@ -5,8 +5,11 @@ import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:madathil/constants.dart';
+import 'package:madathil/model/model_class/api_response_model/add_address_response.dart';
 import 'package:madathil/model/model_class/api_response_model/add_closing_statment_response.dart';
+import 'package:madathil/model/model_class/api_response_model/add_follow_up_respons.dart';
 import 'package:madathil/model/model_class/api_response_model/add_new_service_response.dart';
+import 'package:madathil/model/model_class/api_response_model/address_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/assign_employee_lead_response.dart';
 import 'package:madathil/model/model_class/api_response_model/attendance_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/call_details_response.dart';
@@ -23,6 +26,7 @@ import 'package:madathil/model/model_class/api_response_model/create_payment_res
 import 'package:madathil/model/model_class/api_response_model/customer_list_response.dart';
 import 'package:madathil/model/model_class/api_response_model/employee_details_response.dart';
 import 'package:madathil/model/model_class/api_response_model/employee_list_response.dart';
+import 'package:madathil/model/model_class/api_response_model/followup_status_lits.dart';
 import 'package:madathil/model/model_class/api_response_model/forgot_password_response.dart';
 import 'package:madathil/model/model_class/api_response_model/general_response.dart';
 import 'package:madathil/model/model_class/api_response_model/generate_link_reponse.dart';
@@ -192,7 +196,7 @@ class ApiRepository {
   Future<LeadsDetailsResponse?> getLeadsDetails(String? id) async {
     return _apiViewModel!.get<LeadsDetailsResponse>(
         apiUrl:
-            '${ApiUrls.kLeadDetails}$id?fields=["name", "lead_name", "address_line1", "address_line2", "city", "state", "country", "pincode", "ld_source", "lead_category", "number_to_be_contacted", "email_id", "aadhaar_number", "consumer_number", "status", "lead_owner", "creation"]');
+            '${ApiUrls.kLeadDetails}$id?fields=["name", "lead_name", "address_line1","company_name","address_line2", "city", "state", "country", "pincode", "ld_source", "lead_category", "number_to_be_contacted", "email_id", "aadhaar_number", "consumer_number", "status", "lead_owner", "creation"]');
   }
 
   Future<LeadsListOwnResponse?> getLeadsListOwn(int page,
@@ -647,5 +651,43 @@ class ApiRepository {
       apiUrl: ApiUrls.kFileUploade,
       data: data,
     );
+  }
+
+  Future<AddAddressResponse?> addaddress({
+    required Map<String, dynamic>? data,
+    required bool? isEdit,
+    String? id,
+  }) {
+    // Build the URL dynamically based on isEdit
+    final String apiUrl = isEdit == true && id != null
+        ? "${ApiUrls.kAddaddress}/$id" // Append ID to the base URL for editing
+        : ApiUrls.kAddaddress;
+
+    // Make the appropriate API call
+    if (isEdit == true) {
+      // Edit scenario: Use PUT method
+      return _apiViewModel!.put<AddAddressResponse>(apiUrl: apiUrl, data: data);
+    } else {
+      // Add scenario: Use POST method
+      return _apiViewModel!
+          .post<AddAddressResponse>(apiUrl: apiUrl, data: data);
+    }
+  }
+
+  Future<AddressListResponse?> getAddressList(
+      {Map<String, dynamic>? param}) async {
+    return _apiViewModel!
+        .get<AddressListResponse>(apiUrl: ApiUrls.kAddressList, params: param);
+  }
+
+  Future<AddFollowUpResponse?> addFollowUp({Map<String, dynamic>? data}) async {
+    return _apiViewModel!
+        .post<AddFollowUpResponse>(apiUrl: ApiUrls.kAddfollowUp, data: data);
+  }
+
+  Future<StatusFollowUpResponse?> followUpStatusLits(
+      {Map<String, dynamic>? param}) async {
+    return _apiViewModel!.get<StatusFollowUpResponse>(
+        apiUrl: ApiUrls.kFollowupStatusList, params: param);
   }
 }
