@@ -15,6 +15,7 @@ import 'package:madathil/view/screens/leads/addres_contact_screen.dart';
 import 'package:madathil/view/screens/leads/components/assign_employee_widget.dart';
 import 'package:madathil/view/screens/leads/components/custom_button_wit_icon.dart';
 import 'package:madathil/view/screens/leads/components/employee_serachable_dropdown.dart';
+import 'package:madathil/view/screens/leads/components/quotation_lst.dart';
 import 'package:madathil/view/screens/leads/follow_up_list_screen.dart';
 import 'package:madathil/view/screens/products/product_list.dart';
 import 'package:madathil/view/screens/profile/widgets/detail_card.dart';
@@ -575,50 +576,56 @@ class LeadDetailScreen extends StatelessWidget {
                     ? CustomButtonWithIcon(
                         icon: Icons.file_download_sharp,
                         color: AppColors.orange,
-                        text: "Download Quotation",
+                        text: "Download Quotations",
                         height: 60,
                         onPressed: () async {
-                          UtilFunctions.loaderPopup(context);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => QuotationLst(
+                                        data: lvm.leadsDetails?.data,
+                                      )));
+                          // UtilFunctions.loaderPopup(context);
 
-                          if (lvm.leadsDetails?.data?.name != null) {
-                            await lvm
-                                .getQuotationLead(
-                                    leadId: lvm.leadsDetails?.data?.name)
-                                .then((value) {
-                              Navigator.pop(context);
-                              if (value) {
-                                UtilFunctions.loaderPopup(context);
-                                lvm
-                                    .getQuotationFile(
-                                        quotationId:
-                                            lvm.quotationLead?.first.name)
-                                    .then((value) {
-                                  Navigator.pop(context);
-                                  if (value) {
-                                    UtilFunctions.loaderPopup(context);
-                                    //
+                          // if (lvm.leadsDetails?.data?.name != null) {
+                          //   await lvm
+                          //       .getQuotationLead(
+                          //           leadId: lvm.leadsDetails?.data?.name)
+                          //       .then((value) {
+                          //     Navigator.pop(context);
+                          //     if (value) {
+                          //       UtilFunctions.loaderPopup(context);
+                          //       lvm
+                          //           .getQuotationFile(
+                          //               quotationId:
+                          //                   lvm.quotationLead?.first.name)
+                          //           .then((value) {
+                          //         Navigator.pop(context);
+                          //         if (value) {
+                          //           UtilFunctions.loaderPopup(context);
+                          //           //
 
-                                    lvm
-                                        .getQuotation(
-                                            quotationPath: lvm.quotationLeadFile
-                                                ?.first.fileUrl)
-                                        .then((value) {
-                                      Navigator.pop(context);
-                                      if (value) {
-                                        log("${lvm.file?.path.toLowerCase()}");
+                          //           lvm
+                          //               .getQuotation(
+                          //                   quotationPath: lvm.quotationLeadFile
+                          //                       ?.first.fileUrl)
+                          //               .then((value) {
+                          //             Navigator.pop(context);
+                          //             if (value) {
+                          //               log("${lvm.file?.path.toLowerCase()}");
 
-                                        OpenFile.open(lvm.file?.path);
-                                      } else {
-                                        toast(lvm.errormsg, context);
-                                      }
-                                    });
-                                  } else {
-                                    toast(lvm.errormsg, context);
-                                  }
-                                });
-                              }
-                            });
-                          }
+                          //               OpenFile.open(lvm.file?.path);
+                          //             } else {
+                          //               toast(lvm.errormsg, context);
+                          //             }
+                          //           });
+                          //         } else {
+                          //           toast(lvm.errormsg, context);
+                          //         }
+                          //       });
+                          //     }
+                          //   });
+                          // }
                         },
                       )
                     : const SizedBox()

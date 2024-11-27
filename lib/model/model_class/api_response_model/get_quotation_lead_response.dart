@@ -22,18 +22,26 @@ class GetQuotationLeadResponse {
 
 class QuotationLeadData {
   String? name;
+  String? creation;
+  String? fileName;
 
-  QuotationLeadData({this.name});
+  QuotationLeadData({this.name, this.creation,this.fileName});
 
   factory QuotationLeadData.fromJson(Map<String, dynamic> json) {
     return QuotationLeadData(
       name: json['name'],
+      creation: json['creation'],
+      fileName: json['quoation_print_specification']
+      
+      
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'name': name,
+      'creation' : creation,
+      'quoation_print_specification' : fileName,
     };
   }
 }

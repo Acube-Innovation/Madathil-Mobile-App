@@ -407,12 +407,14 @@ class LeadsViewmodel extends ChangeNotifier {
         "filters": jsonEncode({
           "party_name": leadId,
         }),
+        "fields": jsonEncode(["creation","name","quoation_print_specification"])
       };
 
       GetQuotationLeadResponse? response =
           await apiRepository.getQuotationLead(param: param);
 
       if (response?.data != null) {
+        quotationLead=null;
         quotationLead = response?.data;
         setLoader(false);
         notifyListeners();
@@ -434,6 +436,8 @@ class LeadsViewmodel extends ChangeNotifier {
 
   Future<bool> getQuotationFile({String? quotationId}) async {
     try {
+      setLoader(true);
+      notifyListeners();
       Map<String, dynamic>? param = {};
 
       param = {
@@ -441,9 +445,7 @@ class LeadsViewmodel extends ChangeNotifier {
           "attached_to_doctype": "Quotation",
           "attached_to_name": quotationId,
         }),
-        "fields": jsonEncode([
-          "file_url",
-        ]),
+        "fields": jsonEncode(["file_url", "file_name", "creation"]),
       };
 
       QuotationFileResponse? response =
@@ -451,12 +453,16 @@ class LeadsViewmodel extends ChangeNotifier {
 
       if (response?.data != null) {
         quotationLeadFile = response?.data;
+        setLoader(false);
+        notifyListeners();
         return true;
       }
 
       return false;
     } catch (e) {
       _errormsg = e.toString();
+      setLoader(false);
+
       notifyListeners();
       return false;
     }
